@@ -28,67 +28,27 @@ body { background: var(--dark); color: var(--ink); font-family: 'Geologica', san
   transition: transform 1.2s cubic-bezier(.16,1,.3,1), opacity 0.1s;
 }
 #light-burst.expand { opacity: 1; transform: scale(7); }
-
-.lamp-hint {
-  position: relative; z-index: 2; font-size: 10px; letter-spacing: 5px;
-  text-transform: uppercase; color: rgba(255,220,180,0.2); margin-bottom: 40px;
-  transition: opacity 0.4s; user-select: none; pointer-events: none;
-}
+.lamp-hint { position: relative; z-index: 2; font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,220,180,0.2); margin-bottom: 40px; transition: opacity 0.4s; user-select: none; pointer-events: none; }
 .lamp-hint.hide { opacity: 0; }
-
-.lamp-scene {
-  position: relative; z-index: 2;
-  display: flex; flex-direction: column; align-items: center;
-}
-
-/* Real bulb SVG */
+.lamp-scene { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
 .lamp-svg { pointer-events: none; filter: drop-shadow(0 0 0px #9b4f2a); transition: filter 0.9s; }
 #lamp-screen.lit .lamp-svg { filter: drop-shadow(0 0 32px rgba(155,79,42,0.95)); }
-
-.bulb-glow {
-  position: absolute; top: 52px; left: 50%; transform: translateX(-50%);
-  width: 30px; height: 30px; border-radius: 50%; pointer-events: none;
-  transition: background 0.6s, box-shadow 0.6s;
-}
-#lamp-screen.lit .bulb-glow {
-  background: #fff8e0;
-  box-shadow: 0 0 60px 30px rgba(196,105,61,0.75), 0 0 140px 80px rgba(155,79,42,0.25);
-}
-.lamp-cone {
-  position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
-  width: 0; height: 0; pointer-events: none; transition: border 0.9s ease;
-}
-#lamp-screen.lit .lamp-cone {
-  border-left: 150px solid transparent; border-right: 150px solid transparent;
-  border-top: 220px solid rgba(196,105,61,0.07);
-}
-
-/* cord */
-.cord-outer {
-  position: relative; z-index: 10; display: flex; flex-direction: column;
-  align-items: center; cursor: grab; padding: 0 32px; user-select: none;
-}
+.bulb-glow { position: absolute; top: 52px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; border-radius: 50%; pointer-events: none; transition: background 0.6s, box-shadow 0.6s; }
+#lamp-screen.lit .bulb-glow { background: #fff8e0; box-shadow: 0 0 60px 30px rgba(196,105,61,0.75), 0 0 140px 80px rgba(155,79,42,0.25); }
+.lamp-cone { position: absolute; top: 120px; left: 50%; transform: translateX(-50%); width: 0; height: 0; pointer-events: none; transition: border 0.9s ease; }
+#lamp-screen.lit .lamp-cone { border-left: 150px solid transparent; border-right: 150px solid transparent; border-top: 220px solid rgba(196,105,61,0.07); }
+.cord-outer { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; cursor: grab; padding: 0 32px; user-select: none; }
 .cord-outer:active { cursor: grabbing; }
 #cord-svg { overflow: visible; }
 #cord-path { stroke: rgba(255,210,160,0.2); stroke-width: 1.8; fill: none; stroke-linecap: round; transition: stroke 0.3s; }
 .cord-outer:hover #cord-path { stroke: rgba(196,105,61,0.75); }
 #cord-ball { fill: rgba(255,210,160,0.2); stroke: rgba(255,210,160,0.3); stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s, filter 0.3s; }
 .cord-outer:hover #cord-ball { fill: var(--terra); stroke: var(--terra2); filter: drop-shadow(0 0 9px rgba(155,79,42,0.95)); }
-
-.lamp-name {
-  margin-top: 36px; position: relative; z-index: 2;
-  font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600;
-  color: rgba(255,210,160,0.05); letter-spacing: 8px; text-transform: uppercase;
-  transition: color 1s; pointer-events: none; user-select: none;
-}
+.lamp-name { margin-top: 36px; position: relative; z-index: 2; font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: rgba(255,210,160,0.05); letter-spacing: 5px; text-transform: uppercase; transition: color 1s; pointer-events: none; user-select: none; text-align: center; }
 #lamp-screen.lit .lamp-name { color: rgba(196,105,61,0.5); }
 
 /* ===== GRAIN ===== */
-body::before {
-  content: ''; position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 9999; opacity: 0.6;
-}
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.6; }
 #main-content { opacity: 0; transition: opacity 1.4s ease 0.3s; }
 #main-content.revealed { opacity: 1; }
 
@@ -104,7 +64,6 @@ body::before {
 .hero-contacts a { color: var(--ink); text-decoration: none; font-size: 13px; display: flex; align-items: center; gap: 12px; transition: color 0.2s; }
 .hero-contacts a:hover { color: var(--terra); }
 .c-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--terra); flex-shrink: 0; }
-
 .hero-right { position: relative; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; }
 .photo-area { flex: 1; display: flex; align-items: flex-end; justify-content: center; position: relative; overflow: hidden; }
 .hero-bg-text { position: absolute; right: -10px; top: 50%; transform: translateY(-55%); font-family: 'Cormorant Garamond', serif; font-size: 220px; font-weight: 700; line-height: 1; color: rgba(155,79,42,0.05); user-select: none; pointer-events: none; writing-mode: vertical-rl; letter-spacing: -10px; }
@@ -129,53 +88,31 @@ section { padding: 96px 0; background: var(--bg); }
 .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 4vw, 50px); font-weight: 700; color: var(--ink); line-height: 1.1; }
 .section-divider { height: 1px; background: var(--line); }
 
-/* ===== FLIP CARDS ===== */
+/* ===== FLIP CARDS WITH PHOTO ===== */
 .offer-section { background: var(--ink) !important; }
-.flip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.flip-card { height: 260px; perspective: 1000px; cursor: pointer; }
-.flip-inner {
-  width: 100%; height: 100%; position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.65s cubic-bezier(.4,0,.2,1);
-}
+.flip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flip-card { height: 280px; perspective: 1000px; cursor: pointer; }
+.flip-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(.4,0,.2,1); }
 .flip-card:hover .flip-inner { transform: rotateY(180deg); }
-.flip-front, .flip-back {
-  position: absolute; inset: 0;
-  backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 36px 28px;
-}
-.flip-front {
-  background: #221810;
-  border: 1px solid rgba(155,79,42,0.15);
-  border-top: 2px solid var(--terra);
-}
-.flip-back {
-  background: var(--terra);
-  transform: rotateY(180deg);
-}
-.flip-icon { font-size: 28px; margin-bottom: 16px; }
-.flip-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: #fff; line-height: 1.2; }
-.flip-back-text { font-size: 13px; color: rgba(255,255,255,0.9); line-height: 1.75; }
-.flip-back .flip-icon { opacity: 0.5; }
+.flip-front, .flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+.flip-front { border-radius: 4px; }
+.flip-front img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.38); transition: filter 0.4s; }
+.flip-card:hover .flip-front img { filter: brightness(0.28); }
+.flip-front-content { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; justify-content: flex-end; }
+.flip-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra2); margin-bottom: 8px; }
+.flip-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700; color: #fff; line-height: 1.15; }
+.flip-back { background: var(--terra); transform: rotateY(180deg); border-radius: 4px; padding: 28px; display: flex; flex-direction: column; justify-content: center; }
+.flip-back-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+.flip-back-text { font-size: 13px; color: rgba(255,255,255,0.92); line-height: 1.8; }
 
-/* ===== NICHES — visual cards ===== */
+/* ===== NICHES ===== */
 .niches-section { background: var(--bg2) !important; }
 .niches-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-.niche-card {
-  padding: 20px 16px; background: var(--cream);
-  border: 1px solid var(--line); border-bottom: 3px solid transparent;
-  cursor: pointer; text-align: center;
-  transition: border-color 0.25s, background 0.25s, transform 0.2s;
-  opacity: 0; transform: translateY(12px);
-  transition: opacity 0.4s, transform 0.4s, border-color 0.25s, background 0.25s;
-  text-decoration: none; display: block;
-}
-.niche-card:hover { border-bottom-color: var(--terra); background: #fff; transform: translateY(-3px); }
+.niche-card { padding: 20px 16px; background: var(--cream); border: 1px solid var(--line); border-bottom: 3px solid transparent; cursor: pointer; text-align: center; text-decoration: none; display: block; opacity: 0; transform: translateY(12px); transition: opacity 0.4s, transform 0.4s, border-color 0.25s, background 0.25s; }
+.niche-card:hover { border-bottom-color: var(--terra); background: #fff; transform: translateY(-3px) !important; }
 .niche-card.visible { opacity: 1; transform: translateY(0); }
-.niche-card:hover { transform: translateY(-3px); }
 .niche-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: rgba(155,79,42,0.15); line-height: 1; margin-bottom: 8px; }
-.niche-name { font-size: 12px; color: var(--ink); line-height: 1.4; letter-spacing: 0.3px; }
+.niche-name { font-size: 12px; color: var(--ink); line-height: 1.4; }
 
 /* ===== ACCORDION ===== */
 .acc-item { border-bottom: 1px solid var(--line); opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; }
@@ -204,15 +141,18 @@ section { padding: 96px 0; background: var(--bg); }
 .tool-tag { font-size: 12px; padding: 6px 14px; border: 1px solid var(--line); color: var(--ink2); background: var(--bg); transition: border-color 0.2s, color 0.2s; }
 .tool-tag:hover { border-color: var(--terra); color: var(--terra); }
 
-/* ===== QUALITIES ===== */
-.q-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
-.q-card { background: var(--ink); color: #fff; padding: 36px 28px; opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s, background 0.3s; border-top: 2px solid transparent; }
-.q-card:hover { background: var(--terra); border-top-color: var(--terra2); }
+/* ===== QUALITIES — Вариант А ===== */
+.q-section { background: var(--bg) !important; }
+.q-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; background: var(--line); }
+.q-card { background: var(--cream); padding: 40px 28px; opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; position: relative; overflow: hidden; }
 .q-card.visible { opacity: 1; transform: none; }
-.q-icon { font-size: 24px; margin-bottom: 14px; }
-.q-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-.q-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
-.q-card:hover .q-desc { color: rgba(255,255,255,0.8); }
+.q-card:hover .q-num { color: rgba(155,79,42,0.25); }
+.q-card:hover { background: #fff; }
+.q-num { font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 700; color: rgba(155,79,42,0.1); line-height: 1; margin-bottom: 12px; transition: color 0.3s; }
+.q-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+.q-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+.q-accent { position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background: var(--terra); transition: width 0.4s ease; }
+.q-card:hover .q-accent { width: 100%; }
 
 /* ===== EDUCATION ===== */
 .edu-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
@@ -236,11 +176,9 @@ section { padding: 96px 0; background: var(--bg); }
 .btn-fill:hover { background: var(--terra2); transform: translateY(-2px); }
 .btn-ghost { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); }
 .btn-ghost:hover { border-color: var(--terra); color: var(--terra); }
-
 footer { background: #0d0a06; color: rgba(255,200,150,0.2); padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: 1px; }
 footer span { color: var(--terra); }
 
-/* RESPONSIVE */
 @media (max-width: 960px) {
   .hero { grid-template-columns: 1fr; min-height: auto; }
   .hero-left { padding: 60px 32px 40px; }
@@ -257,7 +195,7 @@ footer span { color: var(--terra); }
 @media (max-width: 560px) {
   .flip-grid { grid-template-columns: 1fr; }
   .niches-grid { grid-template-columns: repeat(2,1fr); }
-  .q-grid { grid-template-columns: 1fr; }
+  .q-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -268,15 +206,10 @@ footer span { color: var(--terra); }
   <div id="light-burst"></div>
   <p class="lamp-hint" id="lamp-hint">Потяни за шнурок</p>
   <div class="lamp-scene">
-    <!-- Real bulb SVG -->
     <svg class="lamp-svg" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- bulb glass -->
       <path d="M100 20 C60 20 34 50 34 82 C34 108 50 126 68 140 C72 144 74 150 74 156 L126 156 C126 150 128 144 132 140 C150 126 166 108 166 82 C166 50 140 20 100 20 Z" fill="#1e1810" stroke="#3a2e1e" stroke-width="2"/>
-      <!-- bulb highlight -->
       <path d="M72 50 C72 50 80 42 95 40" stroke="rgba(255,240,200,0.12)" stroke-width="3" stroke-linecap="round"/>
-      <!-- filament -->
       <path d="M88 130 L88 110 Q100 100 112 110 L112 130" stroke="rgba(255,200,100,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <!-- base segments -->
       <rect x="74" y="156" width="52" height="10" rx="2" fill="#2a2018" stroke="#3d3020" stroke-width="1"/>
       <rect x="76" y="166" width="48" height="8" rx="1" fill="#221810" stroke="#3d3020" stroke-width="1"/>
       <rect x="78" y="174" width="44" height="8" rx="1" fill="#2a2018" stroke="#3d3020" stroke-width="1"/>
@@ -286,12 +219,12 @@ footer span { color: var(--terra); }
     <div class="lamp-cone"></div>
     <div class="cord-outer" id="cord">
       <svg id="cord-svg" width="16" height="100" viewBox="0 0 16 100" style="overflow:visible">
-        <path id="cord-path" d="M8,0 C8,25 8,50 8,88"/>
+        <path id="cord-path" d="M8,0 C8,30 8,60 8,88"/>
         <circle id="cord-ball" cx="8" cy="92" r="6"/>
       </svg>
     </div>
   </div>
-  <div class="lamp-name">Егор Филимонов</div>
+  <div class="lamp-name">Осторожно: внутри амбиции</div>
 </div>
 
 <!-- MAIN -->
@@ -346,43 +279,96 @@ footer span { color: var(--terra); }
     <div class="section-header">
       <p class="section-eyebrow" style="color:rgba(196,105,61,0.6)">Чем могу помочь</p>
       <h2 class="section-title" style="color:#fff">Задачи, которые я закрываю</h2>
-      <p style="font-size:12px;color:rgba(255,255,255,0.25);margin-top:10px;letter-spacing:1px;">наведи на карточку</p>
     </div>
     <div class="flip-grid">
       <div class="flip-card">
         <div class="flip-inner">
-          <div class="flip-front"><div class="flip-icon">🗂️</div><div class="flip-title">Разгружу твой день</div></div>
-          <div class="flip-back"><div class="flip-icon">🗂️</div><p class="flip-back-text">Возьму на себя рутину и операционку — переписки, подрядчики, документы, поручения. Ты занимаешься стратегией, я делаю всё остальное.</p></div>
+          <div class="flip-front">
+            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80" alt="">
+            <div class="flip-front-content">
+              <div class="flip-label">Операционка</div>
+              <div class="flip-title">Разгружу твой день</div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-back-label">Операционка</div>
+            <p class="flip-back-text">Возьму на себя рутину — переписки, подрядчики, документы, поручения. Ты занимаешься стратегией, я делаю всё остальное.</p>
+          </div>
         </div>
       </div>
       <div class="flip-card">
         <div class="flip-inner">
-          <div class="flip-front"><div class="flip-icon">⚙️</div><div class="flip-title">Выстрою процессы</div></div>
-          <div class="flip-back"><div class="flip-icon">⚙️</div><p class="flip-back-text">Создам регламенты, CRM и отчётность с нуля или наведу порядок в существующих. Работал с Битрикс24, AmoCRM, OKCRM, RetailCRM.</p></div>
+          <div class="flip-front">
+            <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80" alt="">
+            <div class="flip-front-content">
+              <div class="flip-label">Процессы</div>
+              <div class="flip-title">Выстрою систему</div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-back-label">Процессы</div>
+            <p class="flip-back-text">Создам регламенты, CRM и отчётность с нуля или наведу порядок в существующих. Битрикс24, AmoCRM, OKCRM, RetailCRM.</p>
+          </div>
         </div>
       </div>
       <div class="flip-card">
         <div class="flip-inner">
-          <div class="flip-front"><div class="flip-icon">📈</div><div class="flip-title">Закрою продажи</div></div>
-          <div class="flip-back"><div class="flip-icon">📈</div><p class="flip-back-text">Опыт в B2B продажах, работе с лидами, подготовке КП и договоров. Выстраивал отделы продаж с нуля и управлял ими.</p></div>
+          <div class="flip-front">
+            <img src="https://images.unsplash.com/photo-1560472355-536de3962603?w=600&q=80" alt="">
+            <div class="flip-front-content">
+              <div class="flip-label">Продажи</div>
+              <div class="flip-title">Закрою сделки</div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-back-label">Продажи</div>
+            <p class="flip-back-text">B2B продажи, работа с лидами, подготовка КП и договоров. Выстраивал отделы продаж с нуля и управлял ими.</p>
+          </div>
         </div>
       </div>
       <div class="flip-card">
         <div class="flip-inner">
-          <div class="flip-front"><div class="flip-icon">🛒</div><div class="flip-title">Маркетплейсы</div></div>
-          <div class="flip-back"><div class="flip-icon">🛒</div><p class="flip-back-text">Полный цикл на WB, OZON, Яндекс.Маркет — карточки, поставки, ЧЗ, аналитика, реклама через Яндекс.Директ и РСЯ.</p></div>
+          <div class="flip-front">
+            <img src="https://images.unsplash.com/photo-1586880244406-556ebe35f282?w=600&q=80" alt="">
+            <div class="flip-front-content">
+              <div class="flip-label">Маркетплейсы</div>
+              <div class="flip-title">WB / OZON / Маркет</div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-back-label">Маркетплейсы</div>
+            <p class="flip-back-text">Полный цикл на WB, OZON, Яндекс.Маркет — карточки, поставки, ЧЗ, аналитика, реклама через Яндекс.Директ и РСЯ.</p>
+          </div>
         </div>
       </div>
       <div class="flip-card">
         <div class="flip-inner">
-          <div class="flip-front"><div class="flip-icon">🤖</div><div class="flip-title">AI-инструменты</div></div>
-          <div class="flip-back"><div class="flip-icon">🤖</div><p class="flip-back-text">Изучаю и внедряю инструменты на базе ИИ в рабочие процессы. Автоматизация рутины, генерация контента, работа с данными быстрее и эффективнее.</p></div>
+          <div class="flip-front">
+            <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80" alt="">
+            <div class="flip-front-content">
+              <div class="flip-label">Технологии</div>
+              <div class="flip-title">AI-инструменты</div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-back-label">Технологии</div>
+            <p class="flip-back-text">Изучаю и внедряю ИИ в рабочие процессы. Автоматизация рутины, генерация контента, работа с данными быстрее и эффективнее.</p>
+          </div>
         </div>
       </div>
       <div class="flip-card">
         <div class="flip-inner">
-          <div class="flip-front"><div class="flip-icon">💼</div><div class="flip-title">Финансы и документы</div></div>
-          <div class="flip-back"><div class="flip-icon">💼</div><p class="flip-back-text">Бюджеты, финансовые отчёты, счета, договоры, декларации. Опыт в бухгалтерском учёте и работе с госорганами.</p></div>
+          <div class="flip-front">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80" alt="">
+            <div class="flip-front-content">
+              <div class="flip-label">Финансы</div>
+              <div class="flip-title">Документы и учёт</div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-back-label">Финансы</div>
+            <p class="flip-back-text">Бюджеты, финансовые отчёты, счета, договоры, декларации. Опыт в бухгалтерском учёте и работе с госорганами.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -406,8 +392,7 @@ footer span { color: var(--terra); }
       <a class="niche-card" href="#exp-psy"><div class="niche-num">07</div><div class="niche-name">Психология</div></a>
       <a class="niche-card" href="#exp-food"><div class="niche-num">08</div><div class="niche-name">Общепит / HoReCa</div></a>
       <a class="niche-card" href="#exp-info"><div class="niche-num">09</div><div class="niche-name">Агентство подбора персонала</div></a>
-      <a class="niche-card" href="#exp-info"><div class="niche-num">10</div><div class="niche-name">Онлайн-школа английского</div></a>
-      <a class="niche-card" href="#exp-info"><div class="niche-num">11</div><div class="niche-name">Маркетинговое агентство</div></a>
+      <a class="niche-card" href="#exp-info"><div class="niche-num">10</div><div class="niche-name">Маркетинговое агентство</div></a>
     </div>
   </div>
 </section>
@@ -511,7 +496,7 @@ footer span { color: var(--terra); }
         <div class="acc-arrow">▾</div>
       </div>
       <div class="acc-body">
-        <p class="acc-desc">Первый опыт работы с людьми. Именно здесь сформировались базовые навыки коммуникации, стрессоустойчивости и работы в команде в условиях высокой нагрузки. Работал в нескольких ролях параллельно: обслуживание гостей, барная стойка, курьерская доставка. Опыт научил понимать людей, быть жизнерадостным и ответственным в любой ситуации.</p>
+        <p class="acc-desc">Первый опыт работы с людьми. Именно здесь сформировались базовые навыки коммуникации, стрессоустойчивости и работы в команде в условиях высокой нагрузки. Работал в нескольких ролях параллельно: обслуживание гостей, барная стойка, курьерская доставка.</p>
         <div class="acc-tags"><span class="acc-tag">Коммуникация</span><span class="acc-tag">Стрессоустойчивость</span><span class="acc-tag">Командная работа</span><span class="acc-tag">Сервис</span></div>
       </div>
     </div>
@@ -540,9 +525,9 @@ footer span { color: var(--terra); }
         </div>
       </div>
       <div class="tool-group">
-        <div class="tool-group-title">Маркетинг, контент и AI</div>
+        <div class="tool-group-title">AI и контент</div>
         <div class="tool-tags">
-          <span class="tool-tag">Яндекс.Директ</span><span class="tool-tag">РСЯ</span><span class="tool-tag">Яндекс.Метрика</span><span class="tool-tag">Telegram</span><span class="tool-tag">Видеомонтаж</span><span class="tool-tag">Reels / Shorts</span><span class="tool-tag">СДЕК</span><span class="tool-tag">ChatGPT</span><span class="tool-tag">Claude AI</span>
+          <span class="tool-tag">ChatGPT</span><span class="tool-tag">Claude AI</span><span class="tool-tag">Gemini</span><span class="tool-tag">Perplexity</span><span class="tool-tag">Nano Banana</span><span class="tool-tag">VS Code</span><span class="tool-tag">Яндекс.Директ</span><span class="tool-tag">Метрика</span><span class="tool-tag">Видеомонтаж</span><span class="tool-tag">Reels / Shorts</span>
         </div>
       </div>
     </div>
@@ -550,12 +535,32 @@ footer span { color: var(--terra); }
 </section>
 
 <!-- QUALITIES -->
-<section style="padding:0!important">
+<section class="q-section" style="padding:0!important">
   <div class="q-grid">
-    <div class="q-card"><div class="q-icon">⚡</div><h3 class="q-title">Дисциплина</h3><p class="q-desc">Выполняю задачи в срок, не теряю детали даже при большом потоке информации</p></div>
-    <div class="q-card"><div class="q-icon">🎯</div><h3 class="q-title">Амбиции</h3><p class="q-desc">От официанта до РОП. MBA — не для галочки, а для роста</p></div>
-    <div class="q-card"><div class="q-icon">🔄</div><h3 class="q-title">Гибкость</h3><p class="q-desc">10+ ниш за карьеру. Быстро вхожу в контекст любого бизнеса</p></div>
-    <div class="q-card"><div class="q-icon">🤝</div><h3 class="q-title">Коммуникация</h3><p class="q-desc">Грамотная речь, переговоры с подрядчиками, клиентами, госорганами</p></div>
+    <div class="q-card">
+      <div class="q-num">01</div>
+      <div class="q-title">Дисциплина</div>
+      <div class="q-desc">Выполняю задачи в срок, не теряю детали даже при большом потоке информации</div>
+      <div class="q-accent"></div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">02</div>
+      <div class="q-title">Амбиции</div>
+      <div class="q-desc">От официанта до РОП. MBA — не для галочки, а для роста</div>
+      <div class="q-accent"></div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">03</div>
+      <div class="q-title">Гибкость</div>
+      <div class="q-desc">10+ ниш за карьеру. Быстро вхожу в контекст любого бизнеса</div>
+      <div class="q-accent"></div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">04</div>
+      <div class="q-title">Коммуникация</div>
+      <div class="q-desc">Грамотная речь, переговоры с подрядчиками, клиентами, госорганами</div>
+      <div class="q-accent"></div>
+    </div>
   </div>
 </section>
 
@@ -569,7 +574,8 @@ footer span { color: var(--terra); }
     <div class="edu-grid">
       <div class="edu-card"><p class="edu-year">2021</p><h3 class="edu-title">МГТУ им. Г.И. Носова</h3><p class="edu-sub">Промышленная электроника · Инженер · Магнитогорск</p></div>
       <div class="edu-card"><p class="edu-year">2025</p><h3 class="edu-title">City Business School — MBA General</h3><p class="edu-sub">Управление бизнесом · Финансы · Стратегия</p></div>
-      <div class="edu-card"><p class="edu-year">2017</p><h3 class="edu-title">Курс делового английского языка</h3><p class="edu-sub">Happy English · Уровень Intermediate · Магнитогорск</p></div>
+      <div class="edu-card"><p class="edu-year">2024</p><h3 class="edu-title">Онлайн-школа Инессы Мальцевой</h3><p class="edu-sub">Курс «Аутсорсер» · Удалённая работа и управление проектами</p></div>
+      <div class="edu-card"><p class="edu-year">2017</p><h3 class="edu-title">Дополнительное образование · Английский язык B2</h3><p class="edu-sub">Happy English · Магнитогорск</p></div>
     </div>
   </div>
 </section>
@@ -593,110 +599,43 @@ footer span { color: var(--terra); }
 </div>
 
 <script>
-/* CORD PHYSICS */
+/* CORD */
 const screen=document.getElementById('lamp-screen'),burst=document.getElementById('light-burst'),hint=document.getElementById('lamp-hint');
 const cp=document.getElementById('cord-path'),cb=document.getElementById('cord-ball');
 let pulling=false,pulled=false,startY=0,pd=0;
 const MAX=70;
-
-function gc(p){
-  // natural S-curve cord with gravity
-  const ctrl1y=30+p*0.2, ctrl2y=60+p*0.6, ey=88+p;
-  return{ path:`M8,0 C8,${ctrl1y} ${8+p*0.15},${ctrl2y} 8,${ey}`, by:ey+4 };
-}
-
+function gc(p){const c1y=30+p*0.2,c2y=60+p*0.6,ey=88+p;return{path:`M8,0 C8,${c1y} ${8+p*0.12},${c2y} 8,${ey}`,by:ey+4};}
 document.getElementById('cord').addEventListener('mousedown',e=>{pulling=true;startY=e.clientY;e.preventDefault();});
 document.getElementById('cord').addEventListener('touchstart',e=>{pulling=true;startY=e.touches[0].clientY;e.preventDefault();},{passive:false});
 document.addEventListener('mousemove',e=>{if(!pulling||pulled)return;move(e.clientY);});
 document.addEventListener('touchmove',e=>{if(!pulling||pulled)return;move(e.touches[0].clientY);e.preventDefault();},{passive:false});
 document.addEventListener('mouseup',end);document.addEventListener('touchend',end);
-
-function move(y){
-  pd=Math.max(0,Math.min(y-startY,MAX));
-  const{path,by}=gc(pd);cp.setAttribute('d',path);cb.setAttribute('cy',by);
-  if(pd>8)hint.classList.add('hide');
-}
+function move(y){pd=Math.max(0,Math.min(y-startY,MAX));const{path,by}=gc(pd);cp.setAttribute('d',path);cb.setAttribute('cy',by);if(pd>8)hint.classList.add('hide');}
 function end(){if(!pulling||pulled)return;pulling=false;if(pd>=28){pulled=true;snap();}else springBack();pd=0;}
-
-function springBack(){
-  const d=pd,s=performance.now();
-  function a(now){
-    const t=(now-s)/480;
-    if(t>=1){cp.setAttribute('d','M8,0 C8,30 8,60 8,88');cb.setAttribute('cy',92);hint.classList.remove('hide');return;}
-    // damped oscillation
-    const decay=Math.exp(-t*5);
-    const osc=Math.cos(t*Math.PI*4)*decay;
-    const{path,by}=gc(d*osc*Math.max(0,1-t));
-    cp.setAttribute('d',path);cb.setAttribute('cy',by);
-    requestAnimationFrame(a);
-  }
-  requestAnimationFrame(a);
-}
-
-function snap(){
-  const d=pd,s=performance.now();
-  // cord snaps back with oscillation
-  function a(now){
-    const t=(now-s)/320;
-    if(t<1){
-      const v=Math.sin(t*Math.PI*2.5)*Math.exp(-t*4)*d*0.4;
-      const{path,by}=gc(Math.max(0,v));
-      cp.setAttribute('d',path);cb.setAttribute('cy',by);
-      requestAnimationFrame(a);
-    }
-  }
-  requestAnimationFrame(a);
+function springBack(){const d=pd,s=performance.now();function a(now){const t=(now-s)/480;if(t>=1){cp.setAttribute('d','M8,0 C8,30 8,60 8,88');cb.setAttribute('cy',92);hint.classList.remove('hide');return;}const decay=Math.exp(-t*5);const osc=Math.cos(t*Math.PI*4)*decay;const{path,by}=gc(d*Math.max(0,osc*(1-t)));cp.setAttribute('d',path);cb.setAttribute('cy',by);requestAnimationFrame(a);}requestAnimationFrame(a);}
+function snap(){const d=pd,s=performance.now();function a(now){const t=(now-s)/320;if(t<1){const v=Math.sin(t*Math.PI*2.5)*Math.exp(-t*4)*d*0.4;const{path,by}=gc(Math.max(0,v));cp.setAttribute('d',path);cb.setAttribute('cy',by);requestAnimationFrame(a);}}requestAnimationFrame(a);
   setTimeout(()=>screen.classList.add('lit'),90);
   setTimeout(()=>{burst.getBoundingClientRect();burst.classList.add('expand');},270);
   setTimeout(()=>{screen.classList.add('fade-out');document.getElementById('main-content').classList.add('revealed');document.body.style.background='#f5f0e8';},850);
-  setTimeout(()=>{screen.style.display='none';},2300);
-}
+  setTimeout(()=>{screen.style.display='none';},2300);}
 
 /* PHOTO TILT */
 const pw=document.getElementById('photoWrap'),pi=document.getElementById('photoInner');
 if(pw&&pi){
-  pw.addEventListener('mousemove',e=>{
-    const r=pw.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-    pi.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.03)`;
-    pi.style.filter=`drop-shadow(${x*-16}px ${y*-10}px 28px rgba(155,79,42,0.2))`;
-  });
-  pw.addEventListener('mouseleave',()=>{
-    pi.style.transition='transform 0.7s ease,filter 0.7s ease';
-    pi.style.transform='rotateY(0) rotateX(0) scale(1)';pi.style.filter='none';
-    setTimeout(()=>pi.style.transition='transform 0.12s ease-out',700);
-  });
-}
+  pw.addEventListener('mousemove',e=>{const r=pw.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;pi.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.03)`;pi.style.filter=`drop-shadow(${x*-16}px ${y*-10}px 28px rgba(155,79,42,0.2))`;});
+  pw.addEventListener('mouseleave',()=>{pi.style.transition='transform 0.7s ease,filter 0.7s ease';pi.style.transform='rotateY(0) rotateX(0) scale(1)';pi.style.filter='none';setTimeout(()=>pi.style.transition='transform 0.12s ease-out',700);});}
 
 /* ACCORDION */
-function toggleAcc(h){
-  const item=h.parentElement,isOpen=item.classList.contains('open');
-  document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));
-  if(!isOpen)item.classList.add('open');
-}
+function toggleAcc(h){const item=h.parentElement,isOpen=item.classList.contains('open');document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));if(!isOpen)item.classList.add('open');}
 
-/* NICHE SCROLL — smooth scroll + open accordion */
+/* NICHE SCROLL */
 document.querySelectorAll('.niche-card').forEach(card=>{
-  card.addEventListener('click',e=>{
-    e.preventDefault();
-    const target=document.querySelector(card.getAttribute('href'));
-    if(!target)return;
-    // open accordion
-    document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));
-    target.classList.add('open');
-    // scroll
-    setTimeout(()=>{
-      target.scrollIntoView({behavior:'smooth',block:'start'});
-    },100);
-  });
+  card.addEventListener('click',e=>{e.preventDefault();const target=document.querySelector(card.getAttribute('href'));if(!target)return;document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));target.classList.add('open');setTimeout(()=>{target.scrollIntoView({behavior:'smooth',block:'start'});},100);});
 });
 
 /* SCROLL REVEAL */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),+e.target.dataset.delay||0);obs.unobserve(e.target);}
-  });
-},{threshold:0.1});
-document.querySelectorAll('.acc-item,.edu-card,.q-card,.offer-card,.flip-card').forEach((el,i)=>{if(!el.dataset.delay)el.dataset.delay=(i%4)*90;obs.observe(el);});
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),+e.target.dataset.delay||0);obs.unobserve(e.target);}});},{threshold:0.1});
+document.querySelectorAll('.acc-item,.edu-card,.q-card,.flip-card').forEach((el,i)=>{if(!el.dataset.delay)el.dataset.delay=(i%4)*90;obs.observe(el);});
 document.querySelectorAll('.niche-card').forEach((el,i)=>{el.dataset.delay=i*50;obs.observe(el);});
 </script>
 </body>
