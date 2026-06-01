@@ -8,303 +8,195 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #f5f0e8;
-  --bg2: #ede8df;
-  --ink: #2a1f14;
-  --ink2: #6a5a48;
-  --terra: #9b4f2a;
-  --terra2: #c4693d;
-  --cream: #faf7f2;
-  --line: #ddd8ce;
-  --dark: #1a1209;
+  --bg: #f5f0e8; --bg2: #ede8df; --ink: #2a1f14; --ink2: #6a5a48;
+  --terra: #9b4f2a; --terra2: #c4693d; --cream: #faf7f2; --line: #ddd8ce; --dark: #1a1209;
 }
 html { scroll-behavior: smooth; }
-body {
-  background: var(--dark);
-  color: var(--ink);
-  font-family: 'Geologica', sans-serif;
-  font-weight: 300;
-  overflow-x: hidden;
-}
+body { background: var(--dark); color: var(--ink); font-family: 'Geologica', sans-serif; font-weight: 300; overflow-x: hidden; }
 
-/* ============================================================ LAMP */
+/* ===== LAMP ===== */
 #lamp-screen {
-  position: fixed; inset: 0;
-  background: #0d0a06; z-index: 1000;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  overflow: hidden;
-  transition: opacity 1.4s cubic-bezier(.4,0,.2,1);
+  position: fixed; inset: 0; background: #0d0a06; z-index: 1000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden; transition: opacity 1.4s cubic-bezier(.4,0,.2,1);
 }
 #lamp-screen.fade-out { opacity: 0; pointer-events: none; }
-
 #light-burst {
   position: absolute; inset: 0;
-  background: radial-gradient(circle at 50% 40%,
-    #fff9f0 0%, #fde8c8 15%, #d4835a 35%, #7a3010 55%, #0d0a06 72%);
-  opacity: 0; transform: scale(0.04); border-radius: 50%;
-  pointer-events: none;
+  background: radial-gradient(circle at 50% 38%, #fff9f0 0%, #fde8c8 14%, #d4835a 33%, #7a3010 54%, #0d0a06 70%);
+  opacity: 0; transform: scale(0.04); border-radius: 50%; pointer-events: none;
   transition: transform 1.2s cubic-bezier(.16,1,.3,1), opacity 0.1s;
 }
 #light-burst.expand { opacity: 1; transform: scale(7); }
 
 .lamp-hint {
-  position: relative; z-index: 2;
-  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
-  color: rgba(255,220,180,0.2); margin-bottom: 56px;
+  position: relative; z-index: 2; font-size: 10px; letter-spacing: 5px;
+  text-transform: uppercase; color: rgba(255,220,180,0.2); margin-bottom: 40px;
   transition: opacity 0.4s; user-select: none; pointer-events: none;
 }
 .lamp-hint.hide { opacity: 0; }
 
 .lamp-scene {
   position: relative; z-index: 2;
-  display: flex; flex-direction: column; align-items: center; width: 180px;
+  display: flex; flex-direction: column; align-items: center;
 }
-.lamp-svg { width: 180px; pointer-events: none; filter: drop-shadow(0 0 0px #9b4f2a); transition: filter 0.9s; }
-#lamp-screen.lit .lamp-svg { filter: drop-shadow(0 0 28px rgba(155,79,42,0.9)); }
+
+/* Real bulb SVG */
+.lamp-svg { pointer-events: none; filter: drop-shadow(0 0 0px #9b4f2a); transition: filter 0.9s; }
+#lamp-screen.lit .lamp-svg { filter: drop-shadow(0 0 32px rgba(155,79,42,0.95)); }
+
 .bulb-glow {
-  position: absolute; top: 28px; left: 50%; transform: translateX(-50%);
-  width: 20px; height: 20px; border-radius: 50%;
-  pointer-events: none; transition: background 0.6s, box-shadow 0.6s;
+  position: absolute; top: 52px; left: 50%; transform: translateX(-50%);
+  width: 30px; height: 30px; border-radius: 50%; pointer-events: none;
+  transition: background 0.6s, box-shadow 0.6s;
 }
 #lamp-screen.lit .bulb-glow {
-  background: #fff3d0;
-  box-shadow: 0 0 50px 25px rgba(196,105,61,0.7), 0 0 120px 70px rgba(155,79,42,0.25);
+  background: #fff8e0;
+  box-shadow: 0 0 60px 30px rgba(196,105,61,0.75), 0 0 140px 80px rgba(155,79,42,0.25);
 }
 .lamp-cone {
-  position: absolute; top: 76px; left: 50%; transform: translateX(-50%);
+  position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
   width: 0; height: 0; pointer-events: none; transition: border 0.9s ease;
 }
 #lamp-screen.lit .lamp-cone {
-  border-left: 140px solid transparent;
-  border-right: 140px solid transparent;
-  border-top: 200px solid rgba(196,105,61,0.06);
+  border-left: 150px solid transparent; border-right: 150px solid transparent;
+  border-top: 220px solid rgba(196,105,61,0.07);
 }
+
+/* cord */
 .cord-outer {
-  position: relative; z-index: 10;
-  display: flex; flex-direction: column; align-items: center;
-  cursor: grab; padding: 0 28px; user-select: none;
+  position: relative; z-index: 10; display: flex; flex-direction: column;
+  align-items: center; cursor: grab; padding: 0 32px; user-select: none;
 }
 .cord-outer:active { cursor: grabbing; }
-#cord-path { stroke: rgba(255,210,160,0.18); stroke-width: 2; fill: none; stroke-linecap: round; transition: stroke 0.3s; }
-.cord-outer:hover #cord-path { stroke: rgba(196,105,61,0.7); }
-#cord-ball { fill: rgba(255,210,160,0.18); stroke: rgba(255,210,160,0.25); stroke-width: 2; transition: fill 0.3s, stroke 0.3s, filter 0.3s; }
-.cord-outer:hover #cord-ball { fill: var(--terra); stroke: var(--terra2); filter: drop-shadow(0 0 8px rgba(155,79,42,0.9)); }
+#cord-svg { overflow: visible; }
+#cord-path { stroke: rgba(255,210,160,0.2); stroke-width: 1.8; fill: none; stroke-linecap: round; transition: stroke 0.3s; }
+.cord-outer:hover #cord-path { stroke: rgba(196,105,61,0.75); }
+#cord-ball { fill: rgba(255,210,160,0.2); stroke: rgba(255,210,160,0.3); stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s, filter 0.3s; }
+.cord-outer:hover #cord-ball { fill: var(--terra); stroke: var(--terra2); filter: drop-shadow(0 0 9px rgba(155,79,42,0.95)); }
+
 .lamp-name {
-  margin-top: 44px; position: relative; z-index: 2;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 26px; font-weight: 600;
+  margin-top: 36px; position: relative; z-index: 2;
+  font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600;
   color: rgba(255,210,160,0.05); letter-spacing: 8px; text-transform: uppercase;
   transition: color 1s; pointer-events: none; user-select: none;
 }
 #lamp-screen.lit .lamp-name { color: rgba(196,105,61,0.5); }
 
-/* ============================================================ GRAIN */
+/* ===== GRAIN ===== */
 body::before {
   content: ''; position: fixed; inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
   pointer-events: none; z-index: 9999; opacity: 0.6;
 }
-
 #main-content { opacity: 0; transition: opacity 1.4s ease 0.3s; }
 #main-content.revealed { opacity: 1; }
 
-/* ============================================================ HERO */
-.hero {
-  min-height: 100vh; background: var(--cream);
-  display: grid; grid-template-columns: 1fr 1fr;
-  position: relative; overflow: hidden;
-}
-
-.hero-left {
-  padding: 90px 64px; display: flex; flex-direction: column;
-  justify-content: center; position: relative; z-index: 2;
-}
-
-.hero-eyebrow {
-  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
-  color: var(--terra); margin-bottom: 24px;
-  display: flex; align-items: center; gap: 10px;
-}
+/* ===== HERO ===== */
+.hero { min-height: 100vh; background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+.hero-left { padding: 90px 64px; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2; }
+.hero-eyebrow { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: var(--terra); margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
 .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--terra); }
-
-/* BIG SLOGAN */
-.hero-slogan {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(48px, 6.5vw, 96px);
-  font-weight: 700; line-height: 0.92;
-  color: var(--ink); margin-bottom: 32px;
-  letter-spacing: -2px;
-}
+.hero-slogan { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 7vw, 100px); font-weight: 700; line-height: 0.9; color: var(--ink); margin-bottom: 32px; letter-spacing: -2px; }
 .hero-slogan em { color: var(--terra); font-style: normal; display: block; }
-
-/* ABOUT */
-.hero-about {
-  font-size: 14px; color: var(--ink2); line-height: 1.9;
-  max-width: 400px; margin-bottom: 44px;
-  border-left: 2px solid var(--terra);
-  padding-left: 18px;
-}
-
+.hero-about { font-size: 14px; color: var(--ink2); line-height: 1.9; max-width: 400px; margin-bottom: 44px; border-left: 2px solid var(--terra); padding-left: 18px; }
 .hero-contacts { display: flex; flex-direction: column; gap: 13px; }
-.hero-contacts a {
-  color: var(--ink); text-decoration: none; font-size: 13px;
-  display: flex; align-items: center; gap: 12px; transition: color 0.2s;
-}
+.hero-contacts a { color: var(--ink); text-decoration: none; font-size: 13px; display: flex; align-items: center; gap: 12px; transition: color 0.2s; }
 .hero-contacts a:hover { color: var(--terra); }
 .c-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--terra); flex-shrink: 0; }
 
-/* HERO RIGHT */
-.hero-right {
-  position: relative; overflow: hidden;
-  background: var(--bg);
-  display: flex; flex-direction: column;
-}
-
-.photo-area {
-  flex: 1; display: flex; align-items: flex-end; justify-content: center;
-  position: relative; overflow: hidden;
-}
-
-.hero-bg-text {
-  position: absolute; right: -10px; top: 50%; transform: translateY(-55%);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 220px; font-weight: 700; line-height: 1;
-  color: rgba(155,79,42,0.05); user-select: none; pointer-events: none;
-  writing-mode: vertical-rl; letter-spacing: -10px;
-}
-
-.photo-wrap {
-  width: 360px; height: 480px;
-  perspective: 900px; position: relative; z-index: 2;
-}
-.photo-inner {
-  width: 100%; height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.12s ease-out;
-  will-change: transform; position: relative;
-}
-.photo-inner img {
-  width: 100%; height: 100%;
-  object-fit: contain; object-position: bottom center;
-  display: block;
-}
+.hero-right { position: relative; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; }
+.photo-area { flex: 1; display: flex; align-items: flex-end; justify-content: center; position: relative; overflow: hidden; }
+.hero-bg-text { position: absolute; right: -10px; top: 50%; transform: translateY(-55%); font-family: 'Cormorant Garamond', serif; font-size: 220px; font-weight: 700; line-height: 1; color: rgba(155,79,42,0.05); user-select: none; pointer-events: none; writing-mode: vertical-rl; letter-spacing: -10px; }
+.photo-wrap { width: 360px; height: 480px; perspective: 900px; position: relative; z-index: 2; }
+.photo-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.12s ease-out; will-change: transform; }
+.photo-inner img { width: 100%; height: 100%; object-fit: contain; object-position: bottom center; display: block; }
 
 /* TICKER */
-.ticker-wrap {
-  border-top: 1px solid var(--line);
-  background: var(--cream);
-  overflow: hidden; padding: 14px 0;
-  white-space: nowrap;
-}
-.ticker-track {
-  display: inline-flex; gap: 0;
-  animation: ticker 28s linear infinite;
-}
+.ticker-wrap { border-top: 1px solid var(--line); background: var(--cream); overflow: hidden; padding: 13px 0; white-space: nowrap; }
+.ticker-track { display: inline-flex; animation: ticker 32s linear infinite; }
 .ticker-track:hover { animation-play-state: paused; }
-.ticker-item {
-  font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--ink2); padding: 0 28px;
-  display: inline-flex; align-items: center; gap: 28px;
-}
+.ticker-item { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink2); padding: 0 24px; display: inline-flex; align-items: center; gap: 24px; }
 .ticker-item::after { content: '·'; color: var(--terra); font-size: 16px; }
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-@keyframes ticker {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ============================================================ SECTIONS */
+/* ===== SECTIONS ===== */
 section { padding: 96px 0; background: var(--bg); }
 .container { max-width: 1160px; margin: 0 auto; padding: 0 60px; }
-
 .section-header { margin-bottom: 56px; }
-.section-eyebrow {
-  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
-  color: var(--terra); margin-bottom: 12px;
-  display: flex; align-items: center; gap: 10px;
-}
+.section-eyebrow { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: var(--terra); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
 .section-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--terra); }
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(28px, 4vw, 50px); font-weight: 700; color: var(--ink); line-height: 1.1;
-}
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 4vw, 50px); font-weight: 700; color: var(--ink); line-height: 1.1; }
 .section-divider { height: 1px; background: var(--line); }
 
-/* ============================================================ OFFER */
+/* ===== FLIP CARDS ===== */
 .offer-section { background: var(--ink) !important; }
-.offer-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,0.06); }
-.offer-card {
-  background: var(--ink); padding: 40px 32px;
-  border-top: 2px solid transparent;
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 0.5s, transform 0.5s, border-color 0.3s, background 0.3s;
+.flip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.flip-card { height: 260px; perspective: 1000px; cursor: pointer; }
+.flip-inner {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(.4,0,.2,1);
 }
-.offer-card:hover { border-top-color: var(--terra); background: #2a1f14; }
-.offer-card.visible { opacity: 1; transform: none; }
-.offer-icon { font-size: 26px; margin-bottom: 16px; }
-.offer-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 12px; }
-.offer-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.75; }
-.offer-desc strong { color: rgba(255,255,255,0.75); font-weight: 400; }
+.flip-card:hover .flip-inner { transform: rotateY(180deg); }
+.flip-front, .flip-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 36px 28px;
+}
+.flip-front {
+  background: #221810;
+  border: 1px solid rgba(155,79,42,0.15);
+  border-top: 2px solid var(--terra);
+}
+.flip-back {
+  background: var(--terra);
+  transform: rotateY(180deg);
+}
+.flip-icon { font-size: 28px; margin-bottom: 16px; }
+.flip-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: #fff; line-height: 1.2; }
+.flip-back-text { font-size: 13px; color: rgba(255,255,255,0.9); line-height: 1.75; }
+.flip-back .flip-icon { opacity: 0.5; }
 
-/* ============================================================ NICHES */
+/* ===== NICHES — visual cards ===== */
 .niches-section { background: var(--bg2) !important; }
-.niches-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
-.niche-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 18px; border: 1px solid var(--line);
-  font-size: 13px; color: var(--ink2); background: var(--cream);
-  opacity: 0; transform: scale(0.92);
-  transition: opacity 0.4s, transform 0.4s, border-color 0.2s, color 0.2s;
-  cursor: default;
+.niches-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.niche-card {
+  padding: 20px 16px; background: var(--cream);
+  border: 1px solid var(--line); border-bottom: 3px solid transparent;
+  cursor: pointer; text-align: center;
+  transition: border-color 0.25s, background 0.25s, transform 0.2s;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.4s, transform 0.4s, border-color 0.25s, background 0.25s;
+  text-decoration: none; display: block;
 }
-.niche-tag:hover { border-color: var(--terra); color: var(--terra); background: rgba(155,79,42,0.04); }
-.niche-tag.visible { opacity: 1; transform: scale(1); }
-.niche-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--terra); flex-shrink: 0; }
+.niche-card:hover { border-bottom-color: var(--terra); background: #fff; transform: translateY(-3px); }
+.niche-card.visible { opacity: 1; transform: translateY(0); }
+.niche-card:hover { transform: translateY(-3px); }
+.niche-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: rgba(155,79,42,0.15); line-height: 1; margin-bottom: 8px; }
+.niche-name { font-size: 12px; color: var(--ink); line-height: 1.4; letter-spacing: 0.3px; }
 
-/* ============================================================ ACCORDION */
-.acc-item {
-  border-bottom: 1px solid var(--line);
-  opacity: 0; transform: translateY(16px);
-  transition: opacity 0.5s, transform 0.5s;
-}
+/* ===== ACCORDION ===== */
+.acc-item { border-bottom: 1px solid var(--line); opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; }
 .acc-item.visible { opacity: 1; transform: none; }
-
-.acc-header {
-  display: grid; grid-template-columns: 100px 1fr auto;
-  gap: 24px; align-items: center;
-  padding: 28px 0; cursor: pointer; user-select: none;
-}
+.acc-header { display: grid; grid-template-columns: 100px 1fr auto; gap: 24px; align-items: center; padding: 28px 0; cursor: pointer; user-select: none; }
 .acc-header:hover .acc-company { color: var(--terra); }
-
 .acc-duration { text-align: center; }
 .acc-dur-num { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 700; color: var(--terra); line-height: 1; }
 .acc-dur-label { font-size: 10px; letter-spacing: 1px; color: var(--ink2); text-transform: uppercase; margin-top: 2px; }
 .acc-dur-period { font-size: 10px; color: var(--line); margin-top: 2px; }
-
 .acc-company { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--ink); transition: color 0.2s; margin-bottom: 4px; }
 .acc-position { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--terra); }
-
-.acc-arrow {
-  width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: transform 0.35s, border-color 0.2s, background 0.2s;
-  color: var(--ink2); font-size: 12px;
-}
+.acc-arrow { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.35s, border-color 0.2s, background 0.2s; color: var(--ink2); font-size: 12px; }
 .acc-item.open .acc-arrow { transform: rotate(180deg); border-color: var(--terra); background: var(--terra); color: #fff; }
-
-.acc-body {
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(.4,0,.2,1);
-  padding: 0 0 0 124px;
-}
+.acc-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(.4,0,.2,1); padding: 0 0 0 124px; }
 .acc-item.open .acc-body { max-height: 800px; padding-bottom: 32px; }
-
 .acc-desc { font-size: 14px; line-height: 1.9; color: var(--ink2); margin-bottom: 20px; }
 .acc-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.acc-tag { font-size: 11px; padding: 5px 12px; background: rgba(155,79,42,0.07); color: var(--terra); border: 1px solid rgba(155,79,42,0.18); letter-spacing: 0.5px; }
+.acc-tag { font-size: 11px; padding: 5px 12px; background: rgba(155,79,42,0.07); color: var(--terra); border: 1px solid rgba(155,79,42,0.18); }
 
-/* ============================================================ TOOLS */
+/* ===== TOOLS ===== */
 .tools-section { background: var(--cream) !important; }
 .tools-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
 .tool-group-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--terra); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
@@ -312,14 +204,9 @@ section { padding: 96px 0; background: var(--bg); }
 .tool-tag { font-size: 12px; padding: 6px 14px; border: 1px solid var(--line); color: var(--ink2); background: var(--bg); transition: border-color 0.2s, color 0.2s; }
 .tool-tag:hover { border-color: var(--terra); color: var(--terra); }
 
-/* ============================================================ QUALITIES */
+/* ===== QUALITIES ===== */
 .q-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
-.q-card {
-  background: var(--ink); color: #fff; padding: 36px 28px;
-  opacity: 0; transform: translateY(16px);
-  transition: opacity 0.5s, transform 0.5s, background 0.3s;
-  border-top: 2px solid transparent;
-}
+.q-card { background: var(--ink); color: #fff; padding: 36px 28px; opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s, background 0.3s; border-top: 2px solid transparent; }
 .q-card:hover { background: var(--terra); border-top-color: var(--terra2); }
 .q-card.visible { opacity: 1; transform: none; }
 .q-icon { font-size: 24px; margin-bottom: 14px; }
@@ -327,14 +214,9 @@ section { padding: 96px 0; background: var(--bg); }
 .q-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
 .q-card:hover .q-desc { color: rgba(255,255,255,0.8); }
 
-/* ============================================================ EDUCATION */
-.edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.edu-card {
-  border: 1px solid var(--line); padding: 28px 28px 28px 36px;
-  position: relative; background: var(--cream);
-  opacity: 0; transform: translateY(16px);
-  transition: opacity 0.5s, transform 0.5s, border-color 0.2s;
-}
+/* ===== EDUCATION ===== */
+.edu-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.edu-card { border: 1px solid var(--line); padding: 28px 28px 28px 36px; position: relative; background: var(--cream); opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s, border-color 0.2s; }
 .edu-card:hover { border-color: var(--terra); }
 .edu-card.visible { opacity: 1; transform: none; }
 .edu-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--terra); }
@@ -342,10 +224,10 @@ section { padding: 96px 0; background: var(--bg); }
 .edu-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; margin-bottom: 5px; line-height: 1.3; color: var(--ink); }
 .edu-sub { font-size: 12px; color: var(--ink2); }
 
-/* ============================================================ CTA */
+/* ===== CTA ===== */
 .cta-section { background: var(--ink) !important; padding: 96px 0; text-align: center; position: relative; overflow: hidden; }
 .cta-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--terra), transparent); }
-.cta-big { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 68px); font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1; }
+.cta-big { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5.5vw, 72px); font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1; }
 .cta-big em { color: var(--terra2); font-style: normal; }
 .cta-sub { font-size: 14px; color: rgba(255,255,255,0.35); margin-bottom: 44px; letter-spacing: 1px; }
 .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
@@ -362,10 +244,8 @@ footer span { color: var(--terra); }
 @media (max-width: 960px) {
   .hero { grid-template-columns: 1fr; min-height: auto; }
   .hero-left { padding: 60px 32px 40px; }
-  .hero-slogan { font-size: clamp(44px, 10vw, 72px); }
-  .photo-area { min-height: 380px; }
-  .photo-wrap { width: 260px; height: 360px; }
-  .offer-grid { grid-template-columns: 1fr; }
+  .flip-grid { grid-template-columns: 1fr 1fr; }
+  .niches-grid { grid-template-columns: repeat(3,1fr); }
   .tools-grid { grid-template-columns: 1fr; }
   .q-grid { grid-template-columns: 1fr 1fr; }
   .edu-grid { grid-template-columns: 1fr; }
@@ -375,9 +255,9 @@ footer span { color: var(--terra); }
   footer { flex-direction: column; gap: 8px; text-align: center; padding: 28px 32px; }
 }
 @media (max-width: 560px) {
+  .flip-grid { grid-template-columns: 1fr; }
+  .niches-grid { grid-template-columns: repeat(2,1fr); }
   .q-grid { grid-template-columns: 1fr; }
-  .acc-header { grid-template-columns: 60px 1fr auto; }
-  .acc-item.open .acc-body { padding: 0 0 20px 76px; }
 }
 </style>
 </head>
@@ -388,19 +268,26 @@ footer span { color: var(--terra); }
   <div id="light-burst"></div>
   <p class="lamp-hint" id="lamp-hint">Потяни за шнурок</p>
   <div class="lamp-scene">
-    <svg class="lamp-svg" viewBox="0 0 180 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M22 108 L90 16 L158 108 Z" fill="#221a10" stroke="#3a2e1e" stroke-width="1.5"/>
-      <path d="M40 106 L90 26 L140 106 Z" fill="#1a1208"/>
-      <rect x="64" y="108" width="52" height="8" rx="3" fill="#2a2018" stroke="#3d3020" stroke-width="1"/>
-      <rect x="87" y="116" width="6" height="18" fill="#2a2018"/>
-      <rect x="60" y="134" width="60" height="6" rx="3" fill="#2a2018" stroke="#3d3020" stroke-width="1"/>
+    <!-- Real bulb SVG -->
+    <svg class="lamp-svg" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- bulb glass -->
+      <path d="M100 20 C60 20 34 50 34 82 C34 108 50 126 68 140 C72 144 74 150 74 156 L126 156 C126 150 128 144 132 140 C150 126 166 108 166 82 C166 50 140 20 100 20 Z" fill="#1e1810" stroke="#3a2e1e" stroke-width="2"/>
+      <!-- bulb highlight -->
+      <path d="M72 50 C72 50 80 42 95 40" stroke="rgba(255,240,200,0.12)" stroke-width="3" stroke-linecap="round"/>
+      <!-- filament -->
+      <path d="M88 130 L88 110 Q100 100 112 110 L112 130" stroke="rgba(255,200,100,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- base segments -->
+      <rect x="74" y="156" width="52" height="10" rx="2" fill="#2a2018" stroke="#3d3020" stroke-width="1"/>
+      <rect x="76" y="166" width="48" height="8" rx="1" fill="#221810" stroke="#3d3020" stroke-width="1"/>
+      <rect x="78" y="174" width="44" height="8" rx="1" fill="#2a2018" stroke="#3d3020" stroke-width="1"/>
+      <rect x="86" y="182" width="28" height="12" rx="2" fill="#221810" stroke="#3d3020" stroke-width="1"/>
     </svg>
     <div class="bulb-glow"></div>
     <div class="lamp-cone"></div>
     <div class="cord-outer" id="cord">
-      <svg id="cord-svg" width="20" height="90" viewBox="0 0 20 90" style="overflow:visible">
-        <path id="cord-path" d="M10,0 Q10,45 10,80"/>
-        <circle id="cord-ball" cx="10" cy="83" r="7"/>
+      <svg id="cord-svg" width="16" height="100" viewBox="0 0 16 100" style="overflow:visible">
+        <path id="cord-path" d="M8,0 C8,25 8,50 8,88"/>
+        <circle id="cord-ball" cx="8" cy="92" r="6"/>
       </svg>
     </div>
   </div>
@@ -410,7 +297,6 @@ footer span { color: var(--terra); }
 <!-- MAIN -->
 <div id="main-content">
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-left">
     <p class="hero-eyebrow">Бизнес-ассистент · МСК+2 · Удалённо</p>
@@ -431,34 +317,22 @@ footer span { color: var(--terra); }
         </div>
       </div>
     </div>
-    <!-- TICKER -->
     <div class="ticker-wrap">
       <div class="ticker-track">
-        <span class="ticker-item">7 лет опыта</span>
-        <span class="ticker-item">Бизнес-ассистент</span>
-        <span class="ticker-item">MBA 2025</span>
-        <span class="ticker-item">WB / OZON</span>
-        <span class="ticker-item">AmoCRM</span>
-        <span class="ticker-item">Битрикс24</span>
-        <span class="ticker-item">РОП</span>
-        <span class="ticker-item">SMM</span>
-        <span class="ticker-item">B2B продажи</span>
-        <span class="ticker-item">AI-инструменты</span>
-        <span class="ticker-item">Travel-поддержка</span>
-        <span class="ticker-item">Удалённо</span>
-        <!-- duplicate for seamless loop -->
-        <span class="ticker-item">7 лет опыта</span>
-        <span class="ticker-item">Бизнес-ассистент</span>
-        <span class="ticker-item">MBA 2025</span>
-        <span class="ticker-item">WB / OZON</span>
-        <span class="ticker-item">AmoCRM</span>
-        <span class="ticker-item">Битрикс24</span>
-        <span class="ticker-item">РОП</span>
-        <span class="ticker-item">SMM</span>
-        <span class="ticker-item">B2B продажи</span>
-        <span class="ticker-item">AI-инструменты</span>
-        <span class="ticker-item">Travel-поддержка</span>
-        <span class="ticker-item">Удалённо</span>
+        <span class="ticker-item">Выполню в срок</span>
+        <span class="ticker-item">Разберусь в любой нише</span>
+        <span class="ticker-item">Работаю системно</span>
+        <span class="ticker-item">Всегда на связи</span>
+        <span class="ticker-item">Думаю на шаг вперёд</span>
+        <span class="ticker-item">Решаю, а не жалуюсь</span>
+        <span class="ticker-item">Внедряю AI в работу</span>
+        <span class="ticker-item">Выполню в срок</span>
+        <span class="ticker-item">Разберусь в любой нише</span>
+        <span class="ticker-item">Работаю системно</span>
+        <span class="ticker-item">Всегда на связи</span>
+        <span class="ticker-item">Думаю на шаг вперёд</span>
+        <span class="ticker-item">Решаю, а не жалуюсь</span>
+        <span class="ticker-item">Внедряю AI в работу</span>
       </div>
     </div>
   </div>
@@ -466,20 +340,51 @@ footer span { color: var(--terra); }
 
 <div class="section-divider"></div>
 
-<!-- OFFER -->
+<!-- FLIP CARDS -->
 <section class="offer-section">
   <div class="container">
     <div class="section-header">
       <p class="section-eyebrow" style="color:rgba(196,105,61,0.6)">Чем могу помочь</p>
       <h2 class="section-title" style="color:#fff">Задачи, которые я закрываю</h2>
+      <p style="font-size:12px;color:rgba(255,255,255,0.25);margin-top:10px;letter-spacing:1px;">наведи на карточку</p>
     </div>
-    <div class="offer-grid">
-      <div class="offer-card"><div class="offer-icon">🗂️</div><h3 class="offer-title">Разгружу твой день</h3><p class="offer-desc">Возьму на себя <strong>рутину и операционку</strong> — переписки, подрядчики, документы, поручения. Ты занимаешься стратегией, я делаю всё остальное.</p></div>
-      <div class="offer-card"><div class="offer-icon">⚙️</div><h3 class="offer-title">Выстрою процессы</h3><p class="offer-desc">Создам <strong>регламенты, CRM, отчётность</strong> с нуля или наведу порядок в существующих. Работал с Битрикс24, AmoCRM, OKCRM, RetailCRM.</p></div>
-      <div class="offer-card"><div class="offer-icon">📈</div><h3 class="offer-title">Закрою продажи</h3><p class="offer-desc">Опыт в <strong>B2B продажах, работе с лидами</strong>, подготовке КП и договоров. Выстраивал отделы продаж с нуля и управлял ими.</p></div>
-      <div class="offer-card"><div class="offer-icon">🛒</div><h3 class="offer-title">Маркетплейсы</h3><p class="offer-desc">Полный цикл на <strong>WB, OZON, Яндекс.Маркет</strong> — карточки, поставки, ЧЗ, аналитика, реклама через Яндекс.Директ и РСЯ.</p></div>
-      <div class="offer-card"><div class="offer-icon">🤖</div><h3 class="offer-title">AI-инструменты</h3><p class="offer-desc">Изучаю и внедряю <strong>инструменты на базе ИИ</strong> в рабочие процессы. Автоматизация рутины, генерация контента, работа с данными быстрее и эффективнее.</p></div>
-      <div class="offer-card"><div class="offer-icon">💼</div><h3 class="offer-title">Финансы и документы</h3><p class="offer-desc">Бюджеты, финансовые отчёты, счета, договоры, декларации. Опыт в <strong>бухгалтерском учёте</strong> и работе с госорганами.</p></div>
+    <div class="flip-grid">
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-icon">🗂️</div><div class="flip-title">Разгружу твой день</div></div>
+          <div class="flip-back"><div class="flip-icon">🗂️</div><p class="flip-back-text">Возьму на себя рутину и операционку — переписки, подрядчики, документы, поручения. Ты занимаешься стратегией, я делаю всё остальное.</p></div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-icon">⚙️</div><div class="flip-title">Выстрою процессы</div></div>
+          <div class="flip-back"><div class="flip-icon">⚙️</div><p class="flip-back-text">Создам регламенты, CRM и отчётность с нуля или наведу порядок в существующих. Работал с Битрикс24, AmoCRM, OKCRM, RetailCRM.</p></div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-icon">📈</div><div class="flip-title">Закрою продажи</div></div>
+          <div class="flip-back"><div class="flip-icon">📈</div><p class="flip-back-text">Опыт в B2B продажах, работе с лидами, подготовке КП и договоров. Выстраивал отделы продаж с нуля и управлял ими.</p></div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-icon">🛒</div><div class="flip-title">Маркетплейсы</div></div>
+          <div class="flip-back"><div class="flip-icon">🛒</div><p class="flip-back-text">Полный цикл на WB, OZON, Яндекс.Маркет — карточки, поставки, ЧЗ, аналитика, реклама через Яндекс.Директ и РСЯ.</p></div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-icon">🤖</div><div class="flip-title">AI-инструменты</div></div>
+          <div class="flip-back"><div class="flip-icon">🤖</div><p class="flip-back-text">Изучаю и внедряю инструменты на базе ИИ в рабочие процессы. Автоматизация рутины, генерация контента, работа с данными быстрее и эффективнее.</p></div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-icon">💼</div><div class="flip-title">Финансы и документы</div></div>
+          <div class="flip-back"><div class="flip-icon">💼</div><p class="flip-back-text">Бюджеты, финансовые отчёты, счета, договоры, декларации. Опыт в бухгалтерском учёте и работе с госорганами.</p></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -491,18 +396,18 @@ footer span { color: var(--terra); }
       <p class="section-eyebrow">Опыт по нишам</p>
       <h2 class="section-title">Сферы, в которых работал</h2>
     </div>
-    <div class="niches-wrap">
-      <span class="niche-tag"><span class="niche-dot"></span>Маркетплейсы WB / OZON</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Инфобизнес / Наставничество</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Фулфилмент</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Психология</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Газовая отрасль</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Бухгалтерия и налоги</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Авиация / Аэропорт</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Общепит / HoReCa</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Агентство подбора персонала</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Онлайн-школа английского</span>
-      <span class="niche-tag"><span class="niche-dot"></span>Маркетинговое агентство</span>
+    <div class="niches-grid">
+      <a class="niche-card" href="#exp-wb"><div class="niche-num">01</div><div class="niche-name">Маркетплейсы WB / OZON</div></a>
+      <a class="niche-card" href="#exp-gaz"><div class="niche-num">02</div><div class="niche-name">Газовая отрасль</div></a>
+      <a class="niche-card" href="#exp-airport"><div class="niche-num">03</div><div class="niche-name">Авиация / Аэропорт</div></a>
+      <a class="niche-card" href="#exp-buh"><div class="niche-num">04</div><div class="niche-name">Бухгалтерия и налоги</div></a>
+      <a class="niche-card" href="#exp-ful"><div class="niche-num">05</div><div class="niche-name">Фулфилмент</div></a>
+      <a class="niche-card" href="#exp-info"><div class="niche-num">06</div><div class="niche-name">Инфобизнес / Наставничество</div></a>
+      <a class="niche-card" href="#exp-psy"><div class="niche-num">07</div><div class="niche-name">Психология</div></a>
+      <a class="niche-card" href="#exp-food"><div class="niche-num">08</div><div class="niche-name">Общепит / HoReCa</div></a>
+      <a class="niche-card" href="#exp-info"><div class="niche-num">09</div><div class="niche-name">Агентство подбора персонала</div></a>
+      <a class="niche-card" href="#exp-info"><div class="niche-num">10</div><div class="niche-name">Онлайн-школа английского</div></a>
+      <a class="niche-card" href="#exp-info"><div class="niche-num">11</div><div class="niche-name">Маркетинговое агентство</div></a>
     </div>
   </div>
 </section>
@@ -515,35 +420,31 @@ footer span { color: var(--terra); }
       <h2 class="section-title">Опыт работы</h2>
     </div>
 
-    <div class="acc-item">
+    <div class="acc-item" id="exp-wb">
       <div class="acc-header" onclick="toggleAcc(this)">
         <div class="acc-duration"><div class="acc-dur-num">1</div><div class="acc-dur-label">год</div><div class="acc-dur-period">2025 — н.в.</div></div>
         <div><div class="acc-company">Wildberries / OZON</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
         <div class="acc-arrow">▾</div>
       </div>
       <div class="acc-body">
-        <p class="acc-desc">Полноценная работа в личных кабинетах WB и OZON: заполнение и оптимизация карточек товара, работа с контентом, коммуникация с производствами и поставщиками. Подготовка штрихкодов, оформление честных знаков (ЧЗ), формирование СДЕК-накладных, взаимодействие с менеджерами транспортных компаний. Поиск и найм сотрудников, проведение первичных собеседований, онбординг. Работа в Битрикс24: постановка задач, трекинг, отчётность. Прошёл обучение от Яндекса по работе с РСЯ, Яндекс.Директом и Яндекс.Метрикой — применяю на практике для продвижения товаров.</p>
-        <div class="acc-tags">
-          <span class="acc-tag">WB / OZON</span><span class="acc-tag">Карточки товара</span><span class="acc-tag">Честный знак</span><span class="acc-tag">СДЕК</span><span class="acc-tag">Яндекс.Директ</span><span class="acc-tag">РСЯ</span><span class="acc-tag">HR</span><span class="acc-tag">Битрикс24</span>
-        </div>
+        <p class="acc-desc">Полноценная работа в личных кабинетах WB и OZON: заполнение и оптимизация карточек товара, работа с контентом, коммуникация с производствами и поставщиками. Подготовка штрихкодов, оформление честных знаков (ЧЗ), формирование СДЕК-накладных, взаимодействие с менеджерами транспортных компаний. Поиск и найм сотрудников, проведение первичных собеседований, онбординг. Работа в Битрикс24: постановка задач, трекинг, отчётность. Прошёл обучение от Яндекса по работе с РСЯ, Яндекс.Директом и Яндекс.Метрикой.</p>
+        <div class="acc-tags"><span class="acc-tag">WB / OZON</span><span class="acc-tag">Карточки товара</span><span class="acc-tag">Честный знак</span><span class="acc-tag">СДЕК</span><span class="acc-tag">Яндекс.Директ</span><span class="acc-tag">РСЯ</span><span class="acc-tag">HR</span><span class="acc-tag">Битрикс24</span></div>
       </div>
     </div>
 
-    <div class="acc-item">
+    <div class="acc-item" id="exp-gaz">
       <div class="acc-header" onclick="toggleAcc(this)">
         <div class="acc-duration"><div class="acc-dur-num">1.5</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2024 — н.в.</div></div>
         <div><div class="acc-company">Газстройпром</div><div class="acc-position">Помощник руководителя</div></div>
         <div class="acc-arrow">▾</div>
       </div>
       <div class="acc-body">
-        <p class="acc-desc">Работа в крупной газовой компании в роли помощника руководителя. Финансовое планирование и контроль: составление бюджетов по проектам, работа со счетами, выставление счетов подрядчикам, составление финансовых отчётов. Учёт рабочего времени сотрудников, статусов ИТД по построенным адресам, ведение реестров догазов, внутрянок, распредов и просрочек. Работа с документацией: разбивки (акты ЗСО, СП, планы трасс, схемы сварных стыков), учёт ППР, отчётные сведения в ГСМ. Работа с сертификатами (Росс RU, ГазСЕРТ и др.), структуризация и ведение таблиц по закупкам (паспорта изделий), поиск подрядчиков и коммуникация с ними. Параллельно прошёл полный курс MBA General в City Business School.</p>
-        <div class="acc-tags">
-          <span class="acc-tag">Финпланирование</span><span class="acc-tag">Бюджеты</span><span class="acc-tag">ИТД / ППР</span><span class="acc-tag">Сертификаты</span><span class="acc-tag">Закупки</span><span class="acc-tag">MBA</span><span class="acc-tag">Битрикс24</span>
-        </div>
+        <p class="acc-desc">Работа в крупной газовой компании: финансовое планирование и контроль, составление бюджетов по проектам, работа со счетами, выставление счетов подрядчикам, составление финансовых отчётов. Учёт рабочего времени, статусов ИТД, ведение реестров догазов, внутрянок, распредов и просрочек. Работа с документацией: акты ЗСО, СП, планы трасс, схемы сварных стыков. Учёт ППР, отчётные сведения в ГСМ, работа с сертификатами (Росс RU, ГазСЕРТ), структуризация закупок. Параллельно прошёл полный курс MBA General в City Business School.</p>
+        <div class="acc-tags"><span class="acc-tag">Финпланирование</span><span class="acc-tag">Бюджеты</span><span class="acc-tag">ИТД / ППР</span><span class="acc-tag">Сертификаты</span><span class="acc-tag">Закупки</span><span class="acc-tag">MBA</span><span class="acc-tag">Битрикс24</span></div>
       </div>
     </div>
 
-    <div class="acc-item">
+    <div class="acc-item" id="exp-airport">
       <div class="acc-header" onclick="toggleAcc(this)">
         <div class="acc-duration"><div class="acc-dur-num">4+</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2021 — н.в.</div></div>
         <div><div class="acc-company">Аэропорт</div><div class="acc-position">Инженер связи</div></div>
@@ -551,79 +452,67 @@ footer span { color: var(--terra); }
       </div>
       <div class="acc-body">
         <p class="acc-desc">Работа по профильной специальности инженера-связиста в государственной организации. Обслуживание, эксплуатация и контроль состояния кабельных линий связи (КЛС). Параллельная деятельность, совмещаемая с основной карьерой бизнес-ассистента — даёт техническую базу и понимание системной работы в крупных структурах.</p>
-        <div class="acc-tags">
-          <span class="acc-tag">КЛС</span><span class="acc-tag">Связь</span><span class="acc-tag">Инженерия</span><span class="acc-tag">Госструктуры</span>
-        </div>
+        <div class="acc-tags"><span class="acc-tag">КЛС</span><span class="acc-tag">Связь</span><span class="acc-tag">Инженерия</span><span class="acc-tag">Госструктуры</span></div>
       </div>
     </div>
 
-    <div class="acc-item">
+    <div class="acc-item" id="exp-buh">
       <div class="acc-header" onclick="toggleAcc(this)">
         <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2025</div></div>
-        <div><div class="acc-company">Ниша бухгалтерии</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
+        <div><div class="acc-company">Бухгалтерский аутсорсинг</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
         <div class="acc-arrow">▾</div>
       </div>
       <div class="acc-body">
-        <p class="acc-desc">Работа в связке с профессиональным бухгалтером с опытом более 20 лет. Помощь в поиске клиентов для бухгалтерского аутсорсинга и консультаций по российскому законодательству. Участие в процессах регистрации ИП и ООО, сдачи отчётности, составления налоговых деклараций. Ведение Telegram-канала компании: контент, публикации, продвижение. Параллельное обучение в процессе работы — погружение в бухгалтерский и налоговый учёт.</p>
-        <div class="acc-tags">
-          <span class="acc-tag">Бухаутсорсинг</span><span class="acc-tag">Налоги</span><span class="acc-tag">ИП / ООО</span><span class="acc-tag">Telegram</span><span class="acc-tag">Клиентопоиск</span>
-        </div>
+        <p class="acc-desc">Работа в связке с профессиональным бухгалтером с опытом более 20 лет. Поиск клиентов для бухгалтерского аутсорсинга и консультаций по российскому законодательству. Участие в процессах регистрации ИП и ООО, сдачи отчётности, составления налоговых деклараций. Ведение Telegram-канала компании, параллельное обучение — погружение в бухгалтерский и налоговый учёт.</p>
+        <div class="acc-tags"><span class="acc-tag">Бухаутсорсинг</span><span class="acc-tag">Налоги</span><span class="acc-tag">ИП / ООО</span><span class="acc-tag">Telegram</span><span class="acc-tag">Клиентопоиск</span></div>
       </div>
     </div>
 
-    <div class="acc-item">
+    <div class="acc-item" id="exp-ful">
       <div class="acc-header" onclick="toggleAcc(this)">
         <div class="acc-duration"><div class="acc-dur-num">10</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2024</div></div>
         <div><div class="acc-company">Фулфилмент Пеликан</div><div class="acc-position">Менеджер по продажам / личный ассистент</div></div>
         <div class="acc-arrow">▾</div>
       </div>
       <div class="acc-body">
-        <p class="acc-desc">Активный поиск клиентов для услуг фулфилмента, холодные и тёплые продажи, полное сопровождение на каждом этапе сделки. Подготовка коммерческих предложений и договоров, расчёт стоимости услуг под каждого клиента. Анализ конкурентов и рынка фулфилмент-услуг. Параллельно — ведение рабочих аккаунтов компании в соцсетях, видеомонтаж Reels для привлечения клиентов, ведение и развитие Telegram-канала компании.</p>
-        <div class="acc-tags">
-          <span class="acc-tag">B2B продажи</span><span class="acc-tag">КП и договоры</span><span class="acc-tag">Сопровождение сделок</span><span class="acc-tag">SMM</span><span class="acc-tag">Reels</span><span class="acc-tag">Telegram</span>
-        </div>
+        <p class="acc-desc">Активный поиск клиентов для услуг фулфилмента, холодные и тёплые продажи, полное сопровождение на каждом этапе сделки. Подготовка коммерческих предложений и договоров, расчёт стоимости услуг под каждого клиента. Анализ конкурентов и рынка. Ведение рабочих аккаунтов в соцсетях, видеомонтаж Reels, развитие Telegram-канала компании.</p>
+        <div class="acc-tags"><span class="acc-tag">B2B продажи</span><span class="acc-tag">КП и договоры</span><span class="acc-tag">Сопровождение сделок</span><span class="acc-tag">SMM</span><span class="acc-tag">Reels</span><span class="acc-tag">Telegram</span></div>
       </div>
     </div>
 
-    <div class="acc-item">
+    <div class="acc-item" id="exp-info">
       <div class="acc-header" onclick="toggleAcc(this)">
         <div class="acc-duration"><div class="acc-dur-num">9</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2023 — 2024</div></div>
         <div><div class="acc-company">Наставничество / Инфобизнес</div><div class="acc-position">Администратор / РОП / помощник руководителя</div></div>
         <div class="acc-arrow">▾</div>
       </div>
       <div class="acc-body">
-        <p class="acc-desc">Широкий спектр задач в онлайн-бизнесе: создание регламентов и CRM-системы с нуля, руководство отделом продаж — найм, обучение, постановка планов, контроль результатов. Ведение валютного контроля и бухгалтерских отчётов. Travel-поддержка руководителя: поиск и бронирование жилья, транспорта, логистика поездок. Взаимодействие с госорганами, поиск и работа с подрядчиками и исполнителями. Создание договоров, счетов на оплату, платёжных поручений. Работа с AmoCRM и Битрикс24, обработка лидов, ведение воронки продаж. Закупка рекламы в Telegram-каналах.</p>
-        <div class="acc-tags">
-          <span class="acc-tag">РОП</span><span class="acc-tag">CRM с нуля</span><span class="acc-tag">Регламенты</span><span class="acc-tag">Travel</span><span class="acc-tag">Валютный контроль</span><span class="acc-tag">AmoCRM</span><span class="acc-tag">Битрикс24</span><span class="acc-tag">Реклама в TG</span>
-        </div>
+        <p class="acc-desc">Широкий спектр задач в онлайн-бизнесе: создание регламентов и CRM-системы с нуля, руководство отделом продаж — найм, обучение, постановка планов, контроль результатов. Ведение валютного контроля и бухгалтерских отчётов. Travel-поддержка руководителя: поиск и бронирование жилья, транспорта, логистика поездок. Взаимодействие с госорганами, поиск подрядчиков. Создание договоров, счетов на оплату, платёжных поручений. Обработка лидов, ведение воронки продаж, закупка рекламы в Telegram-каналах.</p>
+        <div class="acc-tags"><span class="acc-tag">РОП</span><span class="acc-tag">CRM с нуля</span><span class="acc-tag">Регламенты</span><span class="acc-tag">Travel</span><span class="acc-tag">Валютный контроль</span><span class="acc-tag">AmoCRM</span><span class="acc-tag">Битрикс24</span><span class="acc-tag">Реклама в TG</span></div>
       </div>
     </div>
 
-    <div class="acc-item">
+    <div class="acc-item" id="exp-psy">
       <div class="acc-header" onclick="toggleAcc(this)">
         <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2023</div></div>
         <div><div class="acc-company">Ниша психологии</div><div class="acc-position">Бизнес-ассистент</div></div>
         <div class="acc-arrow">▾</div>
       </div>
       <div class="acc-body">
-        <p class="acc-desc">Работа с практикующим психологом: ведение бухгалтерского учёта и отчётности, составление календаря и планёрок, личные поручения. Копирайтинг для соцсетей и рассылок, анализ алгоритмов Instagram и YouTube для роста аудитории. Ведение Google Docs и Excel-таблиц, CRM. Видеомонтаж экспертных Reels, рассылки по базе клиентов.</p>
-        <div class="acc-tags">
-          <span class="acc-tag">Копирайтинг</span><span class="acc-tag">CRM</span><span class="acc-tag">Reels</span><span class="acc-tag">YouTube</span><span class="acc-tag">Instagram</span><span class="acc-tag">Бухучёт</span>
-        </div>
+        <p class="acc-desc">Работа с практикующим психологом: ведение бухгалтерского учёта и отчётности, составление календаря и планёрок, личные поручения. Копирайтинг для соцсетей и рассылок, анализ алгоритмов Instagram и YouTube для роста аудитории. Ведение CRM, видеомонтаж экспертных Reels, рассылки по базе клиентов.</p>
+        <div class="acc-tags"><span class="acc-tag">Копирайтинг</span><span class="acc-tag">CRM</span><span class="acc-tag">Reels</span><span class="acc-tag">YouTube</span><span class="acc-tag">Instagram</span><span class="acc-tag">Бухучёт</span></div>
       </div>
     </div>
 
-    <div class="acc-item">
+    <div class="acc-item" id="exp-food">
       <div class="acc-header" onclick="toggleAcc(this)">
         <div class="acc-duration"><div class="acc-dur-num">2</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2017 — 2019</div></div>
         <div><div class="acc-company">General Food</div><div class="acc-position">Официант · Бармен · Курьер</div></div>
         <div class="acc-arrow">▾</div>
       </div>
       <div class="acc-body">
-        <p class="acc-desc">Первый опыт работы с людьми — ресторан и общепит. Именно здесь сформировались базовые навыки коммуникации, стрессоустойчивости и работы в команде в условиях высокой нагрузки. Работал в нескольких ролях параллельно: обслуживание гостей, барная стойка, курьерская доставка. Опыт научил понимать людей, быть жизнерадостным и ответственным в любой ситуации.</p>
-        <div class="acc-tags">
-          <span class="acc-tag">Коммуникация</span><span class="acc-tag">Стрессоустойчивость</span><span class="acc-tag">Командная работа</span><span class="acc-tag">Сервис</span>
-        </div>
+        <p class="acc-desc">Первый опыт работы с людьми. Именно здесь сформировались базовые навыки коммуникации, стрессоустойчивости и работы в команде в условиях высокой нагрузки. Работал в нескольких ролях параллельно: обслуживание гостей, барная стойка, курьерская доставка. Опыт научил понимать людей, быть жизнерадостным и ответственным в любой ситуации.</p>
+        <div class="acc-tags"><span class="acc-tag">Коммуникация</span><span class="acc-tag">Стрессоустойчивость</span><span class="acc-tag">Командная работа</span><span class="acc-tag">Сервис</span></div>
       </div>
     </div>
 
@@ -641,19 +530,19 @@ footer span { color: var(--terra); }
       <div class="tool-group">
         <div class="tool-group-title">CRM и управление задачами</div>
         <div class="tool-tags">
-          <span class="tool-tag">Битрикс24</span><span class="tool-tag">AmoCRM</span><span class="tool-tag">OKCRM</span><span class="tool-tag">RetailCRM</span><span class="tool-tag">Trello</span><span class="tool-tag">Todoist</span><span class="tool-tag">WEEEK</span><span class="tool-tag">TickTick</span><span class="tool-tag">Google Calendar</span>
+          <span class="tool-tag">Битрикс24</span><span class="tool-tag">AmoCRM</span><span class="tool-tag">OKCRM</span><span class="tool-tag">RetailCRM</span><span class="tool-tag">Trello</span><span class="tool-tag">Todoist</span><span class="tool-tag">WEEEK</span><span class="tool-tag">TickTick</span><span class="tool-tag">Google Calendar</span><span class="tool-tag">Notion</span>
         </div>
       </div>
       <div class="tool-group">
-        <div class="tool-group-title">Офис и документы</div>
+        <div class="tool-group-title">Офис и коммуникации</div>
         <div class="tool-tags">
-          <span class="tool-tag">Excel</span><span class="tool-tag">Google Sheets</span><span class="tool-tag">Google Docs</span><span class="tool-tag">PowerPoint</span><span class="tool-tag">Word</span><span class="tool-tag">Zoom</span><span class="tool-tag">1С (базово)</span>
+          <span class="tool-tag">Excel</span><span class="tool-tag">Google Sheets</span><span class="tool-tag">Google Docs</span><span class="tool-tag">PowerPoint</span><span class="tool-tag">Word</span><span class="tool-tag">Zoom</span><span class="tool-tag">Google Meet</span><span class="tool-tag">Яндекс Телемост</span><span class="tool-tag">WhatsApp Business</span>
         </div>
       </div>
       <div class="tool-group">
-        <div class="tool-group-title">Маркетинг и контент</div>
+        <div class="tool-group-title">Маркетинг, контент и AI</div>
         <div class="tool-tags">
-          <span class="tool-tag">Яндекс.Директ</span><span class="tool-tag">РСЯ</span><span class="tool-tag">Метрика</span><span class="tool-tag">Telegram</span><span class="tool-tag">Видеомонтаж</span><span class="tool-tag">Reels / Shorts</span><span class="tool-tag">СДЕК</span><span class="tool-tag">AI-инструменты</span>
+          <span class="tool-tag">Яндекс.Директ</span><span class="tool-tag">РСЯ</span><span class="tool-tag">Яндекс.Метрика</span><span class="tool-tag">Telegram</span><span class="tool-tag">Видеомонтаж</span><span class="tool-tag">Reels / Shorts</span><span class="tool-tag">СДЕК</span><span class="tool-tag">ChatGPT</span><span class="tool-tag">Claude AI</span>
         </div>
       </div>
     </div>
@@ -680,8 +569,7 @@ footer span { color: var(--terra); }
     <div class="edu-grid">
       <div class="edu-card"><p class="edu-year">2021</p><h3 class="edu-title">МГТУ им. Г.И. Носова</h3><p class="edu-sub">Промышленная электроника · Инженер · Магнитогорск</p></div>
       <div class="edu-card"><p class="edu-year">2025</p><h3 class="edu-title">City Business School — MBA General</h3><p class="edu-sub">Управление бизнесом · Финансы · Стратегия</p></div>
-      <div class="edu-card"><p class="edu-year">2017</p><h3 class="edu-title">Happy English</h3><p class="edu-sub">Английский язык · Intermediate</p></div>
-      <div class="edu-card"><p class="edu-year">2021</p><h3 class="edu-title">Диплом о высшем образовании</h3><p class="edu-sub">Квалификация инженера · Права категории B</p></div>
+      <div class="edu-card"><p class="edu-year">2017</p><h3 class="edu-title">Курс делового английского языка</h3><p class="edu-sub">Happy English · Уровень Intermediate · Магнитогорск</p></div>
     </div>
   </div>
 </section>
@@ -689,7 +577,7 @@ footer span { color: var(--terra); }
 <!-- CTA -->
 <section class="cta-section">
   <div class="container">
-    <h2 class="cta-big">Готов к <em>новым проектам</em></h2>
+    <h2 class="cta-big">Ваш человек <em>уже здесь</em></h2>
     <p class="cta-sub">Удалённая полная занятость · от 60 000 ₽ на руки</p>
     <div class="cta-btns">
       <a href="tel:+79090990226" class="btn btn-fill">Позвонить</a>
@@ -702,46 +590,114 @@ footer span { color: var(--terra); }
   <div>© 2026 Филимонов <span>Егор Евгеньевич</span></div>
   <div>Магнитогорск · Удалённо · МСК+2</div>
 </footer>
-
 </div>
 
 <script>
-/* CORD */
-const screen=document.getElementById('lamp-screen'), burst=document.getElementById('light-burst'), hint=document.getElementById('lamp-hint');
-const cp=document.getElementById('cord-path'), cb=document.getElementById('cord-ball');
-let pulling=false, pulled=false, startY=0, pd=0;
-const MAX=65;
-function gc(p){ const s=Math.min(p*0.28,16),by=80+p; return{path:`M10,0 Q${10+s},${38+p*0.35} 10,${by}`,by:by+3}; }
+/* CORD PHYSICS */
+const screen=document.getElementById('lamp-screen'),burst=document.getElementById('light-burst'),hint=document.getElementById('lamp-hint');
+const cp=document.getElementById('cord-path'),cb=document.getElementById('cord-ball');
+let pulling=false,pulled=false,startY=0,pd=0;
+const MAX=70;
+
+function gc(p){
+  // natural S-curve cord with gravity
+  const ctrl1y=30+p*0.2, ctrl2y=60+p*0.6, ey=88+p;
+  return{ path:`M8,0 C8,${ctrl1y} ${8+p*0.15},${ctrl2y} 8,${ey}`, by:ey+4 };
+}
+
 document.getElementById('cord').addEventListener('mousedown',e=>{pulling=true;startY=e.clientY;e.preventDefault();});
 document.getElementById('cord').addEventListener('touchstart',e=>{pulling=true;startY=e.touches[0].clientY;e.preventDefault();},{passive:false});
 document.addEventListener('mousemove',e=>{if(!pulling||pulled)return;move(e.clientY);});
 document.addEventListener('touchmove',e=>{if(!pulling||pulled)return;move(e.touches[0].clientY);e.preventDefault();},{passive:false});
-document.addEventListener('mouseup',end); document.addEventListener('touchend',end);
-function move(y){pd=Math.max(0,Math.min(y-startY,MAX));const{path,by}=gc(pd);cp.setAttribute('d',path);cb.setAttribute('cy',by);if(pd>10)hint.classList.add('hide');}
-function end(){if(!pulling||pulled)return;pulling=false;if(pd>=30){pulled=true;snap();}else springBack();pd=0;}
-function springBack(){const d=pd,s=performance.now();function a(now){const t=(now-s)/420;if(t>=1){cp.setAttribute('d','M10,0 Q10,45 10,80');cb.setAttribute('cy',83);hint.classList.remove('hide');return;}const v=Math.pow(1-t,2)*Math.cos(t*Math.PI*5)*(1-t);const{path,by}=gc(d*v);cp.setAttribute('d',path);cb.setAttribute('cy',by);requestAnimationFrame(a);}requestAnimationFrame(a);}
-function snap(){const d=pd,s=performance.now();function a(now){const t=(now-s)/280;if(t<1){const b=Math.sin(t*Math.PI*3)*(1-t)*d*0.35;const{path,by}=gc(b);cp.setAttribute('d',path);cb.setAttribute('cy',by);requestAnimationFrame(a);}}requestAnimationFrame(a);
-  setTimeout(()=>screen.classList.add('lit'),100);
-  setTimeout(()=>{burst.getBoundingClientRect();burst.classList.add('expand');},280);
-  setTimeout(()=>{screen.classList.add('fade-out');document.getElementById('main-content').classList.add('revealed');document.body.style.background='#f5f0e8';},860);
-  setTimeout(()=>{screen.style.display='none';startCounters();},2300);}
+document.addEventListener('mouseup',end);document.addEventListener('touchend',end);
+
+function move(y){
+  pd=Math.max(0,Math.min(y-startY,MAX));
+  const{path,by}=gc(pd);cp.setAttribute('d',path);cb.setAttribute('cy',by);
+  if(pd>8)hint.classList.add('hide');
+}
+function end(){if(!pulling||pulled)return;pulling=false;if(pd>=28){pulled=true;snap();}else springBack();pd=0;}
+
+function springBack(){
+  const d=pd,s=performance.now();
+  function a(now){
+    const t=(now-s)/480;
+    if(t>=1){cp.setAttribute('d','M8,0 C8,30 8,60 8,88');cb.setAttribute('cy',92);hint.classList.remove('hide');return;}
+    // damped oscillation
+    const decay=Math.exp(-t*5);
+    const osc=Math.cos(t*Math.PI*4)*decay;
+    const{path,by}=gc(d*osc*Math.max(0,1-t));
+    cp.setAttribute('d',path);cb.setAttribute('cy',by);
+    requestAnimationFrame(a);
+  }
+  requestAnimationFrame(a);
+}
+
+function snap(){
+  const d=pd,s=performance.now();
+  // cord snaps back with oscillation
+  function a(now){
+    const t=(now-s)/320;
+    if(t<1){
+      const v=Math.sin(t*Math.PI*2.5)*Math.exp(-t*4)*d*0.4;
+      const{path,by}=gc(Math.max(0,v));
+      cp.setAttribute('d',path);cb.setAttribute('cy',by);
+      requestAnimationFrame(a);
+    }
+  }
+  requestAnimationFrame(a);
+  setTimeout(()=>screen.classList.add('lit'),90);
+  setTimeout(()=>{burst.getBoundingClientRect();burst.classList.add('expand');},270);
+  setTimeout(()=>{screen.classList.add('fade-out');document.getElementById('main-content').classList.add('revealed');document.body.style.background='#f5f0e8';},850);
+  setTimeout(()=>{screen.style.display='none';},2300);
+}
 
 /* PHOTO TILT */
 const pw=document.getElementById('photoWrap'),pi=document.getElementById('photoInner');
 if(pw&&pi){
-  pw.addEventListener('mousemove',e=>{const r=pw.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;pi.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.03)`;pi.style.filter=`drop-shadow(${x*-16}px ${y*-10}px 28px rgba(155,79,42,0.2))`;});
-  pw.addEventListener('mouseleave',()=>{pi.style.transition='transform 0.7s ease,filter 0.7s ease';pi.style.transform='rotateY(0) rotateX(0) scale(1)';pi.style.filter='none';setTimeout(()=>pi.style.transition='transform 0.12s ease-out',700);});}
+  pw.addEventListener('mousemove',e=>{
+    const r=pw.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    pi.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.03)`;
+    pi.style.filter=`drop-shadow(${x*-16}px ${y*-10}px 28px rgba(155,79,42,0.2))`;
+  });
+  pw.addEventListener('mouseleave',()=>{
+    pi.style.transition='transform 0.7s ease,filter 0.7s ease';
+    pi.style.transform='rotateY(0) rotateX(0) scale(1)';pi.style.filter='none';
+    setTimeout(()=>pi.style.transition='transform 0.12s ease-out',700);
+  });
+}
 
 /* ACCORDION */
-function toggleAcc(h){const item=h.parentElement,isOpen=item.classList.contains('open');document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));if(!isOpen)item.classList.add('open');}
+function toggleAcc(h){
+  const item=h.parentElement,isOpen=item.classList.contains('open');
+  document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));
+  if(!isOpen)item.classList.add('open');
+}
+
+/* NICHE SCROLL — smooth scroll + open accordion */
+document.querySelectorAll('.niche-card').forEach(card=>{
+  card.addEventListener('click',e=>{
+    e.preventDefault();
+    const target=document.querySelector(card.getAttribute('href'));
+    if(!target)return;
+    // open accordion
+    document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));
+    target.classList.add('open');
+    // scroll
+    setTimeout(()=>{
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+    },100);
+  });
+});
 
 /* SCROLL REVEAL */
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),+e.target.dataset.delay||0);obs.unobserve(e.target);}});},{threshold:0.1});
-document.querySelectorAll('.acc-item,.edu-card,.q-card,.offer-card').forEach((el,i)=>{if(!el.dataset.delay)el.dataset.delay=(i%4)*90;obs.observe(el);});
-document.querySelectorAll('.niche-tag').forEach((el,i)=>{el.dataset.delay=i*45;obs.observe(el);});
-
-/* COUNTERS */
-function startCounters(){document.querySelectorAll('[data-count]').forEach(el=>{const t=+el.dataset.count;let c=0;const s=t/35;const iv=setInterval(()=>{c=Math.min(c+s,t);el.textContent=Math.round(c)+'+';if(c>=t)clearInterval(iv);},45);});}
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),+e.target.dataset.delay||0);obs.unobserve(e.target);}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.acc-item,.edu-card,.q-card,.offer-card,.flip-card').forEach((el,i)=>{if(!el.dataset.delay)el.dataset.delay=(i%4)*90;obs.observe(el);});
+document.querySelectorAll('.niche-card').forEach((el,i)=>{el.dataset.delay=i*50;obs.observe(el);});
 </script>
 </body>
 </html>
