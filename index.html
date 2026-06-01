@@ -4,17 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Егор Филимонов — Бизнес-ассистент</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Geologica:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Geologica:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #f7f7f5;
-  --ink: #1a1a1a;
-  --orange: #e85d04;
-  --orange2: #ff6b1a;
-  --muted: #7a7065;
-  --line: #e0ddd6;
-  --dark: #111;
+  --bg: #f5f0e8;
+  --bg2: #ede8df;
+  --ink: #2a1f14;
+  --ink2: #6a5a48;
+  --terra: #9b4f2a;
+  --terra2: #c4693d;
+  --cream: #faf7f2;
+  --line: #ddd8ce;
+  --dark: #1a1209;
 }
 html { scroll-behavior: smooth; }
 body {
@@ -25,13 +27,10 @@ body {
   overflow-x: hidden;
 }
 
-/* ============================================================
-   LAMP SCREEN
-============================================================ */
+/* ============================================================ LAMP */
 #lamp-screen {
   position: fixed; inset: 0;
-  background: #0a0a0a;
-  z-index: 1000;
+  background: #0d0a06; z-index: 1000;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   overflow: hidden;
@@ -39,874 +38,710 @@ body {
 }
 #lamp-screen.fade-out { opacity: 0; pointer-events: none; }
 
-/* light burst — radial reveal */
 #light-burst {
   position: absolute; inset: 0;
-  background: radial-gradient(circle at 50% 42%, #fff8e7 0%, #fde68a 18%, #f97316 38%, #0a0a0a 65%);
-  opacity: 0;
-  transform: scale(0.05);
-  transition: transform 1.1s cubic-bezier(.16,1,.3,1), opacity 0.15s;
-  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%,
+    #fff9f0 0%, #fde8c8 15%, #d4835a 35%, #7a3010 55%, #0d0a06 72%);
+  opacity: 0; transform: scale(0.04); border-radius: 50%;
   pointer-events: none;
+  transition: transform 1.2s cubic-bezier(.16,1,.3,1), opacity 0.1s;
 }
-#light-burst.expand {
-  opacity: 1;
-  transform: scale(6);
-}
+#light-burst.expand { opacity: 1; transform: scale(7); }
 
 .lamp-hint {
   position: relative; z-index: 2;
-  font-size: 11px; letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.22);
-  margin-bottom: 52px;
-  transition: color 0.4s, opacity 0.4s;
-  user-select: none; pointer-events: none;
+  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+  color: rgba(255,220,180,0.2); margin-bottom: 56px;
+  transition: opacity 0.4s; user-select: none; pointer-events: none;
 }
 .lamp-hint.hide { opacity: 0; }
 
-/* lamp SVG */
 .lamp-scene {
   position: relative; z-index: 2;
-  display: flex; flex-direction: column; align-items: center;
-  width: 180px;
+  display: flex; flex-direction: column; align-items: center; width: 180px;
 }
-
-.lamp-svg {
-  width: 180px; pointer-events: none;
-  filter: drop-shadow(0 0 0px #e85d04);
-  transition: filter 0.8s;
-}
-#lamp-screen.lit .lamp-svg {
-  filter: drop-shadow(0 0 30px rgba(232,93,4,0.8));
-}
-
-/* bulb glow */
+.lamp-svg { width: 180px; pointer-events: none; filter: drop-shadow(0 0 0px #9b4f2a); transition: filter 0.9s; }
+#lamp-screen.lit .lamp-svg { filter: drop-shadow(0 0 28px rgba(155,79,42,0.9)); }
 .bulb-glow {
-  position: absolute; top: 30px; left: 50%;
-  transform: translateX(-50%);
-  width: 24px; height: 24px; border-radius: 50%;
-  background: transparent; pointer-events: none;
-  transition: background 0.5s, box-shadow 0.5s;
+  position: absolute; top: 28px; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 20px; border-radius: 50%;
+  pointer-events: none; transition: background 0.6s, box-shadow 0.6s;
 }
 #lamp-screen.lit .bulb-glow {
-  background: #fff5c0;
-  box-shadow: 0 0 60px 30px rgba(232,93,4,0.6), 0 0 120px 60px rgba(232,93,4,0.2);
+  background: #fff3d0;
+  box-shadow: 0 0 50px 25px rgba(196,105,61,0.7), 0 0 120px 70px rgba(155,79,42,0.25);
 }
-
-/* cone */
 .lamp-cone {
-  position: absolute; top: 80px; left: 50%;
-  transform: translateX(-50%);
-  width: 0; height: 0;
-  border-left: 0px solid transparent;
-  border-right: 0px solid transparent;
-  border-top: 0px solid transparent;
-  transition: border 0.8s ease;
-  pointer-events: none;
+  position: absolute; top: 76px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; pointer-events: none; transition: border 0.9s ease;
 }
 #lamp-screen.lit .lamp-cone {
-  border-left: 130px solid transparent;
-  border-right: 130px solid transparent;
-  border-top: 180px solid rgba(232,93,4,0.07);
+  border-left: 140px solid transparent;
+  border-right: 140px solid transparent;
+  border-top: 200px solid rgba(196,105,61,0.06);
 }
-
-/* ---- CORD ---- */
 .cord-outer {
   position: relative; z-index: 10;
   display: flex; flex-direction: column; align-items: center;
-  cursor: grab; padding: 0 24px;
-  user-select: none;
+  cursor: grab; padding: 0 28px; user-select: none;
 }
 .cord-outer:active { cursor: grabbing; }
-
-.cord-svg-wrap {
-  display: flex; flex-direction: column; align-items: center;
-}
-
-/* cord line drawn as SVG path for physics feel */
-#cord-svg { overflow: visible; }
-#cord-path {
-  stroke: rgba(255,255,255,0.2);
-  stroke-width: 2; fill: none;
-  stroke-linecap: round;
-  transition: stroke 0.3s;
-}
-.cord-outer:hover #cord-path { stroke: rgba(232,93,4,0.7); }
-
-#cord-ball {
-  fill: rgba(255,255,255,0.2);
-  stroke: rgba(255,255,255,0.3);
-  stroke-width: 2;
-  transition: fill 0.3s, stroke 0.3s, filter 0.3s;
-  cursor: grab;
-}
-.cord-outer:hover #cord-ball {
-  fill: var(--orange);
-  stroke: #ff8c42;
-  filter: drop-shadow(0 0 10px rgba(232,93,4,0.8));
-}
-
+#cord-path { stroke: rgba(255,210,160,0.18); stroke-width: 2; fill: none; stroke-linecap: round; transition: stroke 0.3s; }
+.cord-outer:hover #cord-path { stroke: rgba(196,105,61,0.7); }
+#cord-ball { fill: rgba(255,210,160,0.18); stroke: rgba(255,210,160,0.25); stroke-width: 2; transition: fill 0.3s, stroke 0.3s, filter 0.3s; }
+.cord-outer:hover #cord-ball { fill: var(--terra); stroke: var(--terra2); filter: drop-shadow(0 0 8px rgba(155,79,42,0.9)); }
 .lamp-name {
-  margin-top: 40px; position: relative; z-index: 2;
-  font-family: 'Playfair Display', serif;
-  font-size: 24px; font-weight: 700;
-  color: rgba(255,255,255,0.06);
-  letter-spacing: 6px; text-transform: uppercase;
-  transition: color 0.9s; pointer-events: none; user-select: none;
+  margin-top: 44px; position: relative; z-index: 2;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 600;
+  color: rgba(255,210,160,0.05); letter-spacing: 8px; text-transform: uppercase;
+  transition: color 1s; pointer-events: none; user-select: none;
 }
-#lamp-screen.lit .lamp-name { color: rgba(232,93,4,0.5); }
+#lamp-screen.lit .lamp-name { color: rgba(196,105,61,0.5); }
 
-/* ============================================================
-   MAIN CONTENT
-============================================================ */
+/* ============================================================ GRAIN */
 body::before {
   content: ''; position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 9999; opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.6;
 }
 
-#main-content { opacity: 0; transition: opacity 1.4s ease 0.2s; }
+#main-content { opacity: 0; transition: opacity 1.4s ease 0.3s; }
 #main-content.revealed { opacity: 1; }
 
-/* HERO */
+/* ============================================================ HERO */
 .hero {
-  min-height: 100vh;
-  background: var(--bg);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  min-height: 100vh; background: var(--cream);
+  display: grid; grid-template-columns: 1fr 1fr;
   position: relative; overflow: hidden;
-}
-
-/* orange stripe top */
-.hero::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--orange), var(--orange2), transparent);
 }
 
 .hero-left {
-  padding: 80px 60px;
-  display: flex; flex-direction: column; justify-content: center;
-  position: relative; z-index: 2;
+  padding: 90px 64px; display: flex; flex-direction: column;
+  justify-content: center; position: relative; z-index: 2;
 }
 
-.hero-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--orange); margin-bottom: 32px;
-  background: rgba(232,93,4,0.08);
-  padding: 8px 16px; border-radius: 2px;
-  width: fit-content;
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+  color: var(--terra); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 10px;
 }
-.hero-tag::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--orange);
-  animation: pulse 2s infinite;
+.hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--terra); }
+
+/* BIG SLOGAN */
+.hero-slogan {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 6.5vw, 96px);
+  font-weight: 700; line-height: 0.92;
+  color: var(--ink); margin-bottom: 32px;
+  letter-spacing: -2px;
+}
+.hero-slogan em { color: var(--terra); font-style: normal; display: block; }
+
+/* ABOUT */
+.hero-about {
+  font-size: 14px; color: var(--ink2); line-height: 1.9;
+  max-width: 400px; margin-bottom: 44px;
+  border-left: 2px solid var(--terra);
+  padding-left: 18px;
 }
 
-@keyframes pulse {
-  0%,100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.7); }
-}
-
-.hero-name {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(44px, 5.5vw, 76px);
-  font-weight: 900; color: var(--ink);
-  line-height: 1.0; margin-bottom: 20px;
-}
-.hero-name span { color: var(--orange); display: block; }
-
-.hero-role {
-  font-size: 15px; color: var(--muted);
-  line-height: 1.8; max-width: 380px;
-  border-left: 3px solid var(--orange);
-  padding-left: 16px; margin-bottom: 40px;
-}
-
-.hero-contacts {
-  display: flex; flex-direction: column; gap: 12px;
-}
+.hero-contacts { display: flex; flex-direction: column; gap: 13px; }
 .hero-contacts a {
-  color: var(--ink); text-decoration: none;
-  font-size: 14px; display: flex; align-items: center; gap: 10px;
-  transition: color 0.2s; font-weight: 400;
+  color: var(--ink); text-decoration: none; font-size: 13px;
+  display: flex; align-items: center; gap: 12px; transition: color 0.2s;
 }
-.hero-contacts a:hover { color: var(--orange); }
-.contact-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--orange); flex-shrink: 0;
-}
+.hero-contacts a:hover { color: var(--terra); }
+.c-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--terra); flex-shrink: 0; }
 
-/* HERO RIGHT — photo */
+/* HERO RIGHT */
 .hero-right {
-  position: relative; display: flex;
-  align-items: flex-end; justify-content: center;
-  overflow: hidden; background: var(--bg);
-  padding-bottom: 0;
+  position: relative; overflow: hidden;
+  background: var(--bg);
+  display: flex; flex-direction: column;
 }
 
-/* big BG number */
-.hero-bg-num {
-  position: absolute; right: -20px; top: 50%;
-  transform: translateY(-50%);
-  font-family: 'Playfair Display', serif;
-  font-size: 260px; font-weight: 900;
-  color: rgba(232,93,4,0.06); line-height: 1;
-  user-select: none; pointer-events: none;
-  z-index: 0;
+.photo-area {
+  flex: 1; display: flex; align-items: flex-end; justify-content: center;
+  position: relative; overflow: hidden;
+}
+
+.hero-bg-text {
+  position: absolute; right: -10px; top: 50%; transform: translateY(-55%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 220px; font-weight: 700; line-height: 1;
+  color: rgba(155,79,42,0.05); user-select: none; pointer-events: none;
+  writing-mode: vertical-rl; letter-spacing: -10px;
 }
 
 .photo-wrap {
-  position: relative; z-index: 2;
-  width: 380px; height: 500px;
-  perspective: 800px;
+  width: 360px; height: 480px;
+  perspective: 900px; position: relative; z-index: 2;
 }
-
 .photo-inner {
   width: 100%; height: 100%;
-  border-radius: 0 0 0 0;
-  position: relative;
   transform-style: preserve-3d;
-  transition: transform 0.1s ease-out;
-  will-change: transform;
+  transition: transform 0.12s ease-out;
+  will-change: transform; position: relative;
 }
-
 .photo-inner img {
   width: 100%; height: 100%;
-  object-fit: cover; object-position: top center;
+  object-fit: contain; object-position: bottom center;
   display: block;
-  filter: contrast(1.02) brightness(1.01);
 }
 
-/* shadow under photo */
-.photo-inner::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 60%, rgba(232,93,4,0.08) 100%);
-  pointer-events: none;
+/* TICKER */
+.ticker-wrap {
+  border-top: 1px solid var(--line);
+  background: var(--cream);
+  overflow: hidden; padding: 14px 0;
+  white-space: nowrap;
+}
+.ticker-track {
+  display: inline-flex; gap: 0;
+  animation: ticker 28s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+.ticker-item {
+  font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--ink2); padding: 0 28px;
+  display: inline-flex; align-items: center; gap: 28px;
+}
+.ticker-item::after { content: '·'; color: var(--terra); font-size: 16px; }
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-/* orange accent line on photo */
-.photo-accent {
-  position: absolute; left: -8px; top: 40px; bottom: 40px;
-  width: 4px; background: var(--orange);
-  border-radius: 2px;
-}
+/* ============================================================ SECTIONS */
+section { padding: 96px 0; background: var(--bg); }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 60px; }
 
-/* stats row */
-.hero-stats {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  background: var(--ink); z-index: 3;
+.section-header { margin-bottom: 56px; }
+.section-eyebrow {
+  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+  color: var(--terra); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
 }
-.stat {
-  padding: 20px 24px;
-  border-right: 1px solid rgba(255,255,255,0.07);
-}
-.stat:last-child { border-right: none; }
-.stat-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px; font-weight: 700; color: var(--orange);
-  line-height: 1;
-}
-.stat-label {
-  font-size: 11px; letter-spacing: 1px;
-  color: rgba(255,255,255,0.4); margin-top: 4px;
-  text-transform: uppercase;
-}
-
-/* ============================================================
-   SECTIONS
-============================================================ */
-section { padding: 100px 0; background: var(--bg); }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 60px; }
-
-.section-header {
-  display: flex; align-items: baseline; gap: 20px; margin-bottom: 64px;
-}
-.section-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 13px; color: var(--orange); letter-spacing: 2px;
-}
+.section-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--terra); }
 .section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 3.5vw, 48px); font-weight: 700; line-height: 1.1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 4vw, 50px); font-weight: 700; color: var(--ink); line-height: 1.1;
 }
+.section-divider { height: 1px; background: var(--line); }
 
-/* orange divider */
-.section-divider {
-  height: 3px;
-  background: linear-gradient(90deg, var(--orange) 0%, rgba(232,93,4,0.2) 60%, transparent 100%);
-}
-
-/* EXPERIENCE */
-.exp-item {
-  display: grid; grid-template-columns: 180px 1fr;
-  gap: 40px; padding: 40px 0;
-  border-bottom: 1px solid var(--line);
-  opacity: 0; transform: translateY(24px);
-  transition: opacity 0.6s, transform 0.6s;
-}
-.exp-item.visible { opacity: 1; transform: none; }
-.exp-period {
-  font-size: 11px; letter-spacing: 1px; color: var(--muted);
-  text-transform: uppercase; line-height: 1.7; padding-top: 4px;
-}
-.exp-company {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px; font-weight: 700; margin-bottom: 4px;
-}
-.exp-position {
-  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--orange); margin-bottom: 14px;
-}
-.exp-desc { font-size: 14px; line-height: 1.8; color: var(--muted); }
-
-/* SKILLS */
-.skills-bg { background: var(--ink) !important; }
-.skills-bg .section-title { color: #fff; }
-.skills-bg .section-num { color: var(--orange); }
-.skills-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
-.skill-group h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px; color: var(--orange);
-  margin-bottom: 20px; padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.skill-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.skill-list li {
-  font-size: 14px; color: rgba(255,255,255,0.65);
-  display: flex; align-items: center; gap: 10px; line-height: 1.5;
-}
-.skill-list li::before {
-  content: ''; width: 4px; height: 4px; border-radius: 50%;
-  background: var(--orange); flex-shrink: 0;
-}
-
-/* QUALITIES */
-.qualities-section { padding: 0 !important; }
-.qualities-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 3px; }
-.quality-card {
-  background: var(--ink); color: #fff;
-  padding: 40px 28px;
+/* ============================================================ OFFER */
+.offer-section { background: var(--ink) !important; }
+.offer-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,0.06); }
+.offer-card {
+  background: var(--ink); padding: 40px 32px;
+  border-top: 2px solid transparent;
   opacity: 0; transform: translateY(20px);
-  transition: opacity 0.5s, transform 0.5s, background 0.3s;
-  border-top: 3px solid transparent;
+  transition: opacity 0.5s, transform 0.5s, border-color 0.3s, background 0.3s;
 }
-.quality-card:hover { background: var(--orange); border-top-color: #ff8c42; }
-.quality-card.visible { opacity: 1; transform: none; }
-.quality-icon { font-size: 26px; margin-bottom: 14px; }
-.quality-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px; font-weight: 700; margin-bottom: 8px;
-}
-.quality-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
-.quality-card:hover .quality-desc { color: rgba(255,255,255,0.85); }
+.offer-card:hover { border-top-color: var(--terra); background: #2a1f14; }
+.offer-card.visible { opacity: 1; transform: none; }
+.offer-icon { font-size: 26px; margin-bottom: 16px; }
+.offer-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 12px; }
+.offer-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.75; }
+.offer-desc strong { color: rgba(255,255,255,0.75); font-weight: 400; }
 
-/* EDUCATION */
-.edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.edu-card {
-  border: 1px solid var(--line); padding: 32px;
-  position: relative; overflow: hidden;
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 0.6s, transform 0.6s, border-color 0.3s;
-  background: #fff;
-}
-.edu-card:hover { border-color: var(--orange); }
-.edu-card.visible { opacity: 1; transform: none; }
-.edu-card::before {
-  content: ''; position: absolute; top: 0; left: 0;
-  width: 4px; height: 100%; background: var(--orange);
-}
-.edu-year {
-  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--orange); margin-bottom: 8px;
-}
-.edu-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px; font-weight: 700; margin-bottom: 6px; line-height: 1.3;
-}
-.edu-sub { font-size: 13px; color: var(--muted); }
-
-/* CTA */
-.cta-section {
-  background: var(--ink) !important; padding: 80px 0; text-align: center;
-  position: relative; overflow: hidden;
-}
-.cta-section::before {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, transparent, var(--orange), transparent);
-}
-.cta-section h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 4vw, 52px); font-weight: 900;
-  color: #fff; margin-bottom: 12px;
-}
-.cta-section h2 span { color: var(--orange); }
-.cta-section p { font-size: 16px; color: rgba(255,255,255,0.5); margin-bottom: 40px; }
-.cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.btn {
+/* ============================================================ NICHES */
+.niches-section { background: var(--bg2) !important; }
+.niches-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
+.niche-tag {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 15px 36px; font-family: 'Geologica', sans-serif;
-  font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
-  text-decoration: none; cursor: pointer; border: none; transition: all 0.25s;
+  padding: 10px 18px; border: 1px solid var(--line);
+  font-size: 13px; color: var(--ink2); background: var(--cream);
+  opacity: 0; transform: scale(0.92);
+  transition: opacity 0.4s, transform 0.4s, border-color 0.2s, color 0.2s;
+  cursor: default;
 }
-.btn-orange { background: var(--orange); color: #fff; }
-.btn-orange:hover { background: var(--orange2); transform: translateY(-2px); }
-.btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.3); }
-.btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+.niche-tag:hover { border-color: var(--terra); color: var(--terra); background: rgba(155,79,42,0.04); }
+.niche-tag.visible { opacity: 1; transform: scale(1); }
+.niche-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--terra); flex-shrink: 0; }
 
-footer {
-  background: #0a0a0a; color: rgba(255,255,255,0.3);
-  padding: 28px 60px; display: flex;
-  justify-content: space-between; align-items: center; font-size: 13px;
+/* ============================================================ ACCORDION */
+.acc-item {
+  border-bottom: 1px solid var(--line);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.5s, transform 0.5s;
 }
-footer span { color: var(--orange); }
+.acc-item.visible { opacity: 1; transform: none; }
 
-/* scroll reveal */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: none; }
+.acc-header {
+  display: grid; grid-template-columns: 100px 1fr auto;
+  gap: 24px; align-items: center;
+  padding: 28px 0; cursor: pointer; user-select: none;
 }
+.acc-header:hover .acc-company { color: var(--terra); }
+
+.acc-duration { text-align: center; }
+.acc-dur-num { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 700; color: var(--terra); line-height: 1; }
+.acc-dur-label { font-size: 10px; letter-spacing: 1px; color: var(--ink2); text-transform: uppercase; margin-top: 2px; }
+.acc-dur-period { font-size: 10px; color: var(--line); margin-top: 2px; }
+
+.acc-company { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--ink); transition: color 0.2s; margin-bottom: 4px; }
+.acc-position { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--terra); }
+
+.acc-arrow {
+  width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: transform 0.35s, border-color 0.2s, background 0.2s;
+  color: var(--ink2); font-size: 12px;
+}
+.acc-item.open .acc-arrow { transform: rotate(180deg); border-color: var(--terra); background: var(--terra); color: #fff; }
+
+.acc-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(.4,0,.2,1);
+  padding: 0 0 0 124px;
+}
+.acc-item.open .acc-body { max-height: 800px; padding-bottom: 32px; }
+
+.acc-desc { font-size: 14px; line-height: 1.9; color: var(--ink2); margin-bottom: 20px; }
+.acc-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.acc-tag { font-size: 11px; padding: 5px 12px; background: rgba(155,79,42,0.07); color: var(--terra); border: 1px solid rgba(155,79,42,0.18); letter-spacing: 0.5px; }
+
+/* ============================================================ TOOLS */
+.tools-section { background: var(--cream) !important; }
+.tools-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
+.tool-group-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--terra); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.tool-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tool-tag { font-size: 12px; padding: 6px 14px; border: 1px solid var(--line); color: var(--ink2); background: var(--bg); transition: border-color 0.2s, color 0.2s; }
+.tool-tag:hover { border-color: var(--terra); color: var(--terra); }
+
+/* ============================================================ QUALITIES */
+.q-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
+.q-card {
+  background: var(--ink); color: #fff; padding: 36px 28px;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.5s, transform 0.5s, background 0.3s;
+  border-top: 2px solid transparent;
+}
+.q-card:hover { background: var(--terra); border-top-color: var(--terra2); }
+.q-card.visible { opacity: 1; transform: none; }
+.q-icon { font-size: 24px; margin-bottom: 14px; }
+.q-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.q-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+.q-card:hover .q-desc { color: rgba(255,255,255,0.8); }
+
+/* ============================================================ EDUCATION */
+.edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.edu-card {
+  border: 1px solid var(--line); padding: 28px 28px 28px 36px;
+  position: relative; background: var(--cream);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.5s, transform 0.5s, border-color 0.2s;
+}
+.edu-card:hover { border-color: var(--terra); }
+.edu-card.visible { opacity: 1; transform: none; }
+.edu-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--terra); }
+.edu-year { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra); margin-bottom: 8px; }
+.edu-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; margin-bottom: 5px; line-height: 1.3; color: var(--ink); }
+.edu-sub { font-size: 12px; color: var(--ink2); }
+
+/* ============================================================ CTA */
+.cta-section { background: var(--ink) !important; padding: 96px 0; text-align: center; position: relative; overflow: hidden; }
+.cta-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--terra), transparent); }
+.cta-big { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 68px); font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1; }
+.cta-big em { color: var(--terra2); font-style: normal; }
+.cta-sub { font-size: 14px; color: rgba(255,255,255,0.35); margin-bottom: 44px; letter-spacing: 1px; }
+.cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 34px; font-family: 'Geologica', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; cursor: pointer; border: none; transition: all 0.25s; }
+.btn-fill { background: var(--terra); color: #fff; }
+.btn-fill:hover { background: var(--terra2); transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); }
+.btn-ghost:hover { border-color: var(--terra); color: var(--terra); }
+
+footer { background: #0d0a06; color: rgba(255,200,150,0.2); padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: 1px; }
+footer span { color: var(--terra); }
 
 /* RESPONSIVE */
 @media (max-width: 960px) {
   .hero { grid-template-columns: 1fr; min-height: auto; }
-  .hero-right { height: 400px; }
-  .photo-wrap { width: 280px; height: 380px; }
-  .hero-stats { grid-template-columns: repeat(2,1fr); position: relative; }
   .hero-left { padding: 60px 32px 40px; }
-  .skills-grid { grid-template-columns: 1fr; }
-  .qualities-grid { grid-template-columns: 1fr 1fr; }
+  .hero-slogan { font-size: clamp(44px, 10vw, 72px); }
+  .photo-area { min-height: 380px; }
+  .photo-wrap { width: 260px; height: 360px; }
+  .offer-grid { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: 1fr; }
+  .q-grid { grid-template-columns: 1fr 1fr; }
   .edu-grid { grid-template-columns: 1fr; }
-  .exp-item { grid-template-columns: 1fr; gap: 12px; }
-  .container { padding: 0 32px; }
-  footer { flex-direction: column; gap: 8px; text-align: center; }
+  .acc-header { grid-template-columns: 72px 1fr auto; gap: 16px; }
+  .acc-item.open .acc-body { padding: 0 0 24px 88px; }
+  .container { padding: 0 28px; }
+  footer { flex-direction: column; gap: 8px; text-align: center; padding: 28px 32px; }
 }
 @media (max-width: 560px) {
-  .qualities-grid { grid-template-columns: 1fr; }
-  .hero-stats { grid-template-columns: repeat(2,1fr); }
+  .q-grid { grid-template-columns: 1fr; }
+  .acc-header { grid-template-columns: 60px 1fr auto; }
+  .acc-item.open .acc-body { padding: 0 0 20px 76px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     LAMP SCREEN
-============================================================ -->
+<!-- LAMP -->
 <div id="lamp-screen">
   <div id="light-burst"></div>
-
   <p class="lamp-hint" id="lamp-hint">Потяни за шнурок</p>
-
   <div class="lamp-scene">
-    <!-- LAMP SVG -->
     <svg class="lamp-svg" viewBox="0 0 180 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- shade -->
-      <path d="M22 108 L90 16 L158 108 Z" fill="#252525" stroke="#3a3a3a" stroke-width="1.5"/>
-      <path d="M40 106 L90 26 L140 106 Z" fill="#1c1c1c"/>
-      <!-- rim -->
-      <rect x="64" y="108" width="52" height="8" rx="3" fill="#2e2e2e" stroke="#3d3d3d" stroke-width="1"/>
-      <!-- stem -->
-      <rect x="87" y="116" width="6" height="18" fill="#2e2e2e"/>
-      <!-- base -->
-      <rect x="60" y="134" width="60" height="6" rx="3" fill="#2e2e2e" stroke="#3d3d3d" stroke-width="1"/>
+      <path d="M22 108 L90 16 L158 108 Z" fill="#221a10" stroke="#3a2e1e" stroke-width="1.5"/>
+      <path d="M40 106 L90 26 L140 106 Z" fill="#1a1208"/>
+      <rect x="64" y="108" width="52" height="8" rx="3" fill="#2a2018" stroke="#3d3020" stroke-width="1"/>
+      <rect x="87" y="116" width="6" height="18" fill="#2a2018"/>
+      <rect x="60" y="134" width="60" height="6" rx="3" fill="#2a2018" stroke="#3d3020" stroke-width="1"/>
     </svg>
     <div class="bulb-glow"></div>
     <div class="lamp-cone"></div>
-
-    <!-- CORD with SVG physics -->
-    <div class="cord-outer" id="cord" onmousedown="startPull(event)" ontouchstart="startPull(event)">
-      <svg id="cord-svg" width="20" height="90" viewBox="0 0 20 90">
+    <div class="cord-outer" id="cord">
+      <svg id="cord-svg" width="20" height="90" viewBox="0 0 20 90" style="overflow:visible">
         <path id="cord-path" d="M10,0 Q10,45 10,80"/>
         <circle id="cord-ball" cx="10" cy="83" r="7"/>
       </svg>
     </div>
   </div>
-
   <div class="lamp-name">Егор Филимонов</div>
 </div>
 
-<!-- ============================================================
-     MAIN CONTENT
-============================================================ -->
+<!-- MAIN -->
 <div id="main-content">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-left">
-      <p class="hero-tag">Доступен для новых проектов</p>
-      <h1 class="hero-name">Егор<br><span>Филимонов</span></h1>
-      <p class="hero-role">
-        Бизнес-ассистент · Помощник руководителя · РОП<br>
-        7+ лет опыта · Удалённо · Магнитогорск (МСК+2)
-      </p>
-      <div class="hero-contacts">
-        <a href="tel:+79090990226"><span class="contact-dot"></span>+7 (909) 099-02-26</a>
-        <a href="mailto:eeph99@mail.ru"><span class="contact-dot"></span>eeph99@mail.ru</a>
-        <a href="https://t.me/Egor_Evgeneevich" target="_blank"><span class="contact-dot"></span>@Egor_Evgeneevich</a>
-      </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Бизнес-ассистент · МСК+2 · Удалённо</p>
+    <h1 class="hero-slogan">Работаю<em>руками,</em>думаю<em>головой</em></h1>
+    <p class="hero-about">Меня зовут Егор. Я бизнес-ассистент с 7-летним опытом работы в связке с руководителями разного уровня. Закрываю операционные задачи, выстраиваю процессы и беру на себя всё, что отвлекает от стратегии. Активно изучаю инструменты на базе искусственного интеллекта и внедряю их в работу — это позволяет делать больше за меньшее время. Дисциплинирован, грамотен, быстро вхожу в контекст. Работаю удалённо — без потери качества и скорости.</p>
+    <div class="hero-contacts">
+      <a href="tel:+79090990226"><span class="c-dot"></span>+7 (909) 099-02-26</a>
+      <a href="mailto:eeph99@mail.ru"><span class="c-dot"></span>eeph99@mail.ru</a>
+      <a href="https://t.me/Egor_Evgeneevich" target="_blank"><span class="c-dot"></span>@Egor_Evgeneevich</a>
     </div>
-
-    <div class="hero-right">
-      <div class="hero-bg-num">7</div>
+  </div>
+  <div class="hero-right">
+    <div class="photo-area">
+      <div class="hero-bg-text">ЕФ</div>
       <div class="photo-wrap" id="photoWrap">
         <div class="photo-inner" id="photoInner">
-          <div class="photo-accent"></div>
-          <img src="photo.jpg" alt="Егор Филимонов" onerror="this.style.display='none'">
-        </div>
-      </div>
-      <div class="hero-stats">
-        <div class="stat"><div class="stat-num" data-count="7">0</div><div class="stat-label">лет опыта</div></div>
-        <div class="stat"><div class="stat-num" data-count="10">0</div><div class="stat-label">проектов</div></div>
-        <div class="stat"><div class="stat-num">MBA</div><div class="stat-label">City Business School</div></div>
-        <div class="stat"><div class="stat-num">B2B</div><div class="stat-label">продажи и ассистент</div></div>
-      </div>
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- EXPERIENCE -->
-  <section>
-    <div class="container">
-      <div class="section-header">
-        <span class="section-num">01</span>
-        <h2 class="section-title">Опыт работы</h2>
-      </div>
-      <div>
-        <div class="exp-item">
-          <p class="exp-period">Июнь 2025 —<br>настоящее время</p>
-          <div>
-            <h3 class="exp-company">Wildberries / OZON</h3>
-            <p class="exp-position">Помощник / ассистент руководителя</p>
-            <p class="exp-desc">Работа в кабинетах WB и OZON, заполнение карточек товара, коммуникация с производствами, подготовка штрихкодов и честных знаков, СДЕК-накладные, найм и собеседования. Прошёл обучение Яндекса по РСЯ, Яндекс.Директу и Метрике.</p>
-          </div>
-        </div>
-        <div class="exp-item">
-          <p class="exp-period">Август 2024 —<br>настоящее время</p>
-          <div>
-            <h3 class="exp-company">Газстройпром</h3>
-            <p class="exp-position">Помощник руководителя</p>
-            <p class="exp-desc">Финансовое планирование, бюджеты по проектам, работа со счетами и подрядчиками, учёт ИТД, ППР, сертификаты (Росс RU, ГазСЕРТ), структуризация закупок. Прошёл курс MBA General в City Business School.</p>
-          </div>
-        </div>
-        <div class="exp-item">
-          <p class="exp-period">Сент. 2021 —<br>настоящее время</p>
-          <div>
-            <h3 class="exp-company">Аэропорт</h3>
-            <p class="exp-position">Инженер связи</p>
-            <p class="exp-desc">Работа по специальности инженера-связиста, обслуживание кабельных линий связи.</p>
-          </div>
-        </div>
-        <div class="exp-item">
-          <p class="exp-period">Март 2024 —<br>Декабрь 2024</p>
-          <div>
-            <h3 class="exp-company">Фулфилмент (ffpelikan.ru)</h3>
-            <p class="exp-position">Менеджер по продажам / личный ассистент</p>
-            <p class="exp-desc">Поиск клиентов, подготовка КП и договоров, расчёт стоимости услуг, анализ конкурентов, видеомонтаж Reels, ведение Telegram-канала и рабочих аккаунтов.</p>
-          </div>
-        </div>
-        <div class="exp-item">
-          <p class="exp-period">Июнь 2023 —<br>Март 2024</p>
-          <div>
-            <h3 class="exp-company">Наставничество / Инфобизнес</h3>
-            <p class="exp-position">Администратор / помощник руководителя / SMM</p>
-            <p class="exp-desc">Создание договоров, таблиц, презентаций, ведение отчётности, руководство отделом продаж, валютный контроль, travel-поддержка, работа с AmoCRM и Битрикс24, поиск подрядчиков, взаимодействие с госорганами.</p>
-          </div>
-        </div>
-        <div class="exp-item">
-          <p class="exp-period">Февраль 2023 —<br>Июнь 2023</p>
-          <div>
-            <h3 class="exp-company">Ниша психологии</h3>
-            <p class="exp-position">Бизнес-ассистент</p>
-            <p class="exp-desc">Ведение бухучёта, копирайтинг, анализ алгоритмов Instagram и YouTube, ведение CRM, видеомонтаж экспертных Reels, планёрки и рассылки.</p>
-          </div>
+          <img src="photo.png" alt="Егор Филимонов" onerror="this.src='photo.jpg';this.onerror=null;">
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- SKILLS -->
-  <section class="skills-bg">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-num">02</span>
-        <h2 class="section-title">Навыки и инструменты</h2>
+    <!-- TICKER -->
+    <div class="ticker-wrap">
+      <div class="ticker-track">
+        <span class="ticker-item">7 лет опыта</span>
+        <span class="ticker-item">Бизнес-ассистент</span>
+        <span class="ticker-item">MBA 2025</span>
+        <span class="ticker-item">WB / OZON</span>
+        <span class="ticker-item">AmoCRM</span>
+        <span class="ticker-item">Битрикс24</span>
+        <span class="ticker-item">РОП</span>
+        <span class="ticker-item">SMM</span>
+        <span class="ticker-item">B2B продажи</span>
+        <span class="ticker-item">AI-инструменты</span>
+        <span class="ticker-item">Travel-поддержка</span>
+        <span class="ticker-item">Удалённо</span>
+        <!-- duplicate for seamless loop -->
+        <span class="ticker-item">7 лет опыта</span>
+        <span class="ticker-item">Бизнес-ассистент</span>
+        <span class="ticker-item">MBA 2025</span>
+        <span class="ticker-item">WB / OZON</span>
+        <span class="ticker-item">AmoCRM</span>
+        <span class="ticker-item">Битрикс24</span>
+        <span class="ticker-item">РОП</span>
+        <span class="ticker-item">SMM</span>
+        <span class="ticker-item">B2B продажи</span>
+        <span class="ticker-item">AI-инструменты</span>
+        <span class="ticker-item">Travel-поддержка</span>
+        <span class="ticker-item">Удалённо</span>
       </div>
-      <div class="skills-grid">
-        <div class="skill-group">
-          <h3>Управление</h3>
-          <ul class="skill-list">
-            <li>Административная поддержка руководителя</li>
-            <li>Управление командой и отделом продаж</li>
-            <li>Подбор персонала, собеседования</li>
-            <li>Создание регламентов и CRM-систем</li>
-            <li>Travel-поддержка, личные поручения</li>
-          </ul>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- OFFER -->
+<section class="offer-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow" style="color:rgba(196,105,61,0.6)">Чем могу помочь</p>
+      <h2 class="section-title" style="color:#fff">Задачи, которые я закрываю</h2>
+    </div>
+    <div class="offer-grid">
+      <div class="offer-card"><div class="offer-icon">🗂️</div><h3 class="offer-title">Разгружу твой день</h3><p class="offer-desc">Возьму на себя <strong>рутину и операционку</strong> — переписки, подрядчики, документы, поручения. Ты занимаешься стратегией, я делаю всё остальное.</p></div>
+      <div class="offer-card"><div class="offer-icon">⚙️</div><h3 class="offer-title">Выстрою процессы</h3><p class="offer-desc">Создам <strong>регламенты, CRM, отчётность</strong> с нуля или наведу порядок в существующих. Работал с Битрикс24, AmoCRM, OKCRM, RetailCRM.</p></div>
+      <div class="offer-card"><div class="offer-icon">📈</div><h3 class="offer-title">Закрою продажи</h3><p class="offer-desc">Опыт в <strong>B2B продажах, работе с лидами</strong>, подготовке КП и договоров. Выстраивал отделы продаж с нуля и управлял ими.</p></div>
+      <div class="offer-card"><div class="offer-icon">🛒</div><h3 class="offer-title">Маркетплейсы</h3><p class="offer-desc">Полный цикл на <strong>WB, OZON, Яндекс.Маркет</strong> — карточки, поставки, ЧЗ, аналитика, реклама через Яндекс.Директ и РСЯ.</p></div>
+      <div class="offer-card"><div class="offer-icon">🤖</div><h3 class="offer-title">AI-инструменты</h3><p class="offer-desc">Изучаю и внедряю <strong>инструменты на базе ИИ</strong> в рабочие процессы. Автоматизация рутины, генерация контента, работа с данными быстрее и эффективнее.</p></div>
+      <div class="offer-card"><div class="offer-icon">💼</div><h3 class="offer-title">Финансы и документы</h3><p class="offer-desc">Бюджеты, финансовые отчёты, счета, договоры, декларации. Опыт в <strong>бухгалтерском учёте</strong> и работе с госорганами.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- NICHES -->
+<section class="niches-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Опыт по нишам</p>
+      <h2 class="section-title">Сферы, в которых работал</h2>
+    </div>
+    <div class="niches-wrap">
+      <span class="niche-tag"><span class="niche-dot"></span>Маркетплейсы WB / OZON</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Инфобизнес / Наставничество</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Фулфилмент</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Психология</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Газовая отрасль</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Бухгалтерия и налоги</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Авиация / Аэропорт</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Общепит / HoReCa</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Агентство подбора персонала</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Онлайн-школа английского</span>
+      <span class="niche-tag"><span class="niche-dot"></span>Маркетинговое агентство</span>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Карьера</p>
+      <h2 class="section-title">Опыт работы</h2>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-duration"><div class="acc-dur-num">1</div><div class="acc-dur-label">год</div><div class="acc-dur-period">2025 — н.в.</div></div>
+        <div><div class="acc-company">Wildberries / OZON</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <p class="acc-desc">Полноценная работа в личных кабинетах WB и OZON: заполнение и оптимизация карточек товара, работа с контентом, коммуникация с производствами и поставщиками. Подготовка штрихкодов, оформление честных знаков (ЧЗ), формирование СДЕК-накладных, взаимодействие с менеджерами транспортных компаний. Поиск и найм сотрудников, проведение первичных собеседований, онбординг. Работа в Битрикс24: постановка задач, трекинг, отчётность. Прошёл обучение от Яндекса по работе с РСЯ, Яндекс.Директом и Яндекс.Метрикой — применяю на практике для продвижения товаров.</p>
+        <div class="acc-tags">
+          <span class="acc-tag">WB / OZON</span><span class="acc-tag">Карточки товара</span><span class="acc-tag">Честный знак</span><span class="acc-tag">СДЕК</span><span class="acc-tag">Яндекс.Директ</span><span class="acc-tag">РСЯ</span><span class="acc-tag">HR</span><span class="acc-tag">Битрикс24</span>
         </div>
-        <div class="skill-group">
-          <h3>Продажи и маркетинг</h3>
-          <ul class="skill-list">
-            <li>B2B продажи, работа с тёплыми лидами</li>
-            <li>Подготовка КП и договоров</li>
-            <li>SMM, ведение Telegram-каналов</li>
-            <li>Яндекс.Директ, РСЯ, Метрика</li>
-            <li>Маркетплейсы WB / OZON / Яндекс.Маркет</li>
-          </ul>
-        </div>
-        <div class="skill-group">
-          <h3>Инструменты</h3>
-          <ul class="skill-list">
-            <li>Битрикс24, AmoCRM, OKCRM, RetailCRM</li>
-            <li>Excel, Google Docs, PowerPoint</li>
-            <li>Zoom, Trello, Todoist, WEEEK, TickTick</li>
-            <li>Видеомонтаж (YouTube Shorts, Reels)</li>
-            <li>Финансовая отчётность, бюджетирование</li>
-          </ul>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-duration"><div class="acc-dur-num">1.5</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2024 — н.в.</div></div>
+        <div><div class="acc-company">Газстройпром</div><div class="acc-position">Помощник руководителя</div></div>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <p class="acc-desc">Работа в крупной газовой компании в роли помощника руководителя. Финансовое планирование и контроль: составление бюджетов по проектам, работа со счетами, выставление счетов подрядчикам, составление финансовых отчётов. Учёт рабочего времени сотрудников, статусов ИТД по построенным адресам, ведение реестров догазов, внутрянок, распредов и просрочек. Работа с документацией: разбивки (акты ЗСО, СП, планы трасс, схемы сварных стыков), учёт ППР, отчётные сведения в ГСМ. Работа с сертификатами (Росс RU, ГазСЕРТ и др.), структуризация и ведение таблиц по закупкам (паспорта изделий), поиск подрядчиков и коммуникация с ними. Параллельно прошёл полный курс MBA General в City Business School.</p>
+        <div class="acc-tags">
+          <span class="acc-tag">Финпланирование</span><span class="acc-tag">Бюджеты</span><span class="acc-tag">ИТД / ППР</span><span class="acc-tag">Сертификаты</span><span class="acc-tag">Закупки</span><span class="acc-tag">MBA</span><span class="acc-tag">Битрикс24</span>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- QUALITIES -->
-  <section class="qualities-section">
-    <div class="qualities-grid">
-      <div class="quality-card"><div class="quality-icon">⚡</div><h3 class="quality-title">Дисциплина</h3><p class="quality-desc">Выполняю задачи в срок, не теряю детали даже при большом потоке информации</p></div>
-      <div class="quality-card"><div class="quality-icon">🎯</div><h3 class="quality-title">Амбиции</h3><p class="quality-desc">Прошёл путь от официанта до РОП. Курс MBA — это не для галочки, а для роста</p></div>
-      <div class="quality-card"><div class="quality-icon">🔄</div><h3 class="quality-title">Гибкость</h3><p class="quality-desc">Работал в 10+ нишах. Быстро погружаюсь в контекст и новые задачи</p></div>
-      <div class="quality-card"><div class="quality-icon">🤝</div><h3 class="quality-title">Коммуникация</h3><p class="quality-desc">Грамотная речь, опыт переговоров с подрядчиками, госорганами и клиентами</p></div>
-    </div>
-  </section>
-
-  <!-- EDUCATION -->
-  <section>
-    <div class="container">
-      <div class="section-header">
-        <span class="section-num">03</span>
-        <h2 class="section-title">Образование</h2>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-duration"><div class="acc-dur-num">4+</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2021 — н.в.</div></div>
+        <div><div class="acc-company">Аэропорт</div><div class="acc-position">Инженер связи</div></div>
+        <div class="acc-arrow">▾</div>
       </div>
-      <div class="edu-grid">
-        <div class="edu-card"><p class="edu-year">2021</p><h3 class="edu-title">Магнитогорский государственный технический университет</h3><p class="edu-sub">Институт энергетики и автоматики · Промышленная электроника (инженер)</p></div>
-        <div class="edu-card"><p class="edu-year">2025</p><h3 class="edu-title">City Business School — MBA General</h3><p class="edu-sub">Управление бизнесом, финансы, стратегия · ООО «ГСП»</p></div>
-        <div class="edu-card"><p class="edu-year">2017</p><h3 class="edu-title">Happy English</h3><p class="edu-sub">Английский язык · Уровень Intermediate</p></div>
-        <div class="edu-card"><p class="edu-year">2021</p><h3 class="edu-title">Диплом о высшем образовании</h3><p class="edu-sub">Подтверждённая квалификация инженера · Права категории B</p></div>
+      <div class="acc-body">
+        <p class="acc-desc">Работа по профильной специальности инженера-связиста в государственной организации. Обслуживание, эксплуатация и контроль состояния кабельных линий связи (КЛС). Параллельная деятельность, совмещаемая с основной карьерой бизнес-ассистента — даёт техническую базу и понимание системной работы в крупных структурах.</p>
+        <div class="acc-tags">
+          <span class="acc-tag">КЛС</span><span class="acc-tag">Связь</span><span class="acc-tag">Инженерия</span><span class="acc-tag">Госструктуры</span>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- CTA -->
-  <section class="cta-section">
-    <div class="container">
-      <h2>Готов к <span>новым проектам</span></h2>
-      <p>Удалённая полная занятость · от 60 000 ₽ на руки</p>
-      <div class="cta-buttons">
-        <a href="tel:+79090990226" class="btn btn-orange">Позвонить</a>
-        <a href="https://t.me/Egor_Evgeneevich" target="_blank" class="btn btn-outline">Написать в Telegram</a>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2025</div></div>
+        <div><div class="acc-company">Ниша бухгалтерии</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <p class="acc-desc">Работа в связке с профессиональным бухгалтером с опытом более 20 лет. Помощь в поиске клиентов для бухгалтерского аутсорсинга и консультаций по российскому законодательству. Участие в процессах регистрации ИП и ООО, сдачи отчётности, составления налоговых деклараций. Ведение Telegram-канала компании: контент, публикации, продвижение. Параллельное обучение в процессе работы — погружение в бухгалтерский и налоговый учёт.</p>
+        <div class="acc-tags">
+          <span class="acc-tag">Бухаутсорсинг</span><span class="acc-tag">Налоги</span><span class="acc-tag">ИП / ООО</span><span class="acc-tag">Telegram</span><span class="acc-tag">Клиентопоиск</span>
+        </div>
       </div>
     </div>
-  </section>
 
-  <footer>
-    <div>© 2026 Филимонов <span>Егор Евгеньевич</span></div>
-    <div>Магнитогорск · Удалённо · МСК+2</div>
-  </footer>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-duration"><div class="acc-dur-num">10</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2024</div></div>
+        <div><div class="acc-company">Фулфилмент Пеликан</div><div class="acc-position">Менеджер по продажам / личный ассистент</div></div>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <p class="acc-desc">Активный поиск клиентов для услуг фулфилмента, холодные и тёплые продажи, полное сопровождение на каждом этапе сделки. Подготовка коммерческих предложений и договоров, расчёт стоимости услуг под каждого клиента. Анализ конкурентов и рынка фулфилмент-услуг. Параллельно — ведение рабочих аккаунтов компании в соцсетях, видеомонтаж Reels для привлечения клиентов, ведение и развитие Telegram-канала компании.</p>
+        <div class="acc-tags">
+          <span class="acc-tag">B2B продажи</span><span class="acc-tag">КП и договоры</span><span class="acc-tag">Сопровождение сделок</span><span class="acc-tag">SMM</span><span class="acc-tag">Reels</span><span class="acc-tag">Telegram</span>
+        </div>
+      </div>
+    </div>
 
-</div><!-- /main-content -->
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-duration"><div class="acc-dur-num">9</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2023 — 2024</div></div>
+        <div><div class="acc-company">Наставничество / Инфобизнес</div><div class="acc-position">Администратор / РОП / помощник руководителя</div></div>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <p class="acc-desc">Широкий спектр задач в онлайн-бизнесе: создание регламентов и CRM-системы с нуля, руководство отделом продаж — найм, обучение, постановка планов, контроль результатов. Ведение валютного контроля и бухгалтерских отчётов. Travel-поддержка руководителя: поиск и бронирование жилья, транспорта, логистика поездок. Взаимодействие с госорганами, поиск и работа с подрядчиками и исполнителями. Создание договоров, счетов на оплату, платёжных поручений. Работа с AmoCRM и Битрикс24, обработка лидов, ведение воронки продаж. Закупка рекламы в Telegram-каналах.</p>
+        <div class="acc-tags">
+          <span class="acc-tag">РОП</span><span class="acc-tag">CRM с нуля</span><span class="acc-tag">Регламенты</span><span class="acc-tag">Travel</span><span class="acc-tag">Валютный контроль</span><span class="acc-tag">AmoCRM</span><span class="acc-tag">Битрикс24</span><span class="acc-tag">Реклама в TG</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2023</div></div>
+        <div><div class="acc-company">Ниша психологии</div><div class="acc-position">Бизнес-ассистент</div></div>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <p class="acc-desc">Работа с практикующим психологом: ведение бухгалтерского учёта и отчётности, составление календаря и планёрок, личные поручения. Копирайтинг для соцсетей и рассылок, анализ алгоритмов Instagram и YouTube для роста аудитории. Ведение Google Docs и Excel-таблиц, CRM. Видеомонтаж экспертных Reels, рассылки по базе клиентов.</p>
+        <div class="acc-tags">
+          <span class="acc-tag">Копирайтинг</span><span class="acc-tag">CRM</span><span class="acc-tag">Reels</span><span class="acc-tag">YouTube</span><span class="acc-tag">Instagram</span><span class="acc-tag">Бухучёт</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-duration"><div class="acc-dur-num">2</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2017 — 2019</div></div>
+        <div><div class="acc-company">General Food</div><div class="acc-position">Официант · Бармен · Курьер</div></div>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <p class="acc-desc">Первый опыт работы с людьми — ресторан и общепит. Именно здесь сформировались базовые навыки коммуникации, стрессоустойчивости и работы в команде в условиях высокой нагрузки. Работал в нескольких ролях параллельно: обслуживание гостей, барная стойка, курьерская доставка. Опыт научил понимать людей, быть жизнерадостным и ответственным в любой ситуации.</p>
+        <div class="acc-tags">
+          <span class="acc-tag">Коммуникация</span><span class="acc-tag">Стрессоустойчивость</span><span class="acc-tag">Командная работа</span><span class="acc-tag">Сервис</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="tools-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Инструменты</p>
+      <h2 class="section-title">Стек</h2>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-group">
+        <div class="tool-group-title">CRM и управление задачами</div>
+        <div class="tool-tags">
+          <span class="tool-tag">Битрикс24</span><span class="tool-tag">AmoCRM</span><span class="tool-tag">OKCRM</span><span class="tool-tag">RetailCRM</span><span class="tool-tag">Trello</span><span class="tool-tag">Todoist</span><span class="tool-tag">WEEEK</span><span class="tool-tag">TickTick</span><span class="tool-tag">Google Calendar</span>
+        </div>
+      </div>
+      <div class="tool-group">
+        <div class="tool-group-title">Офис и документы</div>
+        <div class="tool-tags">
+          <span class="tool-tag">Excel</span><span class="tool-tag">Google Sheets</span><span class="tool-tag">Google Docs</span><span class="tool-tag">PowerPoint</span><span class="tool-tag">Word</span><span class="tool-tag">Zoom</span><span class="tool-tag">1С (базово)</span>
+        </div>
+      </div>
+      <div class="tool-group">
+        <div class="tool-group-title">Маркетинг и контент</div>
+        <div class="tool-tags">
+          <span class="tool-tag">Яндекс.Директ</span><span class="tool-tag">РСЯ</span><span class="tool-tag">Метрика</span><span class="tool-tag">Telegram</span><span class="tool-tag">Видеомонтаж</span><span class="tool-tag">Reels / Shorts</span><span class="tool-tag">СДЕК</span><span class="tool-tag">AI-инструменты</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUALITIES -->
+<section style="padding:0!important">
+  <div class="q-grid">
+    <div class="q-card"><div class="q-icon">⚡</div><h3 class="q-title">Дисциплина</h3><p class="q-desc">Выполняю задачи в срок, не теряю детали даже при большом потоке информации</p></div>
+    <div class="q-card"><div class="q-icon">🎯</div><h3 class="q-title">Амбиции</h3><p class="q-desc">От официанта до РОП. MBA — не для галочки, а для роста</p></div>
+    <div class="q-card"><div class="q-icon">🔄</div><h3 class="q-title">Гибкость</h3><p class="q-desc">10+ ниш за карьеру. Быстро вхожу в контекст любого бизнеса</p></div>
+    <div class="q-card"><div class="q-icon">🤝</div><h3 class="q-title">Коммуникация</h3><p class="q-desc">Грамотная речь, переговоры с подрядчиками, клиентами, госорганами</p></div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Обучение</p>
+      <h2 class="section-title">Образование</h2>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card"><p class="edu-year">2021</p><h3 class="edu-title">МГТУ им. Г.И. Носова</h3><p class="edu-sub">Промышленная электроника · Инженер · Магнитогорск</p></div>
+      <div class="edu-card"><p class="edu-year">2025</p><h3 class="edu-title">City Business School — MBA General</h3><p class="edu-sub">Управление бизнесом · Финансы · Стратегия</p></div>
+      <div class="edu-card"><p class="edu-year">2017</p><h3 class="edu-title">Happy English</h3><p class="edu-sub">Английский язык · Intermediate</p></div>
+      <div class="edu-card"><p class="edu-year">2021</p><h3 class="edu-title">Диплом о высшем образовании</h3><p class="edu-sub">Квалификация инженера · Права категории B</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2 class="cta-big">Готов к <em>новым проектам</em></h2>
+    <p class="cta-sub">Удалённая полная занятость · от 60 000 ₽ на руки</p>
+    <div class="cta-btns">
+      <a href="tel:+79090990226" class="btn btn-fill">Позвонить</a>
+      <a href="https://t.me/Egor_Evgeneevich" target="_blank" class="btn btn-ghost">Telegram</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 Филимонов <span>Егор Евгеньевич</span></div>
+  <div>Магнитогорск · Удалённо · МСК+2</div>
+</footer>
+
+</div>
 
 <script>
-/* ============================================================
-   CORD PULL PHYSICS
-============================================================ */
-const cordEl = document.getElementById('cord');
-const cordPath = document.getElementById('cord-path');
-const cordBall = document.getElementById('cord-ball');
-const screen = document.getElementById('lamp-screen');
-const burst = document.getElementById('light-burst');
-const hint = document.getElementById('lamp-hint');
+/* CORD */
+const screen=document.getElementById('lamp-screen'), burst=document.getElementById('light-burst'), hint=document.getElementById('lamp-hint');
+const cp=document.getElementById('cord-path'), cb=document.getElementById('cord-ball');
+let pulling=false, pulled=false, startY=0, pd=0;
+const MAX=65;
+function gc(p){ const s=Math.min(p*0.28,16),by=80+p; return{path:`M10,0 Q${10+s},${38+p*0.35} 10,${by}`,by:by+3}; }
+document.getElementById('cord').addEventListener('mousedown',e=>{pulling=true;startY=e.clientY;e.preventDefault();});
+document.getElementById('cord').addEventListener('touchstart',e=>{pulling=true;startY=e.touches[0].clientY;e.preventDefault();},{passive:false});
+document.addEventListener('mousemove',e=>{if(!pulling||pulled)return;move(e.clientY);});
+document.addEventListener('touchmove',e=>{if(!pulling||pulled)return;move(e.touches[0].clientY);e.preventDefault();},{passive:false});
+document.addEventListener('mouseup',end); document.addEventListener('touchend',end);
+function move(y){pd=Math.max(0,Math.min(y-startY,MAX));const{path,by}=gc(pd);cp.setAttribute('d',path);cb.setAttribute('cy',by);if(pd>10)hint.classList.add('hide');}
+function end(){if(!pulling||pulled)return;pulling=false;if(pd>=30){pulled=true;snap();}else springBack();pd=0;}
+function springBack(){const d=pd,s=performance.now();function a(now){const t=(now-s)/420;if(t>=1){cp.setAttribute('d','M10,0 Q10,45 10,80');cb.setAttribute('cy',83);hint.classList.remove('hide');return;}const v=Math.pow(1-t,2)*Math.cos(t*Math.PI*5)*(1-t);const{path,by}=gc(d*v);cp.setAttribute('d',path);cb.setAttribute('cy',by);requestAnimationFrame(a);}requestAnimationFrame(a);}
+function snap(){const d=pd,s=performance.now();function a(now){const t=(now-s)/280;if(t<1){const b=Math.sin(t*Math.PI*3)*(1-t)*d*0.35;const{path,by}=gc(b);cp.setAttribute('d',path);cb.setAttribute('cy',by);requestAnimationFrame(a);}}requestAnimationFrame(a);
+  setTimeout(()=>screen.classList.add('lit'),100);
+  setTimeout(()=>{burst.getBoundingClientRect();burst.classList.add('expand');},280);
+  setTimeout(()=>{screen.classList.add('fade-out');document.getElementById('main-content').classList.add('revealed');document.body.style.background='#f5f0e8';},860);
+  setTimeout(()=>{screen.style.display='none';startCounters();},2300);}
 
-let pulling = false;
-let pulled = false;
-let startY = 0;
-let pullDist = 0;
-const MAX_PULL = 60;
+/* PHOTO TILT */
+const pw=document.getElementById('photoWrap'),pi=document.getElementById('photoInner');
+if(pw&&pi){
+  pw.addEventListener('mousemove',e=>{const r=pw.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;pi.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.03)`;pi.style.filter=`drop-shadow(${x*-16}px ${y*-10}px 28px rgba(155,79,42,0.2))`;});
+  pw.addEventListener('mouseleave',()=>{pi.style.transition='transform 0.7s ease,filter 0.7s ease';pi.style.transform='rotateY(0) rotateX(0) scale(1)';pi.style.filter='none';setTimeout(()=>pi.style.transition='transform 0.12s ease-out',700);});}
 
-function getCordPath(pull) {
-  const sag = Math.min(pull * 0.3, 18);
-  const ballY = 80 + pull;
-  return {
-    path: `M10,0 Q${10 + sag},${40 + pull * 0.4} 10,${ballY}`,
-    ballY: ballY + 3
-  };
-}
+/* ACCORDION */
+function toggleAcc(h){const item=h.parentElement,isOpen=item.classList.contains('open');document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));if(!isOpen)item.classList.add('open');}
 
-function startPull(e) {
-  if (pulled) return;
-  pulling = true;
-  startY = e.touches ? e.touches[0].clientY : e.clientY;
-  e.preventDefault();
-}
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),+e.target.dataset.delay||0);obs.unobserve(e.target);}});},{threshold:0.1});
+document.querySelectorAll('.acc-item,.edu-card,.q-card,.offer-card').forEach((el,i)=>{if(!el.dataset.delay)el.dataset.delay=(i%4)*90;obs.observe(el);});
+document.querySelectorAll('.niche-tag').forEach((el,i)=>{el.dataset.delay=i*45;obs.observe(el);});
 
-document.addEventListener('mousemove', onPull);
-document.addEventListener('touchmove', onPull, { passive: false });
-document.addEventListener('mouseup', endPull);
-document.addEventListener('touchend', endPull);
-
-function onPull(e) {
-  if (!pulling || pulled) return;
-  const y = e.touches ? e.touches[0].clientY : e.clientY;
-  pullDist = Math.max(0, Math.min(y - startY, MAX_PULL));
-
-  const { path, ballY } = getCordPath(pullDist);
-  cordPath.setAttribute('d', path);
-  cordBall.setAttribute('cy', ballY);
-
-  if (pullDist > 10) hint.classList.add('hide');
-}
-
-function endPull(e) {
-  if (!pulling || pulled) return;
-  pulling = false;
-
-  if (pullDist >= 28) {
-    // SNAP — light turns on
-    pulled = true;
-    snapRelease();
-  } else {
-    // spring back
-    springBack();
-  }
-  pullDist = 0;
-}
-
-function springBack() {
-  let t = 0;
-  const dur = 400;
-  const start = performance.now();
-  const startPath = cordPath.getAttribute('d');
-
-  function animate(now) {
-    t = (now - start) / dur;
-    if (t >= 1) {
-      cordPath.setAttribute('d', 'M10,0 Q10,45 10,80');
-      cordBall.setAttribute('cy', 83);
-      hint.classList.remove('hide');
-      return;
-    }
-    // spring oscillation
-    const ease = Math.pow(1 - t, 2) * Math.cos(t * Math.PI * 6) * (1 - t);
-    const pull = pullDist * ease;
-    const { path, ballY } = getCordPath(pull);
-    cordPath.setAttribute('d', path);
-    cordBall.setAttribute('cy', ballY);
-    requestAnimationFrame(animate);
-  }
-  requestAnimationFrame(animate);
-}
-
-function snapRelease() {
-  // 1. cord snaps back fast with overshoot
-  let t = 0;
-  const start = performance.now();
-
-  function animateCord(now) {
-    t = (now - start) / 300;
-    if (t < 1) {
-      const bounce = Math.sin(t * Math.PI * 3) * (1 - t) * pullDist * 0.4;
-      const { path, ballY } = getCordPath(bounce);
-      cordPath.setAttribute('d', path);
-      cordBall.setAttribute('cy', ballY);
-      requestAnimationFrame(animateCord);
-    }
-  }
-  requestAnimationFrame(animateCord);
-
-  // 2. lamp lights up
-  setTimeout(() => {
-    screen.classList.add('lit');
-  }, 120);
-
-  // 3. burst of light from center
-  setTimeout(() => {
-    burst.style.transition = 'transform 1.1s cubic-bezier(.16,1,.3,1), opacity 0.15s';
-    burst.style.opacity = '1';
-    burst.style.transform = 'scale(0.05)';
-    // trigger reflow
-    burst.getBoundingClientRect();
-    burst.classList.add('expand');
-  }, 300);
-
-  // 4. fade out lamp screen, reveal content
-  setTimeout(() => {
-    screen.classList.add('fade-out');
-    document.getElementById('main-content').classList.add('revealed');
-    document.body.style.background = '#f7f7f5';
-  }, 900);
-
-  setTimeout(() => {
-    screen.style.display = 'none';
-    startCounters();
-  }, 2400);
-}
-
-/* ============================================================
-   PHOTO TILT 3D
-============================================================ */
-const photoWrap = document.getElementById('photoWrap');
-const photoInner = document.getElementById('photoInner');
-
-if (photoWrap && photoInner) {
-  photoWrap.addEventListener('mousemove', (e) => {
-    const rect = photoWrap.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    photoInner.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 10}deg) scale(1.02)`;
-    photoInner.style.boxShadow = `${x * -20}px ${y * -20}px 40px rgba(232,93,4,0.15), 0 20px 60px rgba(0,0,0,0.15)`;
-  });
-  photoWrap.addEventListener('mouseleave', () => {
-    photoInner.style.transform = 'rotateY(0) rotateX(0) scale(1)';
-    photoInner.style.boxShadow = 'none';
-    photoInner.style.transition = 'transform 0.6s ease, box-shadow 0.6s ease';
-    setTimeout(() => { photoInner.style.transition = 'transform 0.1s ease-out'; }, 600);
-  });
-}
-
-/* ============================================================
-   SCROLL REVEAL
-============================================================ */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach((el) => {
-    if (el.isIntersecting) {
-      setTimeout(() => el.target.classList.add('visible'), el.target.dataset.delay || 0);
-      revealObserver.unobserve(el.target);
-    }
-  });
-}, { threshold: 0.12 });
-
-document.querySelectorAll('.exp-item, .edu-card, .quality-card').forEach((el, i) => {
-  el.dataset.delay = (i % 4) * 100;
-  revealObserver.observe(el);
-});
-
-/* ============================================================
-   NUMBER COUNTERS
-============================================================ */
-function startCounters() {
-  document.querySelectorAll('[data-count]').forEach(el => {
-    const target = +el.dataset.count;
-    let current = 0;
-    const step = target / 40;
-    const timer = setInterval(() => {
-      current = Math.min(current + step, target);
-      el.textContent = Math.round(current) + '+';
-      if (current >= target) clearInterval(timer);
-    }, 40);
-  });
-}
+/* COUNTERS */
+function startCounters(){document.querySelectorAll('[data-count]').forEach(el=>{const t=+el.dataset.count;let c=0;const s=t/35;const iv=setInterval(()=>{c=Math.min(c+s,t);el.textContent=Math.round(c)+'+';if(c>=t)clearInterval(iv);},45);});}
 </script>
 </body>
 </html>
