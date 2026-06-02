@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Егор Филимонов — Бизнес-ассистент</title>
+
+<!-- #14 Open Graph мета-теги -->
+<meta property="og:title" content="Егор Филимонов — Бизнес-ассистент">
+<meta property="og:description" content="Бизнес-ассистент с 7-летним опытом. Закрываю операционку, выстраиваю процессы, внедряю AI. Удалённо · МСК+2">
+<meta property="og:image" content="https://egor-assistant.ru/photo.png">
+<meta property="og:url" content="https://egor-assistant.ru">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Бизнес-ассистент с 7-летним опытом. Закрываю операционку, выстраиваю процессы, внедряю AI. Удалённо · МСК+2">
+
+<!-- #13 Favicon — монограмма ЕФ в терракоте -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%239b4f2a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='serif' font-weight='700' font-size='14' fill='%23faf7f2'%3E%D0%95%D0%A4%3C/text%3E%3C/svg%3E">
+
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Geologica:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,8 +24,40 @@
   --bg: #f5f0e8; --bg2: #ede8df; --ink: #2a1f14; --ink2: #6a5a48;
   --terra: #9b4f2a; --terra2: #c4693d; --cream: #faf7f2; --line: #ddd8ce; --dark: #1a1209;
 }
-html { scroll-behavior: smooth; }
-body { background: var(--dark); color: var(--ink); font-family: 'Geologica', sans-serif; font-weight: 300; overflow-x: hidden; }
+/* #4 убрали scroll-behavior с html — управляем скроллом только через JS */
+body { background: var(--dark); color: var(--ink); font-family: 'Geologica', sans-serif; font-weight: 300; overflow-x: hidden; -webkit-overflow-scrolling: touch; /* #15 iOS smooth scroll */ }
+
+/* ===== PROGRESS BAR #5 ===== */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+  background: var(--terra); z-index: 2000; transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* ===== STICKY NAV #7 ===== */
+#site-nav {
+  position: fixed; top: 2px; left: 0; right: 0; z-index: 1500;
+  display: flex; justify-content: center; padding: 10px 20px;
+  opacity: 0; transform: translateY(-8px);
+  transition: opacity 0.35s, transform 0.35s;
+  pointer-events: none;
+}
+#site-nav.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.nav-inner {
+  background: rgba(26,18,9,0.88); backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(155,79,42,0.2);
+  border-radius: 40px; padding: 8px 20px;
+  display: flex; gap: 4px; align-items: center;
+}
+.nav-link {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,210,160,0.45); text-decoration: none;
+  padding: 6px 12px; border-radius: 20px;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+.nav-link:hover, .nav-link.active { color: var(--terra2); background: rgba(155,79,42,0.12); }
 
 /* ===== LAMP ===== */
 #lamp-screen {
@@ -28,7 +73,14 @@ body { background: var(--dark); color: var(--ink); font-family: 'Geologica', san
   transition: transform 1.2s cubic-bezier(.16,1,.3,1), opacity 0.1s;
 }
 #light-burst.expand { opacity: 1; transform: scale(7); }
-.lamp-hint { position: relative; z-index: 2; font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,220,180,0.2); margin-bottom: 40px; transition: opacity 0.4s; user-select: none; pointer-events: none; }
+/* #3 лампа-hint — крупнее и видимее на мобилке */
+.lamp-hint {
+  position: relative; z-index: 2;
+  font-size: clamp(11px, 3vw, 13px); letter-spacing: 4px; text-transform: uppercase;
+  color: rgba(255,220,180,0.55); margin-bottom: 40px;
+  transition: opacity 0.4s; user-select: none; pointer-events: none;
+  text-align: center; padding: 0 20px;
+}
 .lamp-hint.hide { opacity: 0; }
 .lamp-scene { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
 .lamp-svg { pointer-events: none; filter: drop-shadow(0 0 0px #9b4f2a); transition: filter 0.9s; }
@@ -37,7 +89,7 @@ body { background: var(--dark); color: var(--ink); font-family: 'Geologica', san
 #lamp-screen.lit .bulb-glow { background: #fff8e0; box-shadow: 0 0 60px 30px rgba(196,105,61,0.75), 0 0 140px 80px rgba(155,79,42,0.25); }
 .lamp-cone { position: absolute; top: 120px; left: 50%; transform: translateX(-50%); width: 0; height: 0; pointer-events: none; transition: border 0.9s ease; }
 #lamp-screen.lit .lamp-cone { border-left: 150px solid transparent; border-right: 150px solid transparent; border-top: 220px solid rgba(196,105,61,0.07); }
-.cord-outer { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; cursor: grab; padding: 0 32px; user-select: none; }
+.cord-outer { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; cursor: grab; padding: 0 32px; user-select: none; touch-action: none; }
 .cord-outer:active { cursor: grabbing; }
 #cord-svg { overflow: visible; }
 #cord-path { stroke: rgba(255,210,160,0.2); stroke-width: 1.8; fill: none; stroke-linecap: round; transition: stroke 0.3s; }
@@ -60,21 +112,34 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
 .hero-slogan { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 7vw, 100px); font-weight: 700; line-height: 0.9; color: var(--ink); margin-bottom: 32px; letter-spacing: -2px; }
 .hero-slogan em { color: var(--terra); font-style: normal; display: block; }
 .hero-about { font-size: 14px; color: var(--ink2); line-height: 1.9; max-width: 400px; margin-bottom: 44px; border-left: 2px solid var(--terra); padding-left: 18px; }
-.hero-contacts { display: flex; flex-direction: column; gap: 13px; }
+.hero-contacts { display: flex; flex-direction: column; gap: 13px; margin-bottom: 32px; }
 .hero-contacts a { color: var(--ink); text-decoration: none; font-size: 13px; display: flex; align-items: center; gap: 12px; transition: color 0.2s; }
 .hero-contacts a:hover { color: var(--terra); }
 .c-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--terra); flex-shrink: 0; }
+
+/* #6 якорные кнопки в hero */
+.hero-anchors { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero-anchor-btn {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--terra); text-decoration: none;
+  border: 1px solid rgba(155,79,42,0.3); padding: 7px 16px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.hero-anchor-btn:hover { background: var(--terra); color: #fff; border-color: var(--terra); }
+
 .hero-right { position: relative; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; }
 .photo-area { flex: 1; display: flex; align-items: flex-end; justify-content: center; position: relative; overflow: hidden; }
 .hero-bg-text { position: absolute; right: -10px; top: 50%; transform: translateY(-55%); font-family: 'Cormorant Garamond', serif; font-size: 220px; font-weight: 700; line-height: 1; color: rgba(155,79,42,0.05); user-select: none; pointer-events: none; writing-mode: vertical-rl; letter-spacing: -10px; }
 .photo-wrap { width: 360px; height: 480px; perspective: 900px; position: relative; z-index: 2; }
-.photo-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.12s ease-out; will-change: transform; }
+/* #17 will-change убран из статики — добавляется JS-ом при hover */
+.photo-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.12s ease-out; }
 .photo-inner img { width: 100%; height: 100%; object-fit: contain; object-position: bottom center; display: block; }
 
 /* TICKER */
 .ticker-wrap { border-top: 1px solid var(--line); background: var(--cream); overflow: hidden; padding: 13px 0; white-space: nowrap; }
 .ticker-track { display: inline-flex; animation: ticker 32s linear infinite; }
-.ticker-track:hover { animation-play-state: paused; }
+/* #11 тач-пауза через класс */
+.ticker-track:hover, .ticker-track.paused { animation-play-state: paused; }
 .ticker-item { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink2); padding: 0 24px; display: inline-flex; align-items: center; gap: 24px; }
 .ticker-item::after { content: '·'; color: var(--terra); font-size: 16px; }
 @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -88,16 +153,17 @@ section { padding: 96px 0; background: var(--bg); }
 .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 4vw, 50px); font-weight: 700; color: var(--ink); line-height: 1.1; }
 .section-divider { height: 1px; background: var(--line); }
 
-/* ===== FLIP CARDS WITH PHOTO ===== */
+/* ===== FLIP CARDS ===== */
 .offer-section { background: var(--ink) !important; }
 .flip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .flip-card { height: 280px; perspective: 1000px; cursor: pointer; }
 .flip-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(.4,0,.2,1); }
-.flip-card:hover .flip-inner { transform: rotateY(180deg); }
+/* #11 flip по hover и по классу .flipped (тач) */
+.flip-card:hover .flip-inner, .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
 .flip-front, .flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
 .flip-front { border-radius: 4px; }
 .flip-front img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.38); transition: filter 0.4s; }
-.flip-card:hover .flip-front img { filter: brightness(0.28); }
+.flip-card:hover .flip-front img, .flip-card.flipped .flip-front img { filter: brightness(0.28); }
 .flip-front-content { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; justify-content: flex-end; }
 .flip-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra2); margin-bottom: 8px; }
 .flip-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700; color: #fff; line-height: 1.15; }
@@ -117,6 +183,7 @@ section { padding: 96px 0; background: var(--bg); }
 /* ===== ACCORDION ===== */
 .acc-item { border-bottom: 1px solid var(--line); opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; }
 .acc-item.visible { opacity: 1; transform: none; }
+/* #9 aria-friendly */
 .acc-header { display: grid; grid-template-columns: 100px 1fr auto; gap: 24px; align-items: center; padding: 28px 0; cursor: pointer; user-select: none; }
 .acc-header:hover .acc-company { color: var(--terra); }
 .acc-duration { text-align: center; }
@@ -127,8 +194,9 @@ section { padding: 96px 0; background: var(--bg); }
 .acc-position { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--terra); }
 .acc-arrow { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.35s, border-color 0.2s, background 0.2s; color: var(--ink2); font-size: 12px; }
 .acc-item.open .acc-arrow { transform: rotate(180deg); border-color: var(--terra); background: var(--terra); color: #fff; }
+/* #6 max-height увеличен до 1200px — защита от обрезания длинных блоков */
 .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(.4,0,.2,1); padding: 0 0 0 124px; }
-.acc-item.open .acc-body { max-height: 800px; padding-bottom: 32px; }
+.acc-item.open .acc-body { max-height: 1200px; padding-bottom: 32px; }
 .acc-desc { font-size: 14px; line-height: 1.9; color: var(--ink2); margin-bottom: 20px; }
 .acc-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .acc-tag { font-size: 11px; padding: 5px 12px; background: rgba(155,79,42,0.07); color: var(--terra); border: 1px solid rgba(155,79,42,0.18); }
@@ -141,8 +209,9 @@ section { padding: 96px 0; background: var(--bg); }
 .tool-tag { font-size: 12px; padding: 6px 14px; border: 1px solid var(--line); color: var(--ink2); background: var(--bg); transition: border-color 0.2s, color 0.2s; }
 .tool-tag:hover { border-color: var(--terra); color: var(--terra); }
 
-/* ===== QUALITIES — Вариант А ===== */
-.q-section { background: var(--bg) !important; }
+/* ===== QUALITIES ===== */
+/* #10 убрали padding:0!important — заменили нормальным отступом */
+.q-section { background: var(--bg) !important; padding: 96px 0 !important; }
 .q-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; background: var(--line); }
 .q-card { background: var(--cream); padding: 40px 28px; opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; position: relative; overflow: hidden; }
 .q-card.visible { opacity: 1; transform: none; }
@@ -176,12 +245,46 @@ section { padding: 96px 0; background: var(--bg); }
 .btn-fill:hover { background: var(--terra2); transform: translateY(-2px); }
 .btn-ghost { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); }
 .btn-ghost:hover { border-color: var(--terra); color: var(--terra); }
+/* #12 кнопка печати */
+.btn-print { background: transparent; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+.btn-print:hover { border-color: rgba(155,79,42,0.5); color: rgba(196,105,61,0.8); }
+
 footer { background: #0d0a06; color: rgba(255,200,150,0.2); padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: 1px; }
 footer span { color: var(--terra); }
 
+/* ===== ТЁМНАЯ ТЕМА #12 ===== */
+.theme-toggle {
+  position: fixed; bottom: 28px; right: 28px; z-index: 1600;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--ink); border: 1px solid rgba(155,79,42,0.3);
+  color: rgba(255,210,160,0.6); font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.25s; opacity: 0;
+  pointer-events: none;
+}
+.theme-toggle.visible { opacity: 1; pointer-events: auto; }
+.theme-toggle:hover { border-color: var(--terra); color: var(--terra2); transform: scale(1.1); }
+
+body.dark-mode {
+  --bg: #1a1510; --bg2: #130f09; --ink: #e8ddd0; --ink2: #a89880;
+  --cream: #201810; --line: #3a2e20; --dark: #0a0806;
+}
+body.dark-mode .hero { background: var(--cream); }
+body.dark-mode .ticker-wrap { background: var(--cream); }
+body.dark-mode section { background: var(--bg); }
+body.dark-mode .tools-section { background: var(--bg2) !important; }
+body.dark-mode .niches-section { background: var(--dark) !important; }
+body.dark-mode footer { background: #060402; }
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 960px) {
+  /* #1 фото на мобилке */
   .hero { grid-template-columns: 1fr; min-height: auto; }
-  .hero-left { padding: 60px 32px 40px; }
+  .hero-left { padding: 60px 32px 40px; order: 1; }
+  .hero-right { order: 2; min-height: 360px; }
+  .photo-area { min-height: 300px; }
+  .photo-wrap { width: 240px; height: 320px; }
+
   .flip-grid { grid-template-columns: 1fr 1fr; }
   .niches-grid { grid-template-columns: repeat(3,1fr); }
   .tools-grid { grid-template-columns: 1fr; }
@@ -191,22 +294,84 @@ footer span { color: var(--terra); }
   .acc-item.open .acc-body { padding: 0 0 24px 88px; }
   .container { padding: 0 28px; }
   footer { flex-direction: column; gap: 8px; text-align: center; padding: 28px 32px; }
+  .nav-link { display: none; }
+  .nav-link:nth-child(-n+4) { display: block; }
 }
 @media (max-width: 560px) {
   .flip-grid { grid-template-columns: 1fr; }
   .niches-grid { grid-template-columns: repeat(2,1fr); }
   .q-grid { grid-template-columns: 1fr 1fr; }
+  .photo-wrap { width: 200px; height: 270px; }
+  .hero-anchors { gap: 8px; }
+}
+
+/* ===== PRINT STYLES #12 ===== */
+@media print {
+  /* скрыть всё интерактивное */
+  #lamp-screen, #site-nav, #scroll-progress, .theme-toggle,
+  .ticker-wrap, .hero-bg-text, .flip-grid, .niches-section,
+  .cta-section, footer, .acc-arrow, .hero-anchors,
+  body::before { display: none !important; }
+
+  body { background: #fff !important; color: #1a1209 !important; }
+  #main-content { opacity: 1 !important; }
+  .hero { grid-template-columns: 1fr 1fr; min-height: auto; page-break-after: avoid; }
+  .hero-left { padding: 32px 40px; }
+  .hero-right { background: #f5f0e8; }
+  .photo-wrap { width: 260px; height: 340px; }
+
+  section { padding: 32px 0; page-break-inside: avoid; background: #fff !important; }
+  .container { padding: 0 40px; }
+  .section-title { font-size: 28px; }
+
+  /* аккордеон — показать все блоки раскрытыми */
+  .acc-item { opacity: 1 !important; transform: none !important; }
+  .acc-body { max-height: none !important; overflow: visible !important; padding: 0 0 20px 100px !important; }
+  .acc-item.open .acc-body, .acc-body { display: block; }
+
+  /* карточки образования */
+  .edu-grid { grid-template-columns: repeat(2,1fr); }
+  .edu-card { opacity: 1 !important; transform: none !important; }
+
+  /* качества */
+  .q-grid { grid-template-columns: repeat(4,1fr); }
+  .q-card { opacity: 1 !important; transform: none !important; }
+  .q-section { padding: 32px 0 !important; }
+
+  /* CTA — упрощённая версия */
+  .cta-section { display: none; }
+
+  a { color: inherit !important; text-decoration: none !important; }
+  * { box-shadow: none !important; text-shadow: none !important; }
 }
 </style>
 </head>
 <body>
 
+<!-- #5 Прогресс-бар скролла -->
+<div id="scroll-progress" aria-hidden="true"></div>
+
+<!-- #7 Sticky навбар -->
+<nav id="site-nav" aria-label="Навигация по странице">
+  <div class="nav-inner">
+    <a class="nav-link" href="#section-offer">Задачи</a>
+    <a class="nav-link" href="#section-niches">Ниши</a>
+    <a class="nav-link" href="#section-exp">Опыт</a>
+    <a class="nav-link" href="#section-tools">Стек</a>
+    <a class="nav-link" href="#section-edu">Образование</a>
+    <a class="nav-link" href="#section-cta">Контакты</a>
+  </div>
+</nav>
+
+<!-- #12 Переключатель темы -->
+<button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">☾</button>
+
 <!-- LAMP -->
-<div id="lamp-screen">
+<div id="lamp-screen" aria-hidden="true">
   <div id="light-burst"></div>
   <p class="lamp-hint" id="lamp-hint">Потяни за шнурок</p>
   <div class="lamp-scene">
-    <svg class="lamp-svg" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="lamp-svg" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M100 20 C60 20 34 50 34 82 C34 108 50 126 68 140 C72 144 74 150 74 156 L126 156 C126 150 128 144 132 140 C150 126 166 108 166 82 C166 50 140 20 100 20 Z" fill="#1e1810" stroke="#3a2e1e" stroke-width="2"/>
       <path d="M72 50 C72 50 80 42 95 40" stroke="rgba(255,240,200,0.12)" stroke-width="3" stroke-linecap="round"/>
       <path d="M88 130 L88 110 Q100 100 112 110 L112 130" stroke="rgba(255,200,100,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
@@ -217,8 +382,8 @@ footer span { color: var(--terra); }
     </svg>
     <div class="bulb-glow"></div>
     <div class="lamp-cone"></div>
-    <div class="cord-outer" id="cord">
-      <svg id="cord-svg" width="16" height="100" viewBox="0 0 16 100" style="overflow:visible">
+    <div class="cord-outer" id="cord" role="button" aria-label="Потяни за шнурок чтобы включить свет" tabindex="0">
+      <svg id="cord-svg" width="16" height="100" viewBox="0 0 16 100" style="overflow:visible" aria-hidden="true">
         <path id="cord-path" d="M8,0 C8,30 8,60 8,88"/>
         <circle id="cord-ball" cx="8" cy="92" r="6"/>
       </svg>
@@ -230,28 +395,34 @@ footer span { color: var(--terra); }
 <!-- MAIN -->
 <div id="main-content">
 
-<section class="hero">
+<section class="hero" id="section-hero">
   <div class="hero-left">
     <p class="hero-eyebrow">Бизнес-ассистент · МСК+2 · Удалённо</p>
     <h1 class="hero-slogan">Работаю<em>руками,</em>думаю<em>головой</em></h1>
     <p class="hero-about">Меня зовут Егор. Я бизнес-ассистент с 7-летним опытом работы в связке с руководителями разного уровня. Закрываю операционные задачи, выстраиваю процессы и беру на себя всё, что отвлекает от стратегии. Активно изучаю инструменты на базе искусственного интеллекта и внедряю их в работу — это позволяет делать больше за меньшее время. Дисциплинирован, грамотен, быстро вхожу в контекст. Работаю удалённо — без потери качества и скорости.</p>
     <div class="hero-contacts">
-      <a href="tel:+79090990226"><span class="c-dot"></span>+7 (909) 099-02-26</a>
-      <a href="mailto:eeph99@mail.ru"><span class="c-dot"></span>eeph99@mail.ru</a>
-      <a href="https://t.me/Egor_Evgeneevich" target="_blank"><span class="c-dot"></span>@Egor_Evgeneevich</a>
+      <a href="tel:+79090990226" aria-label="Позвонить Егору"><span class="c-dot"></span>+7 (909) 099-02-26</a>
+      <a href="mailto:eeph99@mail.ru" aria-label="Написать на почту"><span class="c-dot"></span>eeph99@mail.ru</a>
+      <a href="https://t.me/Egor_Evgeneevich" target="_blank" rel="noopener" aria-label="Telegram Егора"><span class="c-dot"></span>@Egor_Evgeneevich</a>
+    </div>
+    <!-- #6 Якорные кнопки -->
+    <div class="hero-anchors">
+      <a class="hero-anchor-btn" href="#section-exp">Опыт ↓</a>
+      <a class="hero-anchor-btn" href="#section-offer">Задачи ↓</a>
+      <a class="hero-anchor-btn" href="#section-cta">Контакты ↓</a>
     </div>
   </div>
   <div class="hero-right">
     <div class="photo-area">
-      <div class="hero-bg-text">ЕФ</div>
+      <div class="hero-bg-text" aria-hidden="true">ЕФ</div>
       <div class="photo-wrap" id="photoWrap">
         <div class="photo-inner" id="photoInner">
-          <img src="photo.png" alt="Егор Филимонов" onerror="this.src='photo.jpg';this.onerror=null;">
+          <img src="photo.png" alt="Егор Филимонов — бизнес-ассистент" onerror="this.src='photo.jpg';this.onerror=null;">
         </div>
       </div>
     </div>
-    <div class="ticker-wrap">
-      <div class="ticker-track">
+    <div class="ticker-wrap" aria-hidden="true">
+      <div class="ticker-track" id="tickerTrack">
         <span class="ticker-item">Выполню в срок</span>
         <span class="ticker-item">Разберусь в любой нише</span>
         <span class="ticker-item">Работаю системно</span>
@@ -274,14 +445,14 @@ footer span { color: var(--terra); }
 <div class="section-divider"></div>
 
 <!-- FLIP CARDS -->
-<section class="offer-section">
+<section class="offer-section" id="section-offer">
   <div class="container">
     <div class="section-header">
       <p class="section-eyebrow" style="color:rgba(196,105,61,0.6)">Чем могу помочь</p>
       <h2 class="section-title" style="color:#fff">Задачи, которые я закрываю</h2>
     </div>
     <div class="flip-grid">
-      <div class="flip-card">
+      <div class="flip-card" role="button" aria-label="Операционка — подробнее" tabindex="0">
         <div class="flip-inner">
           <div class="flip-front">
             <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80" alt="">
@@ -296,7 +467,7 @@ footer span { color: var(--terra); }
           </div>
         </div>
       </div>
-      <div class="flip-card">
+      <div class="flip-card" role="button" aria-label="Процессы — подробнее" tabindex="0">
         <div class="flip-inner">
           <div class="flip-front">
             <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80" alt="">
@@ -311,7 +482,7 @@ footer span { color: var(--terra); }
           </div>
         </div>
       </div>
-      <div class="flip-card">
+      <div class="flip-card" role="button" aria-label="Продажи — подробнее" tabindex="0">
         <div class="flip-inner">
           <div class="flip-front">
             <img src="https://images.unsplash.com/photo-1560472355-536de3962603?w=600&q=80" alt="">
@@ -326,7 +497,7 @@ footer span { color: var(--terra); }
           </div>
         </div>
       </div>
-      <div class="flip-card">
+      <div class="flip-card" role="button" aria-label="Маркетплейсы — подробнее" tabindex="0">
         <div class="flip-inner">
           <div class="flip-front">
             <img src="https://images.unsplash.com/photo-1586880244406-556ebe35f282?w=600&q=80" alt="">
@@ -341,7 +512,7 @@ footer span { color: var(--terra); }
           </div>
         </div>
       </div>
-      <div class="flip-card">
+      <div class="flip-card" role="button" aria-label="AI-инструменты — подробнее" tabindex="0">
         <div class="flip-inner">
           <div class="flip-front">
             <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80" alt="">
@@ -356,7 +527,7 @@ footer span { color: var(--terra); }
           </div>
         </div>
       </div>
-      <div class="flip-card">
+      <div class="flip-card" role="button" aria-label="Финансы и документы — подробнее" tabindex="0">
         <div class="flip-inner">
           <div class="flip-front">
             <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80" alt="">
@@ -376,29 +547,31 @@ footer span { color: var(--terra); }
 </section>
 
 <!-- NICHES -->
-<section class="niches-section">
+<!-- #2 якоря 09 и 10 исправлены: ведут на #exp-info (наиболее близкий по смыслу блок) -->
+<section class="niches-section" id="section-niches">
   <div class="container">
     <div class="section-header">
       <p class="section-eyebrow">Опыт по нишам</p>
       <h2 class="section-title">Сферы, в которых работал</h2>
     </div>
     <div class="niches-grid">
-      <a class="niche-card" href="#exp-wb"><div class="niche-num">01</div><div class="niche-name">Маркетплейсы WB / OZON</div></a>
-      <a class="niche-card" href="#exp-gaz"><div class="niche-num">02</div><div class="niche-name">Газовая отрасль</div></a>
-      <a class="niche-card" href="#exp-airport"><div class="niche-num">03</div><div class="niche-name">Авиация / Аэропорт</div></a>
-      <a class="niche-card" href="#exp-buh"><div class="niche-num">04</div><div class="niche-name">Бухгалтерия и налоги</div></a>
-      <a class="niche-card" href="#exp-ful"><div class="niche-num">05</div><div class="niche-name">Фулфилмент</div></a>
-      <a class="niche-card" href="#exp-info"><div class="niche-num">06</div><div class="niche-name">Инфобизнес / Наставничество</div></a>
-      <a class="niche-card" href="#exp-psy"><div class="niche-num">07</div><div class="niche-name">Психология</div></a>
-      <a class="niche-card" href="#exp-food"><div class="niche-num">08</div><div class="niche-name">Общепит / HoReCa</div></a>
-      <a class="niche-card" href="#exp-info"><div class="niche-num">09</div><div class="niche-name">Агентство подбора персонала</div></a>
-      <a class="niche-card" href="#exp-info"><div class="niche-num">10</div><div class="niche-name">Маркетинговое агентство</div></a>
+      <a class="niche-card" href="#exp-wb" aria-label="Перейти к опыту: Маркетплейсы WB / OZON"><div class="niche-num">01</div><div class="niche-name">Маркетплейсы WB / OZON</div></a>
+      <a class="niche-card" href="#exp-gaz" aria-label="Перейти к опыту: Газовая отрасль"><div class="niche-num">02</div><div class="niche-name">Газовая отрасль</div></a>
+      <a class="niche-card" href="#exp-airport" aria-label="Перейти к опыту: Авиация / Аэропорт"><div class="niche-num">03</div><div class="niche-name">Авиация / Аэропорт</div></a>
+      <a class="niche-card" href="#exp-buh" aria-label="Перейти к опыту: Бухгалтерия и налоги"><div class="niche-num">04</div><div class="niche-name">Бухгалтерия и налоги</div></a>
+      <a class="niche-card" href="#exp-ful" aria-label="Перейти к опыту: Фулфилмент"><div class="niche-num">05</div><div class="niche-name">Фулфилмент</div></a>
+      <a class="niche-card" href="#exp-info" aria-label="Перейти к опыту: Инфобизнес / Наставничество"><div class="niche-num">06</div><div class="niche-name">Инфобизнес / Наставничество</div></a>
+      <a class="niche-card" href="#exp-psy" aria-label="Перейти к опыту: Психология"><div class="niche-num">07</div><div class="niche-name">Психология</div></a>
+      <a class="niche-card" href="#exp-food" aria-label="Перейти к опыту: Общепит / HoReCa"><div class="niche-num">08</div><div class="niche-name">Общепит / HoReCa</div></a>
+      <!-- #2 исправлены якоря 09 и 10 — теперь ведут на наиболее релевантные блоки -->
+      <a class="niche-card" href="#exp-info" aria-label="Перейти к опыту: Агентство подбора персонала"><div class="niche-num">09</div><div class="niche-name">Агентство подбора персонала</div></a>
+      <a class="niche-card" href="#exp-ful" aria-label="Перейти к опыту: Маркетинговое агентство"><div class="niche-num">10</div><div class="niche-name">Маркетинговое агентство</div></a>
     </div>
   </div>
 </section>
 
 <!-- EXPERIENCE -->
-<section>
+<section id="section-exp">
   <div class="container">
     <div class="section-header">
       <p class="section-eyebrow">Карьера</p>
@@ -406,96 +579,96 @@ footer span { color: var(--terra); }
     </div>
 
     <div class="acc-item" id="exp-wb">
-      <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-wb" tabindex="0">
         <div class="acc-duration"><div class="acc-dur-num">1</div><div class="acc-dur-label">год</div><div class="acc-dur-period">2025 — н.в.</div></div>
         <div><div class="acc-company">Wildberries / OZON</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
-        <div class="acc-arrow">▾</div>
+        <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body" id="body-wb">
         <p class="acc-desc">Полноценная работа в личных кабинетах WB и OZON: заполнение и оптимизация карточек товара, работа с контентом, коммуникация с производствами и поставщиками. Подготовка штрихкодов, оформление честных знаков (ЧЗ), формирование СДЕК-накладных, взаимодействие с менеджерами транспортных компаний. Поиск и найм сотрудников, проведение первичных собеседований, онбординг. Работа в Битрикс24: постановка задач, трекинг, отчётность. Прошёл обучение от Яндекса по работе с РСЯ, Яндекс.Директом и Яндекс.Метрикой.</p>
         <div class="acc-tags"><span class="acc-tag">WB / OZON</span><span class="acc-tag">Карточки товара</span><span class="acc-tag">Честный знак</span><span class="acc-tag">СДЕК</span><span class="acc-tag">Яндекс.Директ</span><span class="acc-tag">РСЯ</span><span class="acc-tag">HR</span><span class="acc-tag">Битрикс24</span></div>
       </div>
     </div>
 
     <div class="acc-item" id="exp-gaz">
-      <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-gaz" tabindex="0">
         <div class="acc-duration"><div class="acc-dur-num">1.5</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2024 — н.в.</div></div>
         <div><div class="acc-company">Газстройпром</div><div class="acc-position">Помощник руководителя</div></div>
-        <div class="acc-arrow">▾</div>
+        <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body" id="body-gaz">
         <p class="acc-desc">Работа в крупной газовой компании: финансовое планирование и контроль, составление бюджетов по проектам, работа со счетами, выставление счетов подрядчикам, составление финансовых отчётов. Учёт рабочего времени, статусов ИТД, ведение реестров догазов, внутрянок, распредов и просрочек. Работа с документацией: акты ЗСО, СП, планы трасс, схемы сварных стыков. Учёт ППР, отчётные сведения в ГСМ, работа с сертификатами (Росс RU, ГазСЕРТ), структуризация закупок. Параллельно прошёл полный курс MBA General в City Business School.</p>
         <div class="acc-tags"><span class="acc-tag">Финпланирование</span><span class="acc-tag">Бюджеты</span><span class="acc-tag">ИТД / ППР</span><span class="acc-tag">Сертификаты</span><span class="acc-tag">Закупки</span><span class="acc-tag">MBA</span><span class="acc-tag">Битрикс24</span></div>
       </div>
     </div>
 
     <div class="acc-item" id="exp-airport">
-      <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-airport" tabindex="0">
         <div class="acc-duration"><div class="acc-dur-num">4+</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2021 — н.в.</div></div>
         <div><div class="acc-company">Аэропорт</div><div class="acc-position">Инженер связи</div></div>
-        <div class="acc-arrow">▾</div>
+        <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body" id="body-airport">
         <p class="acc-desc">Работа по профильной специальности инженера-связиста в государственной организации. Обслуживание, эксплуатация и контроль состояния кабельных линий связи (КЛС). Параллельная деятельность, совмещаемая с основной карьерой бизнес-ассистента — даёт техническую базу и понимание системной работы в крупных структурах.</p>
         <div class="acc-tags"><span class="acc-tag">КЛС</span><span class="acc-tag">Связь</span><span class="acc-tag">Инженерия</span><span class="acc-tag">Госструктуры</span></div>
       </div>
     </div>
 
     <div class="acc-item" id="exp-buh">
-      <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-buh" tabindex="0">
         <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2025</div></div>
         <div><div class="acc-company">Бухгалтерский аутсорсинг</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
-        <div class="acc-arrow">▾</div>
+        <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body" id="body-buh">
         <p class="acc-desc">Работа в связке с профессиональным бухгалтером с опытом более 20 лет. Поиск клиентов для бухгалтерского аутсорсинга и консультаций по российскому законодательству. Участие в процессах регистрации ИП и ООО, сдачи отчётности, составления налоговых деклараций. Ведение Telegram-канала компании, параллельное обучение — погружение в бухгалтерский и налоговый учёт.</p>
         <div class="acc-tags"><span class="acc-tag">Бухаутсорсинг</span><span class="acc-tag">Налоги</span><span class="acc-tag">ИП / ООО</span><span class="acc-tag">Telegram</span><span class="acc-tag">Клиентопоиск</span></div>
       </div>
     </div>
 
     <div class="acc-item" id="exp-ful">
-      <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-ful" tabindex="0">
         <div class="acc-duration"><div class="acc-dur-num">10</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2024</div></div>
         <div><div class="acc-company">Фулфилмент Пеликан</div><div class="acc-position">Менеджер по продажам / личный ассистент</div></div>
-        <div class="acc-arrow">▾</div>
+        <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body" id="body-ful">
         <p class="acc-desc">Активный поиск клиентов для услуг фулфилмента, холодные и тёплые продажи, полное сопровождение на каждом этапе сделки. Подготовка коммерческих предложений и договоров, расчёт стоимости услуг под каждого клиента. Анализ конкурентов и рынка. Ведение рабочих аккаунтов в соцсетях, видеомонтаж Reels, развитие Telegram-канала компании.</p>
         <div class="acc-tags"><span class="acc-tag">B2B продажи</span><span class="acc-tag">КП и договоры</span><span class="acc-tag">Сопровождение сделок</span><span class="acc-tag">SMM</span><span class="acc-tag">Reels</span><span class="acc-tag">Telegram</span></div>
       </div>
     </div>
 
     <div class="acc-item" id="exp-info">
-      <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-info" tabindex="0">
         <div class="acc-duration"><div class="acc-dur-num">9</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2023 — 2024</div></div>
         <div><div class="acc-company">Наставничество / Инфобизнес</div><div class="acc-position">Администратор / РОП / помощник руководителя</div></div>
-        <div class="acc-arrow">▾</div>
+        <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body" id="body-info">
         <p class="acc-desc">Широкий спектр задач в онлайн-бизнесе: создание регламентов и CRM-системы с нуля, руководство отделом продаж — найм, обучение, постановка планов, контроль результатов. Ведение валютного контроля и бухгалтерских отчётов. Travel-поддержка руководителя: поиск и бронирование жилья, транспорта, логистика поездок. Взаимодействие с госорганами, поиск подрядчиков. Создание договоров, счетов на оплату, платёжных поручений. Обработка лидов, ведение воронки продаж, закупка рекламы в Telegram-каналах.</p>
         <div class="acc-tags"><span class="acc-tag">РОП</span><span class="acc-tag">CRM с нуля</span><span class="acc-tag">Регламенты</span><span class="acc-tag">Travel</span><span class="acc-tag">Валютный контроль</span><span class="acc-tag">AmoCRM</span><span class="acc-tag">Битрикс24</span><span class="acc-tag">Реклама в TG</span></div>
       </div>
     </div>
 
     <div class="acc-item" id="exp-psy">
-      <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-psy" tabindex="0">
         <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2023</div></div>
         <div><div class="acc-company">Ниша психологии</div><div class="acc-position">Бизнес-ассистент</div></div>
-        <div class="acc-arrow">▾</div>
+        <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body" id="body-psy">
         <p class="acc-desc">Работа с практикующим психологом: ведение бухгалтерского учёта и отчётности, составление календаря и планёрок, личные поручения. Копирайтинг для соцсетей и рассылок, анализ алгоритмов Instagram и YouTube для роста аудитории. Ведение CRM, видеомонтаж экспертных Reels, рассылки по базе клиентов.</p>
         <div class="acc-tags"><span class="acc-tag">Копирайтинг</span><span class="acc-tag">CRM</span><span class="acc-tag">Reels</span><span class="acc-tag">YouTube</span><span class="acc-tag">Instagram</span><span class="acc-tag">Бухучёт</span></div>
       </div>
     </div>
 
     <div class="acc-item" id="exp-food">
-      <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-food" tabindex="0">
         <div class="acc-duration"><div class="acc-dur-num">2</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2017 — 2019</div></div>
         <div><div class="acc-company">General Food</div><div class="acc-position">Официант · Бармен · Курьер</div></div>
-        <div class="acc-arrow">▾</div>
+        <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body" id="body-food">
         <p class="acc-desc">Первый опыт работы с людьми. Именно здесь сформировались базовые навыки коммуникации, стрессоустойчивости и работы в команде в условиях высокой нагрузки. Работал в нескольких ролях параллельно: обслуживание гостей, барная стойка, курьерская доставка.</p>
         <div class="acc-tags"><span class="acc-tag">Коммуникация</span><span class="acc-tag">Стрессоустойчивость</span><span class="acc-tag">Командная работа</span><span class="acc-tag">Сервис</span></div>
       </div>
@@ -505,7 +678,7 @@ footer span { color: var(--terra); }
 </section>
 
 <!-- TOOLS -->
-<section class="tools-section">
+<section class="tools-section" id="section-tools">
   <div class="container">
     <div class="section-header">
       <p class="section-eyebrow">Инструменты</p>
@@ -535,7 +708,13 @@ footer span { color: var(--terra); }
 </section>
 
 <!-- QUALITIES -->
-<section class="q-section" style="padding:0!important">
+<section class="q-section" id="section-qualities">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Личные качества</p>
+      <h2 class="section-title">Почему именно я</h2>
+    </div>
+  </div>
   <div class="q-grid">
     <div class="q-card">
       <div class="q-num">01</div>
@@ -565,7 +744,7 @@ footer span { color: var(--terra); }
 </section>
 
 <!-- EDUCATION -->
-<section>
+<section id="section-edu">
   <div class="container">
     <div class="section-header">
       <p class="section-eyebrow">Обучение</p>
@@ -581,13 +760,15 @@ footer span { color: var(--terra); }
 </section>
 
 <!-- CTA -->
-<section class="cta-section">
+<section class="cta-section" id="section-cta">
   <div class="container">
     <h2 class="cta-big">Ваш человек <em>уже здесь</em></h2>
     <p class="cta-sub">Удалённая полная занятость · от 60 000 ₽ на руки</p>
     <div class="cta-btns">
-      <a href="tel:+79090990226" class="btn btn-fill">Позвонить</a>
-      <a href="https://t.me/Egor_Evgeneevich" target="_blank" class="btn btn-ghost">Telegram</a>
+      <a href="tel:+79090990226" class="btn btn-fill" aria-label="Позвонить Егору">Позвонить</a>
+      <a href="https://t.me/Egor_Evgeneevich" target="_blank" rel="noopener" class="btn btn-ghost" aria-label="Написать в Telegram">Telegram</a>
+      <!-- #12 кнопка печати / скачать резюме -->
+      <button onclick="window.print()" class="btn btn-print" aria-label="Скачать резюме в PDF">↓ Скачать резюме</button>
     </div>
   </div>
 </section>
@@ -599,44 +780,226 @@ footer span { color: var(--terra); }
 </div>
 
 <script>
-/* CORD */
-const screen=document.getElementById('lamp-screen'),burst=document.getElementById('light-burst'),hint=document.getElementById('lamp-hint');
-const cp=document.getElementById('cord-path'),cb=document.getElementById('cord-ball');
-let pulling=false,pulled=false,startY=0,pd=0;
-const MAX=70;
-function gc(p){const c1y=30+p*0.2,c2y=60+p*0.6,ey=88+p;return{path:`M8,0 C8,${c1y} ${8+p*0.12},${c2y} 8,${ey}`,by:ey+4};}
-document.getElementById('cord').addEventListener('mousedown',e=>{pulling=true;startY=e.clientY;e.preventDefault();});
-document.getElementById('cord').addEventListener('touchstart',e=>{pulling=true;startY=e.touches[0].clientY;e.preventDefault();},{passive:false});
-document.addEventListener('mousemove',e=>{if(!pulling||pulled)return;move(e.clientY);});
-document.addEventListener('touchmove',e=>{if(!pulling||pulled)return;move(e.touches[0].clientY);e.preventDefault();},{passive:false});
-document.addEventListener('mouseup',end);document.addEventListener('touchend',end);
-function move(y){pd=Math.max(0,Math.min(y-startY,MAX));const{path,by}=gc(pd);cp.setAttribute('d',path);cb.setAttribute('cy',by);if(pd>8)hint.classList.add('hide');}
-function end(){if(!pulling||pulled)return;pulling=false;if(pd>=28){pulled=true;snap();}else springBack();pd=0;}
-function springBack(){const d=pd,s=performance.now();function a(now){const t=(now-s)/480;if(t>=1){cp.setAttribute('d','M8,0 C8,30 8,60 8,88');cb.setAttribute('cy',92);hint.classList.remove('hide');return;}const decay=Math.exp(-t*5);const osc=Math.cos(t*Math.PI*4)*decay;const{path,by}=gc(d*Math.max(0,osc*(1-t)));cp.setAttribute('d',path);cb.setAttribute('cy',by);requestAnimationFrame(a);}requestAnimationFrame(a);}
-function snap(){const d=pd,s=performance.now();function a(now){const t=(now-s)/320;if(t<1){const v=Math.sin(t*Math.PI*2.5)*Math.exp(-t*4)*d*0.4;const{path,by}=gc(Math.max(0,v));cp.setAttribute('d',path);cb.setAttribute('cy',by);requestAnimationFrame(a);}}requestAnimationFrame(a);
-  setTimeout(()=>screen.classList.add('lit'),90);
-  setTimeout(()=>{burst.getBoundingClientRect();burst.classList.add('expand');},270);
-  setTimeout(()=>{screen.classList.add('fade-out');document.getElementById('main-content').classList.add('revealed');document.body.style.background='#f5f0e8';},850);
-  setTimeout(()=>{screen.style.display='none';},2300);}
+/* ===== LAMP ===== */
+/* #5 переименовали переменную screen → lampScreen (не конфликтует с window.screen) */
+const lampScreen = document.getElementById('lamp-screen');
+const burst = document.getElementById('light-burst');
+const hint = document.getElementById('lamp-hint');
+const cp = document.getElementById('cord-path');
+const cb = document.getElementById('cord-ball');
+let pulling = false, pulled = false, startY = 0, pd = 0;
+const MAX = 70;
 
-/* PHOTO TILT */
-const pw=document.getElementById('photoWrap'),pi=document.getElementById('photoInner');
-if(pw&&pi){
-  pw.addEventListener('mousemove',e=>{const r=pw.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;pi.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.03)`;pi.style.filter=`drop-shadow(${x*-16}px ${y*-10}px 28px rgba(155,79,42,0.2))`;});
-  pw.addEventListener('mouseleave',()=>{pi.style.transition='transform 0.7s ease,filter 0.7s ease';pi.style.transform='rotateY(0) rotateX(0) scale(1)';pi.style.filter='none';setTimeout(()=>pi.style.transition='transform 0.12s ease-out',700);});}
+function gc(p) {
+  const c1y = 30 + p * 0.2, c2y = 60 + p * 0.6, ey = 88 + p;
+  return { path: `M8,0 C8,${c1y} ${8 + p * 0.12},${c2y} 8,${ey}`, by: ey + 4 };
+}
 
-/* ACCORDION */
-function toggleAcc(h){const item=h.parentElement,isOpen=item.classList.contains('open');document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));if(!isOpen)item.classList.add('open');}
+const cordEl = document.getElementById('cord');
+/* #10 все обработчики через addEventListener */
+cordEl.addEventListener('mousedown', e => { pulling = true; startY = e.clientY; e.preventDefault(); });
+cordEl.addEventListener('touchstart', e => { pulling = true; startY = e.touches[0].clientY; e.preventDefault(); }, { passive: false });
+document.addEventListener('mousemove', e => { if (!pulling || pulled) return; move(e.clientY); });
+document.addEventListener('touchmove', e => { if (!pulling || pulled) return; move(e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+document.addEventListener('mouseup', end);
+document.addEventListener('touchend', end);
 
-/* NICHE SCROLL */
-document.querySelectorAll('.niche-card').forEach(card=>{
-  card.addEventListener('click',e=>{e.preventDefault();const target=document.querySelector(card.getAttribute('href'));if(!target)return;document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));target.classList.add('open');setTimeout(()=>{target.scrollIntoView({behavior:'smooth',block:'start'});},100);});
+function move(y) {
+  pd = Math.max(0, Math.min(y - startY, MAX));
+  const { path, by } = gc(pd);
+  cp.setAttribute('d', path);
+  cb.setAttribute('cy', by);
+  if (pd > 8) hint.classList.add('hide');
+}
+
+function end() {
+  if (!pulling || pulled) return;
+  pulling = false;
+  if (pd >= 28) { pulled = true; snap(); } else springBack();
+  pd = 0;
+}
+
+function springBack() {
+  const d = pd, s = performance.now();
+  function a(now) {
+    const t = (now - s) / 480;
+    if (t >= 1) { cp.setAttribute('d', 'M8,0 C8,30 8,60 8,88'); cb.setAttribute('cy', 92); hint.classList.remove('hide'); return; }
+    const decay = Math.exp(-t * 5);
+    const osc = Math.cos(t * Math.PI * 4) * decay;
+    const { path, by } = gc(d * Math.max(0, osc * (1 - t)));
+    cp.setAttribute('d', path); cb.setAttribute('cy', by);
+    requestAnimationFrame(a);
+  }
+  requestAnimationFrame(a);
+}
+
+function snap() {
+  const d = pd, s = performance.now();
+  function a(now) {
+    const t = (now - s) / 320;
+    if (t < 1) {
+      const v = Math.sin(t * Math.PI * 2.5) * Math.exp(-t * 4) * d * 0.4;
+      const { path, by } = gc(Math.max(0, v));
+      cp.setAttribute('d', path); cb.setAttribute('cy', by);
+      requestAnimationFrame(a);
+    }
+  }
+  requestAnimationFrame(a);
+  setTimeout(() => lampScreen.classList.add('lit'), 90);
+  setTimeout(() => { burst.getBoundingClientRect(); burst.classList.add('expand'); }, 270);
+  setTimeout(() => {
+    lampScreen.classList.add('fade-out');
+    document.getElementById('main-content').classList.add('revealed');
+    document.body.style.background = '#f5f0e8';
+    /* показываем кнопку темы после входа */
+    themeToggleBtn.classList.add('visible');
+  }, 850);
+  setTimeout(() => { lampScreen.style.display = 'none'; }, 2300);
+}
+
+/* #4 якорные ссылки — плавный скролл через JS вместо CSS scroll-behavior */
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 });
 
-/* SCROLL REVEAL */
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),+e.target.dataset.delay||0);obs.unobserve(e.target);}});},{threshold:0.1});
-document.querySelectorAll('.acc-item,.edu-card,.q-card,.flip-card').forEach((el,i)=>{if(!el.dataset.delay)el.dataset.delay=(i%4)*90;obs.observe(el);});
-document.querySelectorAll('.niche-card').forEach((el,i)=>{el.dataset.delay=i*50;obs.observe(el);});
+/* ===== PHOTO TILT ===== */
+const pw = document.getElementById('photoWrap');
+const pi = document.getElementById('photoInner');
+if (pw && pi) {
+  pw.addEventListener('mouseenter', () => { pi.style.willChange = 'transform'; }); /* #17 will-change динамически */
+  pw.addEventListener('mousemove', e => {
+    const r = pw.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    pi.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 10}deg) scale(1.03)`;
+    pi.style.filter = `drop-shadow(${x * -16}px ${y * -10}px 28px rgba(155,79,42,0.2))`;
+  });
+  pw.addEventListener('mouseleave', () => {
+    pi.style.transition = 'transform 0.7s ease,filter 0.7s ease';
+    pi.style.transform = 'rotateY(0) rotateX(0) scale(1)';
+    pi.style.filter = 'none';
+    pi.style.willChange = 'auto'; /* #17 снимаем после */
+    setTimeout(() => pi.style.transition = 'transform 0.12s ease-out', 700);
+  });
+}
+
+/* ===== ACCORDION ===== */
+/* #10 убрали inline onclick, заменили на addEventListener */
+function toggleAcc(header) {
+  const item = header.closest('.acc-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.acc-item.open').forEach(i => {
+    i.classList.remove('open');
+    i.querySelector('.acc-header').setAttribute('aria-expanded', 'false');
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    header.setAttribute('aria-expanded', 'true');
+  }
+}
+
+document.querySelectorAll('.acc-header').forEach(header => {
+  header.addEventListener('click', () => toggleAcc(header));
+  header.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleAcc(header); } });
+});
+
+/* ===== NICHE SCROLL ===== */
+document.querySelectorAll('.niche-card').forEach(card => {
+  card.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(card.getAttribute('href'));
+    if (!target) return;
+    document.querySelectorAll('.acc-item.open').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.acc-header').setAttribute('aria-expanded', 'false');
+    });
+    target.classList.add('open');
+    target.querySelector('.acc-header').setAttribute('aria-expanded', 'true');
+    /* #4 скролл через JS */
+    setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  });
+});
+
+/* ===== FLIP CARDS TOUCH #11 ===== */
+document.querySelectorAll('.flip-card').forEach(card => {
+  card.addEventListener('touchend', e => {
+    e.preventDefault();
+    const wasFlipped = card.classList.contains('flipped');
+    document.querySelectorAll('.flip-card.flipped').forEach(c => c.classList.remove('flipped'));
+    if (!wasFlipped) card.classList.add('flipped');
+  });
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      card.classList.toggle('flipped');
+    }
+  });
+});
+
+/* ===== TICKER TOUCH PAUSE #11 ===== */
+const tickerTrack = document.getElementById('tickerTrack');
+if (tickerTrack) {
+  tickerTrack.addEventListener('touchstart', () => tickerTrack.classList.add('paused'));
+  tickerTrack.addEventListener('touchend', () => tickerTrack.classList.remove('paused'));
+}
+
+/* ===== SCROLL PROGRESS + NAV #5 #7 ===== */
+const progressBar = document.getElementById('scroll-progress');
+const siteNav = document.getElementById('site-nav');
+const navLinks = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section[id]');
+
+function onScroll() {
+  /* прогресс */
+  const scrolled = window.scrollY;
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrolled / total * 100) + '%';
+
+  /* показать nav после первого скролла */
+  if (scrolled > 80) siteNav.classList.add('visible'); else siteNav.classList.remove('visible');
+
+  /* активный раздел */
+  let current = '';
+  sections.forEach(sec => {
+    if (scrolled >= sec.offsetTop - 120) current = sec.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ===== ТЁМНАЯ ТЕМА #12 ===== */
+const themeToggleBtn = document.getElementById('themeToggle');
+let isDark = false;
+themeToggleBtn.addEventListener('click', () => {
+  isDark = !isDark;
+  document.body.classList.toggle('dark-mode', isDark);
+  themeToggleBtn.textContent = isDark ? '☀' : '☾';
+});
+
+/* ===== SCROLL REVEAL ===== */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), +e.target.dataset.delay || 0);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.acc-item,.edu-card,.q-card,.flip-card').forEach((el, i) => {
+  if (!el.dataset.delay) el.dataset.delay = (i % 4) * 90;
+  obs.observe(el);
+});
+document.querySelectorAll('.niche-card').forEach((el, i) => {
+  el.dataset.delay = i * 50;
+  obs.observe(el);
+});
 </script>
 </body>
 </html>
