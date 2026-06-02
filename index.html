@@ -27,7 +27,46 @@
 /* #4 убрали scroll-behavior с html — управляем скроллом только через JS */
 body { background: var(--dark); color: var(--ink); font-family: 'Geologica', sans-serif; font-weight: 300; overflow-x: hidden; -webkit-overflow-scrolling: touch; /* #15 iOS smooth scroll */ }
 
-/* ===== PROGRESS BAR #5 ===== */
+/* ===== СТАТУС-БЕЙДЖ ===== */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(30,60,25,0.08); border: 1px solid rgba(60,140,50,0.2);
+  border-radius: 20px; padding: 5px 12px 5px 8px;
+  margin-bottom: 20px; width: fit-content;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #4caf50;
+  box-shadow: 0 0 0 0 rgba(76,175,80,0.4);
+  animation: pulse-green 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(76,175,80,0); }
+}
+.status-text { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #3a8a32; }
+
+/* ===== HERO АНИМАЦИЯ ===== */
+.hero-left .hero-eyebrow,
+.hero-left .status-badge,
+.hero-left .hero-slogan,
+.hero-left .hero-about,
+.hero-left .hero-contacts,
+.hero-left .hero-anchors {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+#main-content.revealed .hero-left .hero-eyebrow   { opacity: 1; transform: none; transition-delay: 0.1s; }
+#main-content.revealed .hero-left .status-badge   { opacity: 1; transform: none; transition-delay: 0.22s; }
+#main-content.revealed .hero-left .hero-slogan    { opacity: 1; transform: none; transition-delay: 0.36s; }
+#main-content.revealed .hero-left .hero-about     { opacity: 1; transform: none; transition-delay: 0.52s; }
+#main-content.revealed .hero-left .hero-contacts  { opacity: 1; transform: none; transition-delay: 0.66s; }
+#main-content.revealed .hero-left .hero-anchors   { opacity: 1; transform: none; transition-delay: 0.78s; }
+
+/* фото плавно появляется */
+.hero-right { opacity: 0; transition: opacity 0.9s ease 0.5s; }
+#main-content.revealed .hero-right { opacity: 1; }
 #scroll-progress {
   position: fixed; top: 0; left: 0; height: 2px; width: 0%;
   background: var(--terra); z-index: 2000; transition: width 0.1s linear;
@@ -96,8 +135,8 @@ body { background: var(--dark); color: var(--ink); font-family: 'Geologica', san
 .cord-outer:hover #cord-path { stroke: rgba(196,105,61,0.75); }
 #cord-ball { fill: rgba(255,210,160,0.2); stroke: rgba(255,210,160,0.3); stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s, filter 0.3s; }
 .cord-outer:hover #cord-ball { fill: var(--terra); stroke: var(--terra2); filter: drop-shadow(0 0 9px rgba(155,79,42,0.95)); }
-.lamp-name { margin-top: 36px; position: relative; z-index: 2; font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: rgba(255,210,160,0.05); letter-spacing: 5px; text-transform: uppercase; transition: color 1s; pointer-events: none; user-select: none; text-align: center; }
-#lamp-screen.lit .lamp-name { color: rgba(196,105,61,0.5); }
+.lamp-name { margin-top: 36px; position: relative; z-index: 2; font-family: 'Cormorant Garamond', serif; font-size: clamp(12px,2vw,15px); font-weight: 600; color: rgba(255,210,160,0.45); letter-spacing: 5px; text-transform: uppercase; transition: color 1s; pointer-events: none; user-select: none; text-align: center; padding: 0 20px; }
+#lamp-screen.lit .lamp-name { color: rgba(196,105,61,0.75); }
 
 /* ===== GRAIN ===== */
 body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.6; }
@@ -276,6 +315,32 @@ body.dark-mode .tools-section { background: var(--bg2) !important; }
 body.dark-mode .niches-section { background: var(--dark) !important; }
 body.dark-mode footer { background: #060402; }
 
+/* === тёмная тема: фиксы читаемости === */
+body.dark-mode .hero-slogan { color: var(--ink); }
+body.dark-mode .hero-about { color: var(--ink2); }
+body.dark-mode .hero-contacts a { color: var(--ink); }
+body.dark-mode .hero-contacts a:hover { color: var(--terra2); }
+body.dark-mode .niche-card { background: #1e1810; border-color: var(--line); }
+body.dark-mode .niche-card:hover { background: #261e14; }
+body.dark-mode .niche-name { color: var(--ink); }
+body.dark-mode .acc-company { color: var(--ink); }
+body.dark-mode .acc-desc { color: var(--ink2); }
+body.dark-mode .acc-item { border-color: var(--line); }
+body.dark-mode .tool-tag { background: #1e1810; color: var(--ink2); border-color: var(--line); }
+body.dark-mode .tool-tag:hover { color: var(--terra2); border-color: var(--terra); }
+body.dark-mode .tool-group-title { border-color: var(--line); }
+body.dark-mode .q-card { background: #1e1810; }
+body.dark-mode .q-card:hover { background: #261e14; }
+body.dark-mode .q-title { color: var(--ink); }
+body.dark-mode .q-desc { color: var(--ink2); }
+body.dark-mode .q-grid { background: var(--line); }
+body.dark-mode .edu-card { background: #1e1810; border-color: var(--line); }
+body.dark-mode .edu-title { color: var(--ink); }
+body.dark-mode .edu-sub { color: var(--ink2); }
+body.dark-mode .section-title { color: var(--ink); }
+body.dark-mode .hero-anchor-btn { color: var(--terra2); border-color: rgba(196,105,61,0.3); }
+body.dark-mode .acc-dur-label { color: var(--ink2); }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 960px) {
   /* #1 фото на мобилке */
@@ -305,44 +370,61 @@ body.dark-mode footer { background: #060402; }
   .hero-anchors { gap: 8px; }
 }
 
-/* ===== PRINT STYLES #12 ===== */
+/* ===== PRINT STYLES ===== */
+.print-skills { display: none; }
+
 @media print {
-  /* скрыть всё интерактивное */
+  /* скрыть всё интерактивное и лишнее */
   #lamp-screen, #site-nav, #scroll-progress, .theme-toggle,
-  .ticker-wrap, .hero-bg-text, .flip-grid, .niches-section,
+  .ticker-wrap, .hero-bg-text, .offer-section, .niches-section,
   .cta-section, footer, .acc-arrow, .hero-anchors,
-  body::before { display: none !important; }
+  .section-divider, body::before { display: none !important; }
 
-  body { background: #fff !important; color: #1a1209 !important; }
+  /* показать print-only блок навыков */
+  .print-skills { display: block !important; }
+
+  html, body { background: #fff !important; color: #1a1209 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   #main-content { opacity: 1 !important; }
-  .hero { grid-template-columns: 1fr 1fr; min-height: auto; page-break-after: avoid; }
+
+  /* hero — компактный, на одной странице */
+  .hero { grid-template-columns: 1fr 1fr !important; min-height: auto !important; page-break-after: always; background: #faf7f2 !important; }
   .hero-left { padding: 32px 40px; }
-  .hero-right { background: #f5f0e8; }
-  .photo-wrap { width: 260px; height: 340px; }
+  .hero-right { background: #f5f0e8 !important; }
+  .photo-wrap { width: 240px; height: 310px; }
+  .hero-slogan { font-size: 52px !important; }
 
-  section { padding: 32px 0; page-break-inside: avoid; background: #fff !important; }
-  .container { padding: 0 40px; }
-  .section-title { font-size: 28px; }
+  section { padding: 24px 0; background: #fff !important; }
+  section + section { border-top: 1px solid #ddd8ce; }
+  .container { padding: 0 40px; max-width: 100%; }
+  .section-title { font-size: 26px !important; }
+  .section-header { margin-bottom: 20px; }
 
-  /* аккордеон — показать все блоки раскрытыми */
-  .acc-item { opacity: 1 !important; transform: none !important; }
-  .acc-body { max-height: none !important; overflow: visible !important; padding: 0 0 20px 100px !important; }
-  .acc-item.open .acc-body, .acc-body { display: block; }
+  /* аккордеон — все раскрыты */
+  .acc-item { opacity: 1 !important; transform: none !important; border-bottom: 1px solid #ddd8ce; }
+  .acc-body { max-height: none !important; overflow: visible !important; padding: 0 0 16px 100px !important; display: block !important; }
+  .acc-desc { font-size: 12px; line-height: 1.7; }
+  .acc-company { font-size: 18px; }
+  .acc-tags { gap: 5px; }
+  .acc-tag { font-size: 10px; padding: 3px 8px; }
+  /* не разрывать запись опыта посередине */
+  .acc-item { page-break-inside: avoid; }
 
-  /* карточки образования */
-  .edu-grid { grid-template-columns: repeat(2,1fr); }
-  .edu-card { opacity: 1 !important; transform: none !important; }
+  /* образование */
+  .edu-grid { grid-template-columns: repeat(2,1fr) !important; gap: 12px; }
+  .edu-card { opacity: 1 !important; transform: none !important; padding: 16px 16px 16px 24px; }
 
   /* качества */
-  .q-grid { grid-template-columns: repeat(4,1fr); }
-  .q-card { opacity: 1 !important; transform: none !important; }
-  .q-section { padding: 32px 0 !important; }
+  .q-grid { grid-template-columns: repeat(4,1fr) !important; gap: 1px; }
+  .q-card { opacity: 1 !important; transform: none !important; padding: 20px 16px; }
+  .q-num { font-size: 48px; }
+  .q-section { padding: 24px 0 !important; }
 
-  /* CTA — упрощённая версия */
-  .cta-section { display: none; }
+  /* инструменты — компактнее */
+  .tools-grid { grid-template-columns: repeat(3,1fr) !important; gap: 20px; }
+  .tools-section { background: #fff !important; }
 
   a { color: inherit !important; text-decoration: none !important; }
-  * { box-shadow: none !important; text-shadow: none !important; }
+  * { box-shadow: none !important; text-shadow: none !important; transition: none !important; animation: none !important; }
 }
 </style>
 </head>
@@ -398,6 +480,10 @@ body.dark-mode footer { background: #060402; }
 <section class="hero" id="section-hero">
   <div class="hero-left">
     <p class="hero-eyebrow">Бизнес-ассистент · МСК+2 · Удалённо</p>
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      <span class="status-text">Открыт к предложениям</span>
+    </div>
     <h1 class="hero-slogan">Работаю<em>руками,</em>думаю<em>головой</em></h1>
     <p class="hero-about">Меня зовут Егор. Я бизнес-ассистент с 7-летним опытом работы в связке с руководителями разного уровня. Закрываю операционные задачи, выстраиваю процессы и беру на себя всё, что отвлекает от стратегии. Активно изучаю инструменты на базе искусственного интеллекта и внедряю их в работу — это позволяет делать больше за меньшее время. Дисциплинирован, грамотен, быстро вхожу в контекст. Работаю удалённо — без потери качества и скорости.</p>
     <div class="hero-contacts">
@@ -541,6 +627,48 @@ body.dark-mode footer { background: #060402; }
             <p class="flip-back-text">Бюджеты, финансовые отчёты, счета, договоры, декларации. Опыт в бухгалтерском учёте и работе с госорганами.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRINT-ONLY: краткий список задач вместо flip-карточек -->
+<section class="print-skills">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Чем могу помочь</p>
+      <h2 class="section-title">Задачи, которые я закрываю</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <div style="padding:16px;border:1px solid #ddd8ce;border-left:3px solid #9b4f2a;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9b4f2a;margin-bottom:6px;">Операционка</div>
+        <div style="font-size:13px;color:#2a1f14;font-weight:500;margin-bottom:6px;">Разгружу твой день</div>
+        <div style="font-size:12px;color:#6a5a48;line-height:1.6;">Переписки, подрядчики, документы, поручения. Ты — стратегия, я — всё остальное.</div>
+      </div>
+      <div style="padding:16px;border:1px solid #ddd8ce;border-left:3px solid #9b4f2a;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9b4f2a;margin-bottom:6px;">Процессы</div>
+        <div style="font-size:13px;color:#2a1f14;font-weight:500;margin-bottom:6px;">Выстрою систему</div>
+        <div style="font-size:12px;color:#6a5a48;line-height:1.6;">Регламенты, CRM, отчётность с нуля. Битрикс24, AmoCRM, OKCRM, RetailCRM.</div>
+      </div>
+      <div style="padding:16px;border:1px solid #ddd8ce;border-left:3px solid #9b4f2a;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9b4f2a;margin-bottom:6px;">Продажи</div>
+        <div style="font-size:13px;color:#2a1f14;font-weight:500;margin-bottom:6px;">Закрою сделки</div>
+        <div style="font-size:12px;color:#6a5a48;line-height:1.6;">B2B, лиды, КП, договоры. Строил отделы продаж с нуля и руководил ими.</div>
+      </div>
+      <div style="padding:16px;border:1px solid #ddd8ce;border-left:3px solid #9b4f2a;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9b4f2a;margin-bottom:6px;">Маркетплейсы</div>
+        <div style="font-size:13px;color:#2a1f14;font-weight:500;margin-bottom:6px;">WB / OZON / Маркет</div>
+        <div style="font-size:12px;color:#6a5a48;line-height:1.6;">Полный цикл: карточки, поставки, ЧЗ, аналитика, реклама (Директ, РСЯ).</div>
+      </div>
+      <div style="padding:16px;border:1px solid #ddd8ce;border-left:3px solid #9b4f2a;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9b4f2a;margin-bottom:6px;">Технологии</div>
+        <div style="font-size:13px;color:#2a1f14;font-weight:500;margin-bottom:6px;">AI-инструменты</div>
+        <div style="font-size:12px;color:#6a5a48;line-height:1.6;">Внедряю ИИ в рабочие процессы. Автоматизация, генерация контента, работа с данными.</div>
+      </div>
+      <div style="padding:16px;border:1px solid #ddd8ce;border-left:3px solid #9b4f2a;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9b4f2a;margin-bottom:6px;">Финансы</div>
+        <div style="font-size:13px;color:#2a1f14;font-weight:500;margin-bottom:6px;">Документы и учёт</div>
+        <div style="font-size:12px;color:#6a5a48;line-height:1.6;">Бюджеты, отчёты, счета, договоры, декларации. Опыт работы с госорганами.</div>
       </div>
     </div>
   </div>
