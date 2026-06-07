@@ -42,7 +42,23 @@
 
 <!-- LAMP -->
 <div id="lamp-screen" aria-hidden="true">
+  <!-- контекст сцены: силуэт окна и ночного города, чтобы читалось как «интерьер», а не пустой экран -->
+  <svg class="lamp-bg-scene" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect x="36" y="14" width="328" height="232" rx="6" fill="none" stroke="rgba(255,210,160,0.07)" stroke-width="2"/>
+    <line x1="200" y1="14" x2="200" y2="246" stroke="rgba(255,210,160,0.05)" stroke-width="2"/>
+    <circle cx="296" cy="64" r="17" fill="rgba(255,225,190,0.06)"/>
+    <g fill="rgba(155,79,42,0.07)">
+      <rect x="60" y="156" width="28" height="90"/>
+      <rect x="96" y="124" width="22" height="122"/>
+      <rect x="128" y="172" width="38" height="74"/>
+      <rect x="178" y="100" width="26" height="146"/>
+      <rect x="216" y="142" width="32" height="104"/>
+      <rect x="258" y="166" width="24" height="80"/>
+      <rect x="292" y="118" width="30" height="128"/>
+    </g>
+  </svg>
   <div id="light-burst"></div>
+  <button class="lamp-skip" id="lampSkip" aria-label="Пропустить заставку и сразу перейти к резюме">Пропустить →</button>
   <p class="lamp-hint" id="lamp-hint">Потяни за шнурок</p>
   <div class="lamp-scene">
     <svg class="lamp-svg" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -77,7 +93,7 @@
       <span class="status-text">Открыт к предложениям</span>
     </div>
     <h1 class="hero-slogan">Работаю<em>руками,</em>думаю<em>головой</em></h1>
-    <p class="hero-about">Меня зовут Егор. Я бизнес-ассистент с 7-летним опытом работы в связке с руководителями разного уровня. Закрываю операционные задачи, выстраиваю процессы и беру на себя всё, что отвлекает от стратегии. Активно изучаю инструменты на базе искусственного интеллекта и внедряю их в работу — это позволяет делать больше за меньшее время. Дисциплинирован, грамотен, быстро вхожу в контекст. Работаю удалённо — без потери качества и скорости.</p>
+    <p class="hero-about">Меня зовут Егор. Я бизнес-ассистент с 7-летним опытом работы в связке с руководителями разного уровня. Закрываю операционные задачи, выстраиваю процессы и беру на себя всё, что отвлекает от стратегии. Активно изучаю инструменты на базе искусственного интеллекта и внедряю их в работу — это позволяет делать больше за меньшее время. Дисциплинирован, грамотен, быстро вхожу в контекст. Работаю удалённо — без потери качества и скорости. Часть проектов веду параллельно на частичной занятости — это не помешает выйти на полный рабочий день.</p>
     <div class="hero-contacts">
       <a href="tel:+79090990226" aria-label="Позвонить Егору"><span class="c-dot"></span>+7 (909) 099-02-26</a>
       <a href="mailto:eeph99@mail.ru" aria-label="Написать на почту"><span class="c-dot"></span>eeph99@mail.ru</a>
@@ -321,9 +337,6 @@
       <a class="niche-card" href="#exp-info" aria-label="Перейти к опыту: Инфобизнес / Наставничество"><div class="niche-num">06</div><div class="niche-name">Инфобизнес / Наставничество</div></a>
       <a class="niche-card" href="#exp-psy" aria-label="Перейти к опыту: Психология"><div class="niche-num">07</div><div class="niche-name">Психология</div></a>
       <a class="niche-card" href="#exp-food" aria-label="Перейти к опыту: Общепит / HoReCa"><div class="niche-num">08</div><div class="niche-name">Общепит / HoReCa</div></a>
-      <!-- #2 исправлены якоря 09 и 10 — теперь ведут на наиболее релевантные блоки -->
-      <a class="niche-card" href="#exp-info" aria-label="Перейти к опыту: Агентство подбора персонала"><div class="niche-num">09</div><div class="niche-name">Агентство подбора персонала</div></a>
-      <a class="niche-card" href="#exp-ful" aria-label="Перейти к опыту: Маркетинговое агентство"><div class="niche-num">10</div><div class="niche-name">Маркетинговое агентство</div></a>
     </div>
   </div>
 </section>
@@ -338,7 +351,7 @@
 
     <div class="acc-item" id="exp-wb">
       <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-wb" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">1</div><div class="acc-dur-label">год</div><div class="acc-dur-period">2025 — н.в.</div></div>
+        <div class="acc-duration"><div class="acc-dur-num">1</div><div class="acc-dur-label">год</div></div>
         <div><div class="acc-company">Wildberries / OZON</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
         <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
@@ -350,7 +363,7 @@
 
     <div class="acc-item" id="exp-gaz">
       <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-gaz" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">1.5</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2024 — н.в.</div></div>
+        <div class="acc-duration"><div class="acc-dur-num">1.5</div><div class="acc-dur-label">года</div></div>
         <div><div class="acc-company">Газстройпром</div><div class="acc-position">Помощник руководителя</div></div>
         <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
@@ -362,7 +375,7 @@
 
     <div class="acc-item" id="exp-airport">
       <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-airport" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">4+</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2021 — н.в.</div></div>
+        <div class="acc-duration"><div class="acc-dur-num">4+</div><div class="acc-dur-label">года</div></div>
         <div><div class="acc-company">Аэропорт</div><div class="acc-position">Инженер связи</div></div>
         <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
@@ -374,7 +387,7 @@
 
     <div class="acc-item" id="exp-buh">
       <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-buh" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2025</div></div>
+        <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div></div>
         <div><div class="acc-company">Бухгалтерский аутсорсинг</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
         <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
@@ -386,7 +399,7 @@
 
     <div class="acc-item" id="exp-ful">
       <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-ful" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">10</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2024</div></div>
+        <div class="acc-duration"><div class="acc-dur-num">10</div><div class="acc-dur-label">мес.</div></div>
         <div><div class="acc-company">Фулфилмент Пеликан</div><div class="acc-position">Менеджер по продажам / личный ассистент</div></div>
         <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
@@ -398,7 +411,7 @@
 
     <div class="acc-item" id="exp-info">
       <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-info" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">9</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2023 — 2024</div></div>
+        <div class="acc-duration"><div class="acc-dur-num">9</div><div class="acc-dur-label">мес.</div></div>
         <div><div class="acc-company">Наставничество / Инфобизнес</div><div class="acc-position">Администратор / РОП / помощник руководителя</div></div>
         <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
@@ -410,7 +423,7 @@
 
     <div class="acc-item" id="exp-psy">
       <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-psy" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div><div class="acc-dur-period">2023</div></div>
+        <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div></div>
         <div><div class="acc-company">Ниша психологии</div><div class="acc-position">Бизнес-ассистент</div></div>
         <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
@@ -422,7 +435,7 @@
 
     <div class="acc-item" id="exp-food">
       <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-food" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">2</div><div class="acc-dur-label">года</div><div class="acc-dur-period">2017 — 2019</div></div>
+        <div class="acc-duration"><div class="acc-dur-num">2</div><div class="acc-dur-label">года</div></div>
         <div><div class="acc-company">General Food</div><div class="acc-position">Официант · Бармен · Курьер</div></div>
         <div class="acc-arrow" aria-hidden="true">▾</div>
       </div>
@@ -521,7 +534,7 @@
 <section class="cta-section" id="section-cta">
   <div class="container">
     <h2 class="cta-big">Ваш человек <em>уже здесь</em></h2>
-    <p class="cta-sub">Удалённая полная занятость · от 60 000 ₽ на руки</p>
+    <p class="cta-sub">Удалённая полная занятость · 80 000 — 120 000 ₽ на руки · вилка обсуждаема</p>
     <div class="cta-btns">
       <a href="tel:+79090990226" class="btn btn-fill" aria-label="Позвонить Егору">Позвонить</a>
       <a href="https://t.me/Egor_Evgeneevich" target="_blank" rel="noopener" class="btn btn-ghost" aria-label="Написать в Telegram">Telegram</a>

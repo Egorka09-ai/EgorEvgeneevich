@@ -5,6 +5,7 @@ const hint = document.getElementById('lamp-hint');
 const cp = document.getElementById('cord-path');
 const cb = document.getElementById('cord-ball');
 const cordEl = document.getElementById('cord');
+const lampSkip = document.getElementById('lampSkip');
 
 let pulling = false, pulled = false;
 let startX = 0, startY = 0;
@@ -12,6 +13,43 @@ let pullY = 0, swingX = 0;   // текущее вытяжение вниз и р
 let velY = 0, velX = 0;      // скорости для пружинной симуляции
 const MAX_PULL = 70;
 const MAX_SWING = 26;
+
+/* ===== ПОДСКАЗКИ ДЛЯ НЕТЕРПЕЛИВЫХ ===== */
+/* лёгкое покачивание шнурка сразу — глаз цепляется, что за него можно тянуть */
+cordEl.classList.add('idle-sway');
+
+/* через ~4.5с бездействия усиливаем свечение шнурка, чтобы привлечь внимание */
+const attractTimer = setTimeout(() => { if (!pulled) cordEl.classList.add('attract'); }, 4500);
+
+/* кнопка «Пропустить» появляется через ~3с — для тех, кто спешит и не хочет играть со шнурком */
+const skipTimer = setTimeout(() => { if (!pulled) lampSkip.classList.add('visible'); }, 3000);
+
+function stopIdleHints() {
+  cordEl.classList.remove('idle-sway', 'attract');
+  clearTimeout(attractTimer);
+  clearTimeout(skipTimer);
+  lampSkip.classList.remove('visible');
+}
+
+lampSkip.addEventListener('click', () => {
+  if (pulled) return;
+  pulled = true;
+  stopIdleHints();
+  quickReveal();
+});
+
+/* ускоренный показ резюме без анимации натяжения шнурка — тот же финал, но без ожидания */
+function quickReveal() {
+  lampScreen.classList.add('lit');
+  setTimeout(() => { burst.getBoundingClientRect(); burst.classList.add('expand'); }, 120);
+  setTimeout(() => {
+    lampScreen.classList.add('fade-out');
+    document.getElementById('main-content').classList.add('revealed');
+    document.body.style.background = '#f5f0e8';
+    themeToggleBtn.classList.add('visible');
+  }, 700);
+  setTimeout(() => { lampScreen.style.display = 'none'; }, 2150);
+}
 
 /* рисуем верёвку: вытяжение вниз сгибает её, раскачка наклоняет дугой в сторону */
 function drawCord(py, sx) {
@@ -33,6 +71,7 @@ document.addEventListener('touchend', endDrag);
 
 function startDrag(x, y) {
   pulling = true; startX = x; startY = y; velX = 0; velY = 0;
+  stopIdleHints();
 }
 
 function drag(x, y) {
