@@ -39,6 +39,8 @@
 
 <!-- #12 Переключатель темы -->
 <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">☾</button>
+<!-- Переключатель звука: лёгкие тоны при наведении и фоновый эмбиент бегущей строки -->
+<button class="sound-toggle" id="soundToggle" aria-label="Выключить звук" aria-pressed="true">♪</button>
 
 <!-- LAMP -->
 <div id="lamp-screen" aria-hidden="true">
@@ -347,6 +349,11 @@
     <div class="section-header">
       <p class="section-eyebrow">Карьера</p>
       <h2 class="section-title">Опыт работы</h2>
+      <!-- кружок-бейдж: перетекает между фактами при появлении в зоне видимости -->
+      <div class="stat-orb" id="statOrb" aria-hidden="true">
+        <span class="stat-orb-num">7</span>
+        <span class="stat-orb-label">лет опыта</span>
+      </div>
     </div>
 
     <div class="acc-item" id="exp-wb">

@@ -47,6 +47,7 @@ function quickReveal() {
     document.getElementById('main-content').classList.add('revealed');
     document.body.style.background = '#f5f0e8';
     themeToggleBtn.classList.add('visible');
+    soundToggleBtn.classList.add('visible');
   }, 700);
   setTimeout(() => { lampScreen.style.display = 'none'; }, 2150);
 }
@@ -122,6 +123,7 @@ function snap() {
     document.body.style.background = '#f5f0e8';
     /* показываем кнопку темы после входа */
     themeToggleBtn.classList.add('visible');
+    soundToggleBtn.classList.add('visible');
   }, 850);
   setTimeout(() => { lampScreen.style.display = 'none'; }, 2300);
 }
@@ -231,6 +233,10 @@ const siteNav = document.getElementById('site-nav');
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('section[id]');
 
+/* ===== ОЖИВШИЙ ФОНОВЫЙ ТЕКСТ "ЕФ" — реагирует на скролл ===== */
+const heroBgText = document.querySelector('.hero-bg-text');
+const heroSection = document.getElementById('section-hero');
+
 function onScroll() {
   /* прогресс */
   const scrolled = window.scrollY;
@@ -248,6 +254,14 @@ function onScroll() {
   navLinks.forEach(link => {
     link.classList.toggle('active', link.getAttribute('href') === '#' + current);
   });
+
+  /* буквы "ЕФ" смещаются и проступают ярче по мере ухода героя за край экрана */
+  if (heroBgText && heroSection) {
+    const rect = heroSection.getBoundingClientRect();
+    const progress = Math.min(1, Math.max(0, -rect.top / rect.height));
+    heroBgText.style.setProperty('--bgtext-shift', (progress * 70) + 'px');
+    heroBgText.style.setProperty('--bgtext-glow', (0.05 + progress * 0.07).toFixed(3));
+  }
 }
 
 window.addEventListener('scroll', onScroll, { passive: true });
@@ -279,3 +293,117 @@ document.querySelectorAll('.niche-card').forEach((el, i) => {
   el.dataset.delay = i * 50;
   obs.observe(el);
 });
+
+/* ===== STAT-ORB — кружок-бейдж перетекает между фактами в зоне видимости ===== */
+const statOrb = document.getElementById('statOrb');
+if (statOrb) {
+  const orbNum = statOrb.querySelector('.stat-orb-num');
+  const orbLabel = statOrb.querySelector('.stat-orb-label');
+  const stats = [
+    { num: '7', label: 'лет опыта' },
+    { num: '10+', label: 'ниш и сфер' },
+    { num: '8', label: 'компаний' },
+  ];
+  let statIdx = 0;
+  let statTimer = null;
+
+  function morphStat() {
+    statOrb.classList.add('morph');
+    setTimeout(() => {
+      statIdx = (statIdx + 1) % stats.length;
+      orbNum.textContent = stats[statIdx].num;
+      orbLabel.textContent = stats[statIdx].label;
+      statOrb.classList.remove('morph');
+    }, 320);
+  }
+
+  const orbObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        statOrb.classList.add('visible');
+        if (!statTimer) statTimer = setInterval(morphStat, 2700);
+      } else {
+        statOrb.classList.remove('visible');
+        clearInterval(statTimer);
+        statTimer = null;
+      }
+    });
+  }, { threshold: 0.35 });
+  orbObs.observe(statOrb);
+}
+
+/* ===== ЗВУК — лёгкие тоны при наведении и эмбиент бегущей строки (Web Audio API) ===== */
+const soundToggleBtn = document.getElementById('soundToggle');
+let soundOn = true;
+let actx = null;
+let ambient = null;
+
+function ensureAudio() {
+  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+
+/* короткий мягкий тон-«клик» при наведении на инфо-блоки */
+function playTick() {
+  if (!soundOn) return;
+  const ctx = ensureAudio();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 720;
+  gain.gain.setValueAtTime(0, ctx.currentTime);
+  gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.2);
+}
+
+/* тихий фоновый гул, плавно нарастает, пока бегущая строка в зоне видимости */
+function startAmbient() {
+  if (!soundOn || ambient) return;
+  const ctx = ensureAudio();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 210;
+  gain.gain.setValueAtTime(0, ctx.currentTime);
+  gain.gain.linearRampToValueAtTime(0.015, ctx.currentTime + 1.4);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  ambient = { osc, gain };
+}
+
+function stopAmbient() {
+  if (!ambient) return;
+  const { osc, gain } = ambient;
+  const ctx = ensureAudio();
+  gain.gain.cancelScheduledValues(ctx.currentTime);
+  gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime);
+  gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.6);
+  osc.stop(ctx.currentTime + 0.65);
+  ambient = null;
+}
+
+soundToggleBtn.addEventListener('click', () => {
+  soundOn = !soundOn;
+  soundToggleBtn.classList.toggle('muted', !soundOn);
+  soundToggleBtn.setAttribute('aria-pressed', String(soundOn));
+  soundToggleBtn.setAttribute('aria-label', soundOn ? 'Выключить звук' : 'Включить звук');
+  if (soundOn) ensureAudio(); else stopAmbient();
+});
+
+/* лёгкий тон при наведении на карточки ниш, флип-карты задач, соц-иконки и теги стека */
+document.querySelectorAll('.niche-card, .flip-card, .social-icon, .tool-tag').forEach(el => {
+  el.addEventListener('mouseenter', playTick);
+});
+
+/* эмбиент включается, когда в зоне видимости появляется бегущая строка, и затихает при уходе */
+const tickerWrapEl = document.querySelector('.ticker-wrap');
+if (tickerWrapEl) {
+  const ambientObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) startAmbient(); else stopAmbient(); });
+  }, { threshold: 0.4 });
+  ambientObs.observe(tickerWrapEl);
+}

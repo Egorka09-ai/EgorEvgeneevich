@@ -176,7 +176,14 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
 
 .hero-right { position: relative; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; }
 .photo-area { flex: 1; display: flex; align-items: flex-end; justify-content: center; position: relative; overflow: hidden; }
-.hero-bg-text { position: absolute; right: -10px; top: 50%; transform: translateY(-55%); font-family: 'Cormorant Garamond', serif; font-size: 220px; font-weight: 700; line-height: 1; color: rgba(155,79,42,0.05); user-select: none; pointer-events: none; writing-mode: vertical-rl; letter-spacing: -10px; }
+.hero-bg-text {
+  position: absolute; right: -10px; top: 50%;
+  transform: translateY(calc(-55% + var(--bgtext-shift, 0px)));
+  font-family: 'Cormorant Garamond', serif; font-size: 220px; font-weight: 700; line-height: 1;
+  color: rgba(155,79,42, var(--bgtext-glow, 0.05));
+  user-select: none; pointer-events: none; writing-mode: vertical-rl; letter-spacing: -10px;
+  transition: color 0.25s ease;
+}
 .photo-wrap { width: 360px; height: 480px; perspective: 900px; position: relative; z-index: 2; }
 /* #17 will-change убран из статики — добавляется JS-ом при hover */
 .photo-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.12s ease-out; }
@@ -213,6 +220,22 @@ section { padding: 96px 0; background: var(--bg); }
 .section-eyebrow { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: var(--terra); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
 .section-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--terra); }
 .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 4vw, 50px); font-weight: 700; color: var(--ink); line-height: 1.1; }
+
+/* ===== STAT-ORB — кружок-бейдж, перетекающий между фактами ===== */
+#section-exp .section-header { position: relative; }
+.stat-orb {
+  position: absolute; top: 50%; right: 4px; transform: translateY(-50%) scale(0.6);
+  width: 116px; height: 116px; border-radius: 50%;
+  background: var(--terra); color: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  opacity: 0; box-shadow: 0 14px 36px rgba(155,79,42,0.32);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(.34,1.56,.64,1);
+}
+.stat-orb.visible { opacity: 1; transform: translateY(-50%) scale(1); }
+.stat-orb-num { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; line-height: 1; transition: opacity 0.3s, transform 0.3s; }
+.stat-orb-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 5px; opacity: 0.85; transition: opacity 0.3s, transform 0.3s; }
+.stat-orb.morph .stat-orb-num, .stat-orb.morph .stat-orb-label { opacity: 0; transform: translateY(7px); }
+@media (max-width: 960px) { .stat-orb { display: none; } }
 .section-divider { height: 1px; background: var(--line); }
 
 /* ===== FLIP CARDS ===== */
@@ -326,6 +349,21 @@ footer span { color: var(--terra); }
 }
 .theme-toggle.visible { opacity: 1; pointer-events: auto; }
 .theme-toggle:hover { border-color: var(--terra); color: var(--terra2); transform: scale(1.1); }
+
+/* ===== ПЕРЕКЛЮЧАТЕЛЬ ЗВУКА ===== */
+.sound-toggle {
+  position: fixed; bottom: 28px; right: 80px; z-index: 1600;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--ink); border: 1px solid rgba(155,79,42,0.3);
+  color: rgba(255,210,160,0.6); font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.25s; opacity: 0;
+  pointer-events: none;
+}
+.sound-toggle.visible { opacity: 1; pointer-events: auto; }
+.sound-toggle:hover { border-color: var(--terra); color: var(--terra2); transform: scale(1.1); }
+.sound-toggle.muted { color: rgba(255,210,160,0.25); }
+.sound-toggle.muted::after { content: ''; position: absolute; width: 26px; height: 1px; background: currentColor; transform: rotate(45deg); }
 
 body.dark-mode {
   --bg: #1a1510; --bg2: #130f09; --ink: #e8ddd0; --ink2: #a89880;
