@@ -1,3 +1,68 @@
+/* ===== НОЧНОЙ ГОРОД ЗА ЛАМПОЙ (генерируется случайно) ===== */
+(function buildCity() {
+  const host = document.getElementById('lamp-city');
+  if (!host) return;
+  const W = 1200, H = 420;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  function building(x, w, h, baseY, fill, winChance, winAlpha) {
+    let s = '<rect x="' + x.toFixed(0) + '" y="' + (baseY - h).toFixed(0) +
+            '" width="' + w.toFixed(0) + '" height="' + h.toFixed(0) + '" fill="' + fill + '"/>';
+    const cw = 6, ch = 9, gx = 13, gy = 17, pad = 7;
+    for (let wy = baseY - h + 16; wy < baseY - 14; wy += gy) {
+      for (let wx = x + pad; wx < x + w - pad - cw; wx += gx) {
+        if (Math.random() < winChance) {
+          const a = (winAlpha * rnd(0.5, 1)).toFixed(2);
+          const cls = Math.random() < 0.12 ? 'lamp-win tw' : 'lamp-win';
+          s += '<rect class="' + cls + '" x="' + wx.toFixed(0) + '" y="' + wy.toFixed(0) +
+               '" width="' + cw + '" height="' + ch + '" fill="rgba(255,196,116,' + a + ')"/>';
+        }
+      }
+    }
+    return s;
+  }
+
+  let far = '', near = '', x = -25;
+  while (x < W) { const w = rnd(42, 72), h = rnd(90, 180);  far  += building(x, w, h, H - 46, '#2c2014', 0.30, 0.55); x += w + rnd(3, 10); }
+  x = -35;
+  while (x < W) { const w = rnd(58, 96), h = rnd(150, 250); near += building(x, w, h, H,      '#160f08', 0.42, 0.9);  x += w + rnd(6, 16); }
+
+  const defs = '<defs>'
+    + '<linearGradient id="cityGlow" x1="0" y1="1" x2="0" y2="0">'
+    + '<stop offset="0" stop-color="#b4502a" stop-opacity="0.22"/>'
+    + '<stop offset="1" stop-color="#b4502a" stop-opacity="0"/></linearGradient>'
+    + '<radialGradient id="moonG"><stop offset="0" stop-color="#ffe9c8" stop-opacity="0.45"/>'
+    + '<stop offset="1" stop-color="#ffe9c8" stop-opacity="0"/></radialGradient></defs>';
+  const glow = '<rect x="0" y="' + (H - 300) + '" width="' + W + '" height="300" fill="url(#cityGlow)"/>';
+
+  host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMax slice">'
+    + defs + glow
+    + '<g class="city-far">' + far + '</g>'
+    + '<g class="city-near">' + near + '</g></svg>';
+})();
+
+/* ===== ЗВЁЗДНОЕ НЕБО + ЛУНА (верхняя часть заставки) ===== */
+(function buildSky() {
+  const sky = document.getElementById('lamp-sky');
+  if (!sky) return;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  let html = '';
+  // луна — справа сверху
+  const ms = Math.round(rnd(54, 78));
+  html += '<div class="moon-disc" style="width:' + ms + 'px;height:' + ms + 'px;top:11%;right:13%;"></div>';
+  // звёзды в верхних ~62% экрана
+  for (let i = 0; i < 70; i++) {
+    const s = rnd(1, 2.6).toFixed(1);
+    const o = rnd(0.35, 0.9).toFixed(2);
+    const tw = Math.random() < 0.5 ? ' tw' : '';
+    const delay = rnd(0, 3.2).toFixed(2);
+    html += '<span class="star' + tw + '" style="left:' + rnd(1, 99).toFixed(1) + '%;top:' +
+            rnd(1, 62).toFixed(1) + '%;width:' + s + 'px;height:' + s + 'px;opacity:' + o +
+            ';--o:' + o + ';animation-delay:' + delay + 's;"></span>';
+  }
+  sky.innerHTML = html;
+})();
+
 /* ===== LAMP CORD — пружинная физика верёвки ===== */
 const lampScreen = document.getElementById('lamp-screen');
 const burst = document.getElementById('light-burst');
@@ -11,8 +76,8 @@ let pulling = false, pulled = false;
 let startX = 0, startY = 0;
 let pullY = 0, swingX = 0;   // текущее вытяжение вниз и раскачка в стороны
 let velY = 0, velX = 0;      // скорости для пружинной симуляции
-const MAX_PULL = 70;
-const MAX_SWING = 26;
+const MAX_PULL = 100;   // максимальный радиус вытягивания шарика
+const PULL_TRIGGER = 36; // насколько надо оттянуть (в любую сторону), чтобы включить свет
 
 /* ===== ПОДСКАЗКИ ДЛЯ НЕТЕРПЕЛИВЫХ ===== */
 /* лёгкое покачивание шнурка сразу — глаз цепляется, что за него можно тянуть */
@@ -47,7 +112,6 @@ function quickReveal() {
     document.getElementById('main-content').classList.add('revealed');
     document.body.style.background = '#f5f0e8';
     themeToggleBtn.classList.add('visible');
-    soundToggleBtn.classList.add('visible');
   }, 700);
   setTimeout(() => { lampScreen.style.display = 'none'; }, 2150);
 }
@@ -76,16 +140,21 @@ function startDrag(x, y) {
 }
 
 function drag(x, y) {
-  pullY = Math.max(0, Math.min(y - startY, MAX_PULL));
-  swingX = Math.max(-MAX_SWING, Math.min(x - startX, MAX_SWING));
+  // шарик свободно следует за курсором/пальцем в любую сторону, ограничен радиусом
+  let dx = x - startX;
+  let dy = Math.max(0, y - startY); // вверх не тянем — верёвка висит вниз
+  const dist = Math.hypot(dx, dy);
+  if (dist > MAX_PULL) { dx *= MAX_PULL / dist; dy *= MAX_PULL / dist; }
+  swingX = dx;
+  pullY = dy;
   drawCord(pullY, swingX);
-  if (pullY > 8) hint.classList.add('hide');
+  if (Math.hypot(pullY, swingX) > 10) hint.classList.add('hide');
 }
 
 function endDrag() {
   if (!pulling || pulled) return;
   pulling = false;
-  if (pullY >= 28) { pulled = true; snap(); }
+  if (Math.hypot(pullY, swingX) >= PULL_TRIGGER) { pulled = true; snap(); }
   else springRelease(true);
 }
 
@@ -123,7 +192,6 @@ function snap() {
     document.body.style.background = '#f5f0e8';
     /* показываем кнопку темы после входа */
     themeToggleBtn.classList.add('visible');
-    soundToggleBtn.classList.add('visible');
   }, 850);
   setTimeout(() => { lampScreen.style.display = 'none'; }, 2300);
 }
@@ -332,78 +400,25 @@ if (statOrb) {
   orbObs.observe(statOrb);
 }
 
-/* ===== ЗВУК — лёгкие тоны при наведении и эмбиент бегущей строки (Web Audio API) ===== */
-const soundToggleBtn = document.getElementById('soundToggle');
-let soundOn = true;
-let actx = null;
-let ambient = null;
+/* ===== МАСКОТ-ЛАМПОЧКА: глаза следят за курсором ===== */
+(function mascotEyes() {
+  const mascot = document.getElementById('mascot');
+  if (!mascot) return;
+  const eyeL = mascot.querySelector('#eyeL');
+  const eyeR = mascot.querySelector('#eyeR');
+  if (!eyeL || !eyeR) return;
+  function moveEye(eye, fracX, cx, cy, rect) {
+    const ex = rect.left + rect.width * fracX;
+    const ey = rect.top + rect.height * 0.40;
+    const ang = Math.atan2(cy - ey, cx - ex);
+    const d = Math.min(4.5, Math.hypot(cx - ex, cy - ey) / 45);
+    eye.setAttribute('transform', 'translate(' + (Math.cos(ang) * d).toFixed(1) + ',' + (Math.sin(ang) * d).toFixed(1) + ')');
+  }
+  window.addEventListener('mousemove', e => {
+    const rect = mascot.getBoundingClientRect();
+    if (!rect.width) return;
+    moveEye(eyeL, 0.40, e.clientX, e.clientY, rect);
+    moveEye(eyeR, 0.60, e.clientX, e.clientY, rect);
+  }, { passive: true });
+})();
 
-function ensureAudio() {
-  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-  if (actx.state === 'suspended') actx.resume();
-  return actx;
-}
-
-/* короткий мягкий тон-«клик» при наведении на инфо-блоки */
-function playTick() {
-  if (!soundOn) return;
-  const ctx = ensureAudio();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = 720;
-  gain.gain.setValueAtTime(0, ctx.currentTime);
-  gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.012);
-  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
-  osc.connect(gain).connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + 0.2);
-}
-
-/* тихий фоновый гул, плавно нарастает, пока бегущая строка в зоне видимости */
-function startAmbient() {
-  if (!soundOn || ambient) return;
-  const ctx = ensureAudio();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = 210;
-  gain.gain.setValueAtTime(0, ctx.currentTime);
-  gain.gain.linearRampToValueAtTime(0.015, ctx.currentTime + 1.4);
-  osc.connect(gain).connect(ctx.destination);
-  osc.start();
-  ambient = { osc, gain };
-}
-
-function stopAmbient() {
-  if (!ambient) return;
-  const { osc, gain } = ambient;
-  const ctx = ensureAudio();
-  gain.gain.cancelScheduledValues(ctx.currentTime);
-  gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime);
-  gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.6);
-  osc.stop(ctx.currentTime + 0.65);
-  ambient = null;
-}
-
-soundToggleBtn.addEventListener('click', () => {
-  soundOn = !soundOn;
-  soundToggleBtn.classList.toggle('muted', !soundOn);
-  soundToggleBtn.setAttribute('aria-pressed', String(soundOn));
-  soundToggleBtn.setAttribute('aria-label', soundOn ? 'Выключить звук' : 'Включить звук');
-  if (soundOn) ensureAudio(); else stopAmbient();
-});
-
-/* лёгкий тон при наведении на карточки ниш, флип-карты задач, соц-иконки и теги стека */
-document.querySelectorAll('.niche-card, .flip-card, .social-icon, .tool-tag').forEach(el => {
-  el.addEventListener('mouseenter', playTick);
-});
-
-/* эмбиент включается, когда в зоне видимости появляется бегущая строка, и затихает при уходе */
-const tickerWrapEl = document.querySelector('.ticker-wrap');
-if (tickerWrapEl) {
-  const ambientObs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) startAmbient(); else stopAmbient(); });
-  }, { threshold: 0.4 });
-  ambientObs.observe(tickerWrapEl);
-}

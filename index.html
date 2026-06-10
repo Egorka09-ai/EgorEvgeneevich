@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- не превращать числа (например, вилку зарплаты) в кликабельные телефоны на мобильных -->
+<meta name="format-detection" content="telephone=no">
 <title>Егор Филимонов — Бизнес-ассистент</title>
 
 <!-- #14 Open Graph мета-теги -->
@@ -39,26 +41,12 @@
 
 <!-- #12 Переключатель темы -->
 <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">☾</button>
-<!-- Переключатель звука: лёгкие тоны при наведении и фоновый эмбиент бегущей строки -->
-<button class="sound-toggle" id="soundToggle" aria-label="Выключить звук" aria-pressed="true">♪</button>
 
 <!-- LAMP -->
 <div id="lamp-screen" aria-hidden="true">
-  <!-- контекст сцены: силуэт окна и ночного города, чтобы читалось как «интерьер», а не пустой экран -->
-  <svg class="lamp-bg-scene" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <rect x="36" y="14" width="328" height="232" rx="6" fill="none" stroke="rgba(255,210,160,0.07)" stroke-width="2"/>
-    <line x1="200" y1="14" x2="200" y2="246" stroke="rgba(255,210,160,0.05)" stroke-width="2"/>
-    <circle cx="296" cy="64" r="17" fill="rgba(255,225,190,0.06)"/>
-    <g fill="rgba(155,79,42,0.07)">
-      <rect x="60" y="156" width="28" height="90"/>
-      <rect x="96" y="124" width="22" height="122"/>
-      <rect x="128" y="172" width="38" height="74"/>
-      <rect x="178" y="100" width="26" height="146"/>
-      <rect x="216" y="142" width="32" height="104"/>
-      <rect x="258" y="166" width="24" height="80"/>
-      <rect x="292" y="118" width="30" height="128"/>
-    </g>
-  </svg>
+  <!-- звёздное небо + луна сверху, ночной город снизу (генерируются в script.js) -->
+  <div id="lamp-sky" aria-hidden="true"></div>
+  <div id="lamp-city" aria-hidden="true"></div>
   <div id="light-burst"></div>
   <button class="lamp-skip" id="lampSkip" aria-label="Пропустить заставку и сразу перейти к резюме">Пропустить →</button>
   <p class="lamp-hint" id="lamp-hint">Потяни за шнурок</p>
@@ -151,7 +139,6 @@
               <img src="cartoon.png" alt="Мультяшная версия Егора Филимонова">
             </div>
           </div>
-          <span class="photo-flip-hint">↻ Клик — мультяшная версия</span>
         </div>
       </div>
     </div>
@@ -540,6 +527,38 @@
 <!-- CTA -->
 <section class="cta-section" id="section-cta">
   <div class="container">
+    <!-- маскот-лампочка: следит глазами за курсором, тематически связан с интро-лампой -->
+    <div id="mascot" aria-hidden="true">
+      <svg viewBox="0 0 160 210" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bulbG" cx="42%" cy="34%" r="72%">
+            <stop offset="0" stop-color="#fff6df"/>
+            <stop offset="55%" stop-color="#ffd982"/>
+            <stop offset="100%" stop-color="#f3b246"/>
+          </radialGradient>
+        </defs>
+        <!-- цоколь -->
+        <rect x="62" y="150" width="36" height="32" rx="6" fill="#9a8d7a"/>
+        <rect x="60" y="149" width="40" height="7" rx="3" fill="#bcae9a"/>
+        <rect x="63" y="160" width="34" height="5" rx="2" fill="#7d7060"/>
+        <rect x="63" y="169" width="34" height="5" rx="2" fill="#7d7060"/>
+        <path d="M70 182 h20 l-4 11 h-12 z" fill="#6d6052"/>
+        <!-- стеклянная колба -->
+        <circle class="bulb-body" cx="80" cy="86" r="60" fill="url(#bulbG)" stroke="#f0bf72" stroke-width="2"/>
+        <!-- блик на стекле -->
+        <ellipse cx="57" cy="58" rx="13" ry="19" fill="rgba(255,255,255,0.45)"/>
+        <!-- глаза -->
+        <ellipse cx="64" cy="84" rx="14" ry="16" fill="#fff"/>
+        <ellipse cx="96" cy="84" rx="14" ry="16" fill="#fff"/>
+        <g id="eyeL"><circle cx="64" cy="86" r="6.5" fill="#3a2b1c"/><circle cx="66.2" cy="83" r="2" fill="#fff"/></g>
+        <g id="eyeR"><circle cx="96" cy="86" r="6.5" fill="#3a2b1c"/><circle cx="98.2" cy="83" r="2" fill="#fff"/></g>
+        <!-- улыбка -->
+        <path d="M70 108 Q80 120 90 108" stroke="#8a5a28" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- щёчки -->
+        <circle cx="49" cy="101" r="6" fill="rgba(232,120,80,0.32)"/>
+        <circle cx="111" cy="101" r="6" fill="rgba(232,120,80,0.32)"/>
+      </svg>
+    </div>
     <h2 class="cta-big">Ваш человек <em>уже здесь</em></h2>
     <p class="cta-sub">Удалённая полная занятость · 80 000 — 120 000 ₽ на руки · вилка обсуждаема</p>
     <div class="cta-btns">
