@@ -400,6 +400,14 @@ if (statOrb) {
   orbObs.observe(statOrb);
 }
 
+/* ===== РИСОВАННЫЕ ДУДЛЫ: дорисовываются, когда попадают в кадр ===== */
+const doodleObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('drawn'); doodleObs.unobserve(e.target); }
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
+
 /* ===== МАСКОТ-ЛАМПОЧКА: глаза следят за курсором ===== */
 (function mascotEyes() {
   const mascot = document.getElementById('mascot');
