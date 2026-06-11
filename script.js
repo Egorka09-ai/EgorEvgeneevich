@@ -117,7 +117,7 @@ function quickReveal() {
   setTimeout(() => {
     lampScreen.classList.add('fade-out');
     document.getElementById('main-content').classList.add('revealed');
-    document.body.style.background = '#f5f0e8';
+    document.body.style.background = isDark ? '#0a0806' : '#f5f0e8';
     themeToggleBtn.classList.add('visible');
   }, 1000);
   setTimeout(() => { lampScreen.style.display = 'none'; }, 2700);
@@ -197,7 +197,7 @@ function snap() {
   setTimeout(() => {
     lampScreen.classList.add('fade-out');
     document.getElementById('main-content').classList.add('revealed');
-    document.body.style.background = '#f5f0e8';
+    document.body.style.background = isDark ? '#0a0806' : '#f5f0e8';
     /* показываем кнопку темы после входа */
     themeToggleBtn.classList.add('visible');
   }, 1150);
@@ -353,13 +353,16 @@ function onScroll() {
 
 window.addEventListener('scroll', onScroll, { passive: true });
 
-/* ===== ТЁМНАЯ ТЕМА #12 ===== */
+/* ===== ТЁМНАЯ ТЕМА #12 — тёмная по умолчанию, кнопкой ☀ можно включить светлую ===== */
 const themeToggleBtn = document.getElementById('themeToggle');
-let isDark = false;
+let isDark = true;
+document.body.classList.add('dark-mode');
+themeToggleBtn.textContent = '☀';
 themeToggleBtn.addEventListener('click', () => {
   isDark = !isDark;
   document.body.classList.toggle('dark-mode', isDark);
   themeToggleBtn.textContent = isDark ? '☀' : '☾';
+  document.body.style.background = isDark ? '#0a0806' : '#f5f0e8';
 });
 
 /* ===== SCROLL REVEAL ===== */
