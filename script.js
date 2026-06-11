@@ -456,7 +456,7 @@ document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   let w = window.innerWidth, h = window.innerHeight;
-  const N = w < 600 ? 9 : 16;
+  const N = w < 600 ? 5 : 9;
   const flies = [];
 
   for (let i = 0; i < N; i++) {
@@ -464,14 +464,14 @@ document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
     el.className = 'firefly';
     const size = 12 + Math.random() * 14;            // крупные: 12–26px
     el.style.width = el.style.height = size.toFixed(1) + 'px';
-    el.style.animationDuration = (2.2 + Math.random() * 2.6).toFixed(2) + 's';
+    el.style.animationDuration = (2.6 + Math.random() * 3) + 's';
     el.style.animationDelay = (-Math.random() * 4).toFixed(2) + 's';
     layer.appendChild(el);
     flies.push({
       el,
       x: Math.random() * w, y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.45,
-      vy: (Math.random() - 0.5) * 0.45,
+      vx: (Math.random() - 0.5) * 0.18,
+      vy: (Math.random() - 0.5) * 0.18,
     });
   }
 
@@ -482,9 +482,9 @@ document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
     const dt = Math.min(48, t - last); last = t;
     for (const f of flies) {
       // лёгкое случайное подруливание + ограничение скорости — траектория живая, не прямая
-      f.vx += (Math.random() - 0.5) * 0.02;
-      f.vy += (Math.random() - 0.5) * 0.02;
-      const sp = Math.hypot(f.vx, f.vy), max = 0.5;
+      f.vx += (Math.random() - 0.5) * 0.009;
+      f.vy += (Math.random() - 0.5) * 0.009;
+      const sp = Math.hypot(f.vx, f.vy), max = 0.2;
       if (sp > max) { f.vx *= max / sp; f.vy *= max / sp; }
       f.x += f.vx * dt; f.y += f.vy * dt;
       // мягкий «заворот» за краями экрана

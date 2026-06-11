@@ -397,8 +397,10 @@ section { padding: 96px 0; background: var(--bg); position: relative; }
   #mascot svg, #mascot .bulb-body { animation: none; }
 }
 
-/* ===== СВЕТЛЯЧКИ-ИСКРЫ ИДЕЙ: свободно летают по всему сайту ===== */
-#fireflies { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+/* ===== СВЕТЛЯЧКИ-ИСКРЫ ИДЕЙ: свободно летают по сайту — только в тёмной теме ===== */
+/* на светлом фоне свечение почти не видно, поэтому показываем их только в тёмной теме */
+#fireflies { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; display: none; }
+body.dark-mode #fireflies { display: block; }
 .firefly {
   position: absolute; top: 0; left: 0; border-radius: 50%;
   will-change: transform, opacity; pointer-events: none;
