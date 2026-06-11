@@ -113,6 +113,7 @@ lampSkip.addEventListener('click', () => {
 function quickReveal() {
   unlockScroll();
   lampScreen.classList.add('lit');
+  setTimeout(sparkBurst, 120);
   setTimeout(() => { burst.getBoundingClientRect(); burst.classList.add('expand'); }, 120);
   setTimeout(() => {
     lampScreen.classList.add('fade-out');
@@ -189,9 +190,38 @@ function springRelease(restoreHint) {
   requestAnimationFrame(step);
 }
 
+/* рой тёплых искр-идей вырывается из лампы — логичный «ночной» выход вместо вспышки света */
+function sparkBurst() {
+  const svg = document.querySelector('.lamp-svg');
+  if (!svg) return;
+  const r = svg.getBoundingClientRect();
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height * 0.42; // примерно нить накала
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('span');
+    s.className = 'spark';
+    const size = (4 + Math.random() * 7).toFixed(1);
+    s.style.width = s.style.height = size + 'px';
+    s.style.left = cx + 'px';
+    s.style.top = cy + 'px';
+    lampScreen.appendChild(s);
+    const ang = Math.random() * Math.PI * 2;
+    const dist = 70 + Math.random() * 210;
+    const dx = Math.cos(ang) * dist;
+    const dy = Math.sin(ang) * dist - 40; // в среднем чуть вверх
+    s.animate([
+      { transform: 'translate(-50%,-50%) scale(0.3)', opacity: 0 },
+      { transform: 'translate(-50%,-50%) scale(1)', opacity: 1, offset: 0.18 },
+      { transform: 'translate(calc(-50% + ' + dx.toFixed(0) + 'px), calc(-50% + ' + dy.toFixed(0) + 'px)) scale(0.5)', opacity: 0 }
+    ], { duration: 1000 + Math.random() * 800, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
+    setTimeout(() => s.remove(), 2000);
+  }
+}
+
 function snap() {
   unlockScroll();
   springRelease(false);
+  setTimeout(sparkBurst, 150);
   setTimeout(() => lampScreen.classList.add('lit'), 90);
   setTimeout(() => { burst.getBoundingClientRect(); burst.classList.add('expand'); }, 260);
   setTimeout(() => {
@@ -353,16 +383,28 @@ function onScroll() {
 
 window.addEventListener('scroll', onScroll, { passive: true });
 
-/* ===== ТЁМНАЯ ТЕМА #12 — тёмная по умолчанию, кнопкой ☀ можно включить светлую ===== */
+/* ===== ТЁМНАЯ ТЕМА #12 — тёмная по умолчанию, кнопкой можно включить светлую ===== */
 const themeToggleBtn = document.getElementById('themeToggle');
+/* чёткие SVG-иконки вместо символа-глифа (он рендерился бледным кружком) */
+const ICON_SUN = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+  + '<circle cx="12" cy="12" r="4.4" fill="#ffce4d"/>'
+  + '<g stroke="#ffce4d" stroke-width="2" stroke-linecap="round">'
+  + '<line x1="12" y1="1.6" x2="12" y2="4.2"/><line x1="12" y1="19.8" x2="12" y2="22.4"/>'
+  + '<line x1="1.6" y1="12" x2="4.2" y2="12"/><line x1="19.8" y1="12" x2="22.4" y2="12"/>'
+  + '<line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="17.8" y1="17.8" x2="19.6" y2="19.6"/>'
+  + '<line x1="4.4" y1="19.6" x2="6.2" y2="17.8"/><line x1="17.8" y1="6.2" x2="19.6" y2="4.4"/>'
+  + '</g></svg>';
+const ICON_MOON = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+  + '<path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z" fill="#e9dcc6"/></svg>';
 let isDark = true;
 document.body.classList.add('dark-mode');
-themeToggleBtn.textContent = '☀';
+function setThemeIcon() { themeToggleBtn.innerHTML = isDark ? ICON_SUN : ICON_MOON; }
+setThemeIcon();
 themeToggleBtn.addEventListener('click', () => {
   isDark = !isDark;
   document.body.classList.toggle('dark-mode', isDark);
-  themeToggleBtn.textContent = isDark ? '☀' : '☾';
   document.body.style.background = isDark ? '#0a0806' : '#f5f0e8';
+  setThemeIcon();
 });
 
 /* ===== SCROLL REVEAL ===== */
