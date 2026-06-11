@@ -73,6 +73,12 @@ const cordEl = document.getElementById('cord');
 const lampSkip = document.getElementById('lampSkip');
 
 let pulling = false, pulled = false;
+
+/* пока идёт заставка — полностью блокируем скролл страницы под ней,
+   иначе сбоку виден бегунок, сверху прогресс-бар, а при «скролле» проступает меню */
+document.documentElement.classList.add('intro-lock');
+function unlockScroll() { document.documentElement.classList.remove('intro-lock'); }
+
 let startX = 0, startY = 0;
 let pullY = 0, swingX = 0;   // текущее вытяжение вниз и раскачка в стороны
 let velY = 0, velX = 0;      // скорости для пружинной симуляции
@@ -105,6 +111,7 @@ lampSkip.addEventListener('click', () => {
 
 /* ускоренный показ резюме без анимации натяжения шнурка — тот же финал, но без ожидания */
 function quickReveal() {
+  unlockScroll();
   lampScreen.classList.add('lit');
   setTimeout(() => { burst.getBoundingClientRect(); burst.classList.add('expand'); }, 120);
   setTimeout(() => {
@@ -183,6 +190,7 @@ function springRelease(restoreHint) {
 }
 
 function snap() {
+  unlockScroll();
   springRelease(false);
   setTimeout(() => lampScreen.classList.add('lit'), 90);
   setTimeout(() => { burst.getBoundingClientRect(); burst.classList.add('expand'); }, 270);
@@ -369,7 +377,7 @@ if (statOrb) {
   const orbLabel = statOrb.querySelector('.stat-orb-label');
   const stats = [
     { num: '7', label: 'лет опыта' },
-    { num: '10+', label: 'ниш и сфер' },
+    { num: '8', label: 'ниш и сфер' },
     { num: '8', label: 'компаний' },
   ];
   let statIdx = 0;

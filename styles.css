@@ -6,6 +6,9 @@
 /* #4 убрали scroll-behavior с html — управляем скроллом только через JS */
 body { background: var(--dark); color: var(--ink); font-family: 'Geologica', sans-serif; font-weight: 300; overflow-x: hidden; -webkit-overflow-scrolling: touch; /* #15 iOS smooth scroll */ }
 
+/* пока активна заставка — страница не скроллится (нет бегунка, прогресс-бара и проступающего меню) */
+html.intro-lock, html.intro-lock body { overflow: hidden !important; height: 100%; touch-action: none; }
+
 /* ===== СТАТУС-БЕЙДЖ ===== */
 .status-badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -127,7 +130,7 @@ body { background: var(--dark); color: var(--ink); font-family: 'Geologica', san
   text-align: center; padding: 0 20px;
 }
 .lamp-hint.hide { opacity: 0; }
-.lamp-scene { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+.lamp-scene { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; }
 .lamp-svg { pointer-events: none; filter: drop-shadow(0 0 0px #9b4f2a); transition: filter 0.9s; }
 #lamp-screen.lit .lamp-svg { filter: drop-shadow(0 0 32px rgba(155,79,42,0.95)); }
 .bulb-glow { position: absolute; top: 52px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; border-radius: 50%; pointer-events: none; transition: background 0.6s, box-shadow 0.6s; }
@@ -144,12 +147,19 @@ body { background: var(--dark); color: var(--ink); font-family: 'Geologica', san
 .cord-outer.attract #cord-ball { animation: cordAttract 1.7s ease-in-out infinite; fill: rgba(255,210,160,0.55); stroke: rgba(255,210,160,0.6); }
 .cord-outer.attract #cord-path { stroke: rgba(196,105,61,0.4); }
 #cord-svg { overflow: visible; }
-#cord-path { stroke: rgba(255,210,160,0.2); stroke-width: 1.8; fill: none; stroke-linecap: round; transition: stroke 0.3s; }
-.cord-outer:hover #cord-path { stroke: rgba(196,105,61,0.75); }
-#cord-ball { fill: rgba(255,210,160,0.2); stroke: rgba(255,210,160,0.3); stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s, filter 0.3s; }
-.cord-outer:hover #cord-ball { fill: var(--terra); stroke: var(--terra2); filter: drop-shadow(0 0 9px rgba(155,79,42,0.95)); }
-.lamp-name { margin-top: 36px; position: relative; z-index: 4; font-family: 'Cormorant Garamond', serif; font-size: clamp(13px,2vw,16px); font-weight: 600; color: rgba(255,224,184,0.82); letter-spacing: 5px; text-transform: uppercase; transition: color 1s; pointer-events: none; user-select: none; text-align: center; padding: 0 20px; text-shadow: 0 2px 14px rgba(0,0,0,0.85), 0 0 30px rgba(0,0,0,0.6); }
-#lamp-screen.lit .lamp-name { color: rgba(196,105,61,0.75); }
+/* шнурок и шарик всегда контрастные + лёгкое свечение — не теряются на тёмных домах при оттяжке */
+#cord-path { stroke: rgba(255,226,186,0.62); stroke-width: 2.2; fill: none; stroke-linecap: round; transition: stroke 0.3s; filter: drop-shadow(0 0 3px rgba(0,0,0,0.55)); }
+.cord-outer:hover #cord-path { stroke: rgba(255,196,130,0.95); }
+#cord-ball { fill: #e7b074; stroke: #fff0d6; stroke-width: 1.6; transition: fill 0.3s, stroke 0.3s, filter 0.3s; filter: drop-shadow(0 0 6px rgba(0,0,0,0.7)); }
+.cord-outer:hover #cord-ball { fill: var(--terra2); stroke: #fff0d6; filter: drop-shadow(0 0 10px rgba(255,170,90,0.95)); }
+/* подпись на тёмной размытой «таблетке» — читается чётко даже поверх ночного города */
+.lamp-name { margin-top: 30px; position: relative; z-index: 6; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(16px,4.4vw,22px); font-weight: 600; color: rgba(255,236,208,0.95); letter-spacing: 1.5px; transition: color 1s; pointer-events: none; user-select: none; text-align: center;
+  padding: 9px 26px; border-radius: 40px;
+  background: rgba(12,8,5,0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,210,160,0.14);
+  box-shadow: 0 6px 26px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 10px rgba(0,0,0,0.8); }
+#lamp-screen.lit .lamp-name { color: rgba(255,210,160,0.9); }
 
 /* ===== GRAIN ===== */
 body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.6; }
@@ -201,6 +211,14 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
   user-select: none; pointer-events: none; writing-mode: vertical-rl; letter-spacing: -10px;
   transition: color 0.25s ease;
 }
+/* мягкий тёплый ореол за фото — вместо инициалов ЕФ, добавляет глубину */
+.photo-halo {
+  position: absolute; top: 46%; left: 50%; transform: translate(-50%, -50%);
+  width: min(82%, 540px); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,105,61,0.18) 0%, rgba(196,105,61,0.07) 45%, rgba(196,105,61,0) 70%);
+  pointer-events: none; z-index: 1; filter: blur(6px);
+}
+body.dark-mode .photo-halo { background: radial-gradient(circle, rgba(196,105,61,0.28) 0%, rgba(196,105,61,0.1) 48%, rgba(196,105,61,0) 72%); }
 .photo-wrap { width: 360px; height: 480px; perspective: 900px; position: relative; z-index: 2; }
 /* #17 will-change убран из статики — добавляется JS-ом при hover */
 .photo-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.12s ease-out; }
@@ -279,8 +297,9 @@ section { padding: 96px 0; background: var(--bg); position: relative; }
 /* #11 flip по hover и по классу .flipped (тач) */
 .flip-card:hover .flip-inner, .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
 .flip-front, .flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
-.flip-front { border-radius: 4px; }
-.flip-front img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.38); transition: filter 0.4s; }
+/* тёплая подложка-фолбэк: видна, пока внешнее фото грузится (медленный LTE) или если не загрузилось */
+.flip-front { border-radius: 4px; background: linear-gradient(150deg, #3a2418 0%, #5c3420 55%, #7a4527 100%); }
+.flip-front img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.38); transition: filter 0.4s, opacity 0.4s; background: transparent; }
 .flip-card:hover .flip-front img, .flip-card.flipped .flip-front img { filter: brightness(0.28); }
 .flip-front-content { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; justify-content: flex-end; }
 .flip-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra2); margin-bottom: 8px; }
