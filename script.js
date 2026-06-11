@@ -119,8 +119,8 @@ function quickReveal() {
     document.getElementById('main-content').classList.add('revealed');
     document.body.style.background = '#f5f0e8';
     themeToggleBtn.classList.add('visible');
-  }, 700);
-  setTimeout(() => { lampScreen.style.display = 'none'; }, 2150);
+  }, 1000);
+  setTimeout(() => { lampScreen.style.display = 'none'; }, 2700);
 }
 
 /* рисуем верёвку: вытяжение вниз сгибает её, раскачка наклоняет дугой в сторону */
@@ -193,15 +193,15 @@ function snap() {
   unlockScroll();
   springRelease(false);
   setTimeout(() => lampScreen.classList.add('lit'), 90);
-  setTimeout(() => { burst.getBoundingClientRect(); burst.classList.add('expand'); }, 270);
+  setTimeout(() => { burst.getBoundingClientRect(); burst.classList.add('expand'); }, 260);
   setTimeout(() => {
     lampScreen.classList.add('fade-out');
     document.getElementById('main-content').classList.add('revealed');
     document.body.style.background = '#f5f0e8';
     /* показываем кнопку темы после входа */
     themeToggleBtn.classList.add('visible');
-  }, 850);
-  setTimeout(() => { lampScreen.style.display = 'none'; }, 2300);
+  }, 1150);
+  setTimeout(() => { lampScreen.style.display = 'none'; }, 2900);
 }
 
 /* #4 якорные ссылки — плавный скролл через JS вместо CSS scroll-behavior */
@@ -245,17 +245,32 @@ if (photoFlip) {
 
 /* ===== ACCORDION ===== */
 /* #10 убрали inline onclick, заменили на addEventListener */
+/* плавное раскрытие/сворачивание: max-height ведём по реальной высоте контента,
+   иначе при фиксированном max-height закрытие идёт рывком («поэтапно») */
+function accOpen(item) {
+  const body = item.querySelector('.acc-body');
+  item.classList.add('open');
+  item.querySelector('.acc-header').setAttribute('aria-expanded', 'true');
+  body.style.maxHeight = body.scrollHeight + 'px';
+  body.addEventListener('transitionend', function te(e) {
+    if (e.propertyName !== 'max-height') return;
+    if (item.classList.contains('open')) body.style.maxHeight = 'none'; // позволяем расти, если контент изменится
+    body.removeEventListener('transitionend', te);
+  });
+}
+function accClose(item) {
+  const body = item.querySelector('.acc-body');
+  body.style.maxHeight = body.scrollHeight + 'px'; // фиксируем текущую высоту (из 'none')
+  body.offsetHeight;                                // принудительный reflow
+  item.classList.remove('open');
+  item.querySelector('.acc-header').setAttribute('aria-expanded', 'false');
+  requestAnimationFrame(() => { body.style.maxHeight = '0px'; });
+}
 function toggleAcc(header) {
   const item = header.closest('.acc-item');
   const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.acc-item.open').forEach(i => {
-    i.classList.remove('open');
-    i.querySelector('.acc-header').setAttribute('aria-expanded', 'false');
-  });
-  if (!isOpen) {
-    item.classList.add('open');
-    header.setAttribute('aria-expanded', 'true');
-  }
+  document.querySelectorAll('.acc-item.open').forEach(i => { if (i !== item) accClose(i); });
+  if (isOpen) accClose(item); else accOpen(item);
 }
 
 document.querySelectorAll('.acc-header').forEach(header => {
@@ -269,12 +284,8 @@ document.querySelectorAll('.niche-card').forEach(card => {
     e.preventDefault();
     const target = document.querySelector(card.getAttribute('href'));
     if (!target) return;
-    document.querySelectorAll('.acc-item.open').forEach(i => {
-      i.classList.remove('open');
-      i.querySelector('.acc-header').setAttribute('aria-expanded', 'false');
-    });
-    target.classList.add('open');
-    target.querySelector('.acc-header').setAttribute('aria-expanded', 'true');
+    document.querySelectorAll('.acc-item.open').forEach(i => { if (i !== target) accClose(i); });
+    if (!target.classList.contains('open')) accOpen(target);
     /* #4 скролл через JS */
     setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   });
