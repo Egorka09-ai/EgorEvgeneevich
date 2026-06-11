@@ -485,10 +485,9 @@ body.dark-mode .hero { background: linear-gradient(135deg, #1d150d 0%, #241810 5
 }
 /* фото без подложки: светлый студийный фон растворяем смешиванием — остаётся только портрет */
 .photo-face img { object-fit: contain; object-position: center bottom; mix-blend-mode: multiply; }
-/* в тёмной теме multiply не сработает (фон тёмный) — показываем фото в аккуратной светлой рамке */
+/* в тёмной теме multiply не нужен: фон вырезан прямо в PNG (с un-matting краёв),
+   поэтому портрет «парит» без подложки — так же, как в светлой теме */
 body.dark-mode .photo-face img { mix-blend-mode: normal; }
-body.dark-mode .photo-flip { background: #f4ede1; border-radius: 14px; box-shadow: 0 22px 56px rgba(0,0,0,0.5); }
-body.dark-mode .photo-face { border-radius: 14px; overflow: hidden; }
 
 /* единый эффект наведения для всех кнопок-действий */
 .btn, .hero-anchor-btn {
