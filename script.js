@@ -637,34 +637,23 @@ document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
   });
 })();
 
-/* ===== ДЕШИФРОВКА заголовков секций при появлении в viewport ===== */
-(function scrambleTitles() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const CHARS = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩАЕИОУЭЮЯ';
-  const DURATION = 900;
-  const STEP = 40;
-
-  function scramble(el) {
-    const original = el.textContent;
-    const steps = Math.round(DURATION / STEP);
-    let frame = 0;
-    const id = setInterval(() => {
-      frame++;
-      const revealed = Math.floor((frame / steps) * original.length);
-      el.textContent = original.split('').map((ch, i) => {
-        if (i < revealed || ch === ' ') return ch;
-        return CHARS[Math.floor(Math.random() * CHARS.length)];
-      }).join('');
-      if (frame >= steps) { clearInterval(id); el.textContent = original; }
-    }, STEP);
-  }
-
+/* ===== ПЛАВНОЕ ПОЯВЛЕНИЕ заголовков секций ===== */
+(function revealTitles() {
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) { scramble(e.target); io.unobserve(e.target); }
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
     });
-  }, { threshold: 0.25 });
+  }, { threshold: 0.2 });
 
-  document.querySelectorAll('.section-title').forEach(el => io.observe(el));
+  document.querySelectorAll('.section-title').forEach(el => {
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    io.observe(el);
+  });
 })();
 
