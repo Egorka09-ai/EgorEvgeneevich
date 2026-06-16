@@ -542,3 +542,36 @@ document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
   requestAnimationFrame(tick);
 })();
 
+/* ===== СВЕЧЕНИЕ ЗА КУРСОРОМ ===== */
+(function cursorGlow() {
+  const glow = document.getElementById('cursor-glow');
+  if (!glow) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce), (hover: none)').matches) return;
+
+  window.addEventListener('mousemove', e => {
+    glow.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+    glow.classList.add('visible');
+  }, { passive: true });
+})();
+
+/* ===== ПАРАЛЛАКС В HERO: заголовок слегка сдвигается за курсором ===== */
+(function heroParallax() {
+  const hero = document.getElementById('section-hero');
+  const slogan = document.querySelector('.hero-slogan');
+  if (!hero || !slogan) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce), (hover: none)').matches) return;
+
+  hero.addEventListener('mousemove', e => {
+    const rect = hero.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    slogan.style.setProperty('--px-x', (x * -16) + 'px');
+    slogan.style.setProperty('--px-y', (y * -16) + 'px');
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', () => {
+    slogan.style.setProperty('--px-x', '0px');
+    slogan.style.setProperty('--px-y', '0px');
+  });
+})();
+
