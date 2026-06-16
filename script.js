@@ -575,3 +575,96 @@ document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
   });
 })();
 
+/* ===== TIMELINE ОПЫТА: светящаяся нить заполняется по скроллу ===== */
+(function expTimeline() {
+  const section = document.getElementById('section-exp');
+  if (!section) return;
+  const items = [...section.querySelectorAll('.acc-item')];
+  if (!items.length) return;
+
+  // Оборачиваем все acc-items в .exp-tl-wrap
+  const wrap = document.createElement('div');
+  wrap.className = 'exp-tl-wrap';
+  items[0].parentNode.insertBefore(wrap, items[0]);
+  items.forEach(item => wrap.appendChild(item));
+
+  // Добавляем рельс + заливку
+  const rail = document.createElement('div');
+  rail.className = 'tl-rail';
+  const fill = document.createElement('div');
+  fill.className = 'tl-fill';
+  rail.appendChild(fill);
+  wrap.prepend(rail);
+
+  // Добавляем узел-светлячок к каждому acc-item (ДО acc-header, не внутрь grid)
+  items.forEach(item => {
+    const node = document.createElement('span');
+    node.className = 'tl-node';
+    node.setAttribute('aria-hidden', 'true');
+    item.insertBefore(node, item.firstChild);
+  });
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function updateFill() {
+    const wRect = wrap.getBoundingClientRect();
+    const scrolled = -wRect.top;
+    const scrollable = wRect.height - window.innerHeight * 0.6;
+    const progress = Math.max(0, Math.min(1, scrolled / (scrollable || 1)));
+    fill.style.height = progress * 100 + '%';
+  }
+
+  window.addEventListener('scroll', updateFill, { passive: true });
+  updateFill();
+})();
+
+/* ===== МАГНИТНЫЙ HOVER на кнопки и niche-карточки ===== */
+(function magneticHover() {
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  document.querySelectorAll('.btn, .niche-card').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const r = el.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width  / 2)) / r.width;
+      const dy = (e.clientY - (r.top  + r.height / 2)) / r.height;
+      el.style.setProperty('--mg-x', (dx * 10) + 'px');
+      el.style.setProperty('--mg-y', (dy *  6) + 'px');
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.setProperty('--mg-x', '0px');
+      el.style.setProperty('--mg-y', '0px');
+    });
+  });
+})();
+
+/* ===== ДЕШИФРОВКА заголовков секций при появлении в viewport ===== */
+(function scrambleTitles() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const CHARS = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩАЕИОУЭЮЯ';
+  const DURATION = 900;
+  const STEP = 40;
+
+  function scramble(el) {
+    const original = el.textContent;
+    const steps = Math.round(DURATION / STEP);
+    let frame = 0;
+    const id = setInterval(() => {
+      frame++;
+      const revealed = Math.floor((frame / steps) * original.length);
+      el.textContent = original.split('').map((ch, i) => {
+        if (i < revealed || ch === ' ') return ch;
+        return CHARS[Math.floor(Math.random() * CHARS.length)];
+      }).join('');
+      if (frame >= steps) { clearInterval(id); el.textContent = original; }
+    }, STEP);
+  }
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { scramble(e.target); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.25 });
+
+  document.querySelectorAll('.section-title').forEach(el => io.observe(el));
+})();
+

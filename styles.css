@@ -270,8 +270,8 @@ body.dark-mode .photo-halo { background: radial-gradient(circle, rgba(196,105,61
 .ticker-track { display: inline-flex; animation: ticker 32s linear infinite; }
 /* #11 тач-пауза через класс */
 .ticker-track:hover, .ticker-track.paused { animation-play-state: paused; }
-.ticker-item { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink2); padding: 0 24px; display: inline-flex; align-items: center; gap: 24px; }
-.ticker-item::after { content: '·'; color: var(--terra); font-size: 16px; }
+.ticker-item { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink2); padding: 0 14px; display: inline-flex; align-items: center; gap: 14px; }
+.ticker-item::after { content: ''; width: 3px; height: 3px; border-radius: 50%; background: var(--terra); flex-shrink: 0; align-self: center; }
 @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
 /* ===== SECTIONS ===== */
@@ -348,14 +348,38 @@ section { padding: 96px 0; background: var(--bg); position: relative; }
 /* ===== NICHES ===== */
 .niches-section { background: var(--bg2) !important; }
 .niches-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.niche-card { padding: 20px 16px; background: var(--cream); border: 1px solid var(--line); border-bottom: 3px solid transparent; cursor: pointer; text-align: center; text-decoration: none; display: block; opacity: 0; transform: translateY(12px); transition: opacity 0.4s, transform 0.4s, border-color 0.25s, background 0.25s; }
-.niche-card:hover { border-bottom-color: var(--terra); background: #fff; transform: translateY(-3px) !important; }
+.niche-card { padding: 28px 16px 22px; background: var(--cream); border: none; border-bottom: 2px solid var(--line); cursor: pointer; text-align: center; text-decoration: none; display: block; opacity: 0; transform: translateY(12px); translate: var(--mg-x,0px) var(--mg-y,0px); transition: opacity 0.4s, transform 0.4s, border-color 0.25s, background 0.25s, box-shadow 0.3s, translate 0.25s ease; }
+.niche-card:hover { border-bottom-color: var(--terra); background: #fff; box-shadow: 0 6px 24px rgba(155,79,42,0.1); transform: translateY(-3px) !important; }
 .niche-card.visible { opacity: 1; transform: translateY(0); }
-.niche-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: rgba(155,79,42,0.15); line-height: 1; margin-bottom: 8px; }
+.niche-num { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 700; color: rgba(155,79,42,0.12); line-height: 1; margin-bottom: 4px; }
 .niche-name { font-size: 12px; color: var(--ink); line-height: 1.4; }
 
+/* ===== TIMELINE ОПЫТА ===== */
+.exp-tl-wrap { position: relative; }
+.tl-rail {
+  position: absolute; left: 7px; top: 20px; bottom: 20px;
+  width: 2px; background: rgba(155,79,42,0.12); border-radius: 2px; overflow: hidden;
+}
+.tl-fill {
+  position: absolute; left: 0; right: 0; top: 0; height: 0%;
+  background: linear-gradient(to bottom, var(--terra), rgba(196,105,61,0.3));
+  box-shadow: 0 0 8px rgba(196,105,61,0.55);
+}
+.tl-node {
+  position: absolute; left: 2px; top: 40px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: rgba(155,79,42,0.15); border: 2px solid rgba(155,79,42,0.3);
+  z-index: 2; pointer-events: none;
+  transition: background 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease;
+}
+.acc-item.visible .tl-node {
+  background: var(--terra); border-color: var(--terra);
+  box-shadow: 0 0 8px rgba(196,105,61,0.7), 0 0 20px rgba(196,105,61,0.3);
+}
+@media (prefers-reduced-motion: reduce) { .tl-fill, .tl-node { transition: none !important; } }
+
 /* ===== ACCORDION ===== */
-.acc-item { border-bottom: 1px solid var(--line); opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; }
+.acc-item { position: relative; border-bottom: 1px solid var(--line); opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; }
 .acc-item.visible { opacity: 1; transform: none; }
 /* #9 aria-friendly */
 .acc-header { display: grid; grid-template-columns: 100px 1fr auto; gap: 24px; align-items: center; padding: 28px 0; cursor: pointer; user-select: none; }
@@ -377,15 +401,16 @@ section { padding: 96px 0; background: var(--bg); position: relative; }
 
 /* ===== TOOLS ===== */
 .tools-section { background: var(--cream) !important; }
-.tools-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
+.tools-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+.tool-group { flex: 0 0 calc((100% - 80px) / 3); }
 .tool-group-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--terra); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .tool-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.tool-tag { font-size: 12px; padding: 6px 14px; border: 1px solid var(--line); color: var(--ink2); background: var(--bg); transition: border-color 0.2s, color 0.2s; }
-.tool-tag:hover { border-color: var(--terra); color: var(--terra); }
+.tool-tag { font-size: 12px; padding: 0 16px; height: 34px; display: inline-flex; align-items: center; border: 1px solid var(--line); color: var(--ink2); background: var(--bg); border-radius: 999px; transition: border-color 0.2s, color 0.2s, background 0.2s; user-select: none; cursor: default; }
+.tool-tag:hover { border-color: var(--terra); color: var(--terra); background: rgba(155,79,42,0.06); }
 
 /* ===== QUALITIES ===== */
 /* #10 убрали padding:0!important — заменили нормальным отступом */
-.q-section { background: var(--bg) !important; padding: 96px 0 !important; }
+.q-section { background: var(--bg2) !important; padding: 96px 0 !important; }
 .q-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; background: var(--line); }
 .q-card { background: var(--cream); padding: 40px 28px; opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; position: relative; overflow: hidden; }
 .q-card.visible { opacity: 1; transform: none; }
@@ -398,11 +423,12 @@ section { padding: 96px 0; background: var(--bg); position: relative; }
 .q-card:hover .q-accent { width: 100%; }
 
 /* ===== EDUCATION ===== */
-.edu-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-.edu-card { border: 1px solid var(--line); padding: 28px 28px 28px 36px; position: relative; background: var(--cream); opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s, border-color 0.2s; }
+.edu-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+.edu-card { flex: 0 0 calc((100% - 40px) / 3); }
+.edu-card { border: 1px solid var(--line); padding: 32px 28px 28px; position: relative; background: var(--cream); opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s, border-color 0.2s; }
 .edu-card:hover { border-color: var(--terra); }
 .edu-card.visible { opacity: 1; transform: none; }
-.edu-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--terra); }
+.edu-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--terra) 0%, rgba(196,105,61,0.25) 100%); }
 .edu-year { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra); margin-bottom: 8px; }
 .edu-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; margin-bottom: 5px; line-height: 1.3; color: var(--ink); }
 .edu-sub { font-size: 12px; color: var(--ink2); }
@@ -458,7 +484,7 @@ body.dark-mode #cursor-glow.visible { opacity: 1; }
 .cta-big em { color: var(--terra2); font-style: normal; }
 .cta-sub { font-size: 14px; color: rgba(255,255,255,0.35); margin-bottom: 44px; letter-spacing: 1px; }
 .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 34px; font-family: 'Geologica', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; cursor: pointer; border: none; transition: all 0.25s; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 34px; font-family: 'Geologica', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; cursor: pointer; border: none; translate: var(--mg-x,0px) var(--mg-y,0px); transition: all 0.25s; }
 .btn-fill { background: var(--terra); color: #fff; }
 .btn-fill:hover { background: var(--terra2); transform: translateY(-2px); }
 .btn-ghost { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); }
@@ -503,11 +529,12 @@ body.dark-mode .hero-slogan { color: var(--ink); }
 body.dark-mode .hero-about { color: var(--ink2); }
 body.dark-mode .hero-contacts a { color: var(--ink); }
 body.dark-mode .hero-contacts a:hover { color: var(--terra2); }
-body.dark-mode .niche-card { background: #1e1810; border-color: var(--line); }
+body.dark-mode .niche-card { background: #1e1810; border-bottom-color: var(--line); }
+body.dark-mode .niche-card:hover { background: #261e14; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
 body.dark-mode .niche-card:hover { background: #261e14; }
 body.dark-mode .niche-name { color: var(--ink); }
 /* #21 декоративные номера на тёмном фоне были почти не видны — поднимаем контраст */
-body.dark-mode .niche-num { color: rgba(196,105,61,0.35); }
+body.dark-mode .niche-num { color: rgba(196,105,61,0.28); }
 body.dark-mode .acc-company { color: var(--ink); }
 body.dark-mode .acc-desc { color: var(--ink2); }
 body.dark-mode .acc-item { border-color: var(--line); }
@@ -528,6 +555,9 @@ body.dark-mode .edu-sub { color: var(--ink2); }
 body.dark-mode .section-title { color: var(--ink); }
 body.dark-mode .hero-anchor-btn { color: var(--terra2); border-color: rgba(196,105,61,0.3); }
 body.dark-mode .acc-dur-label { color: var(--ink2); }
+body.dark-mode .q-section { background: var(--bg2) !important; }
+body.dark-mode #section-edu { background: var(--bg) !important; }
+body.dark-mode .tool-tag:hover { background: rgba(196,105,61,0.1); }
 
 /* ===== ЧИСТЫЙ ФОН HERO + КРУПНОЕ ФОТО + ЕДИНЫЙ HOVER ===== */
 /* спокойный тёплый градиент вместо «графика»/частиц */
@@ -564,7 +594,7 @@ body.dark-mode .photo-face img { mix-blend-mode: normal; }
 }
 .niche-card {
   transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(.16,1,.3,1), border-color 0.25s, background 0.25s;
+  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(.16,1,.3,1), border-color 0.25s, background 0.25s, box-shadow 0.3s, translate 0.25s ease;
 }
 .acc-item.visible, .q-card.visible, .edu-card.visible, .niche-card.visible {
   opacity: 1; transform: none;
@@ -597,7 +627,8 @@ body.dark-mode .photo-face img { mix-blend-mode: normal; }
 
   .flip-grid { grid-template-columns: 1fr 1fr; }
   .niches-grid { grid-template-columns: repeat(2,1fr); }
-  .tools-grid { grid-template-columns: 1fr; }
+  .tools-grid { flex-direction: column; }
+  .tool-group { flex: 0 0 100%; }
   .q-grid { grid-template-columns: 1fr 1fr; }
   .edu-grid { grid-template-columns: 1fr; }
   .acc-header { grid-template-columns: 72px 1fr auto; gap: 16px; }
