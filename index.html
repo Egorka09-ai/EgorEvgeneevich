@@ -343,115 +343,108 @@
   </div>
 </section>
 
-<!-- EXPERIENCE -->
+<!-- EXPERIENCE — GENIE SCENE -->
 <section id="section-exp">
-  <div class="container">
-    <div class="section-header">
-      <p class="section-eyebrow">Карьера</p>
-      <h2 class="section-title">Опыт работы</h2>
-      <!-- кружок-бейдж: перетекает между фактами при появлении в зоне видимости -->
-      <div class="stat-orb" id="statOrb" aria-hidden="true">
-        <span class="stat-orb-num">7</span>
-        <span class="stat-orb-label">лет опыта</span>
+  <div class="exp-scene" id="expScene">
+
+    <div class="exp-scene-head">
+      <div class="section-header">
+        <p class="section-eyebrow">Карьера · 7 лет</p>
+        <h2 class="section-title">Опыт <em>работы</em></h2>
+        <div class="stat-orb" id="statOrb" aria-hidden="true">
+          <span class="stat-orb-num">7</span>
+          <span class="stat-orb-label">лет опыта</span>
+        </div>
       </div>
     </div>
 
-    <div class="acc-item" id="exp-wb">
-      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-wb" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">1</div><div class="acc-dur-label">год</div></div>
-        <div><div class="acc-company">Wildberries / OZON</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
-        <div class="acc-arrow" aria-hidden="true">▾</div>
-      </div>
-      <div class="acc-body" id="body-wb">
-        <p class="acc-desc">Полноценная работа в личных кабинетах WB и OZON: заполнение и оптимизация карточек товара, работа с контентом, коммуникация с производствами и поставщиками. Подготовка штрихкодов, оформление честных знаков (ЧЗ), формирование СДЕК-накладных, взаимодействие с менеджерами транспортных компаний. Поиск и найм сотрудников, проведение первичных собеседований, онбординг. Работа в Битрикс24: постановка задач, трекинг, отчётность. Прошёл обучение от Яндекса по работе с РСЯ, Яндекс.Директом и Яндекс.Метрикой.</p>
-        <div class="acc-tags"><span class="acc-tag">WB / OZON</span><span class="acc-tag">Карточки товара</span><span class="acc-tag">Честный знак</span><span class="acc-tag">СДЕК</span><span class="acc-tag">Яндекс.Директ</span><span class="acc-tag">РСЯ</span><span class="acc-tag">HR</span><span class="acc-tag">Битрикс24</span></div>
+    <div class="exp-deck" id="expDeck">
+      <article class="exp-card" id="exp-wb" tabindex="0" role="button" aria-haspopup="dialog">
+        <div class="exp-c-num">01</div>
+        <div class="exp-c-company">Wildberries / OZON</div>
+        <div class="exp-c-role">Помощник / ассистент руководителя</div>
+        <div class="exp-c-dur"><b>1</b> год</div>
+        <div class="exp-c-tags"><span class="exp-c-tag">Карточки товара</span><span class="exp-c-tag">Честный знак</span><span class="exp-c-tag">Битрикс24</span></div>
+        <div class="exp-c-more">Подробнее →</div>
+        <div class="exp-c-desc" hidden>Вёл карточки товаров на маркетплейсах: описания, инфографика, SEO-оптимизация. Работал с системой Честный Знак — маркировка и регистрация остатков. Координировал документооборот и задачи в Битрикс24, готовил отчёты и дайджесты для руководителя.</div>
+      </article>
+      <article class="exp-card" id="exp-gaz" tabindex="0" role="button" aria-haspopup="dialog">
+        <div class="exp-c-num">02</div>
+        <div class="exp-c-company">ООО «ГазСтройПроф»</div>
+        <div class="exp-c-role">Помощник руководителя</div>
+        <div class="exp-c-dur"><b>1.5</b> года</div>
+        <div class="exp-c-tags"><span class="exp-c-tag">Бюджеты</span><span class="exp-c-tag">ИТД / ППР</span><span class="exp-c-tag">MBA</span></div>
+        <div class="exp-c-more">Подробнее →</div>
+        <div class="exp-c-desc" hidden>Помогал контролировать бюджеты строительных проектов, работал с исполнительной технической документацией (ИТД) и проектами производства работ (ППР). Параллельно проходил программу MBA — применял полученные знания сразу в рабочих задачах.</div>
+      </article>
+      <article class="exp-card" id="exp-airport" tabindex="0" role="button" aria-haspopup="dialog">
+        <div class="exp-c-num">03</div>
+        <div class="exp-c-company">Госкорпорация по ОрВД</div>
+        <div class="exp-c-role">Инженер связи</div>
+        <div class="exp-c-dur"><b>4+</b> года</div>
+        <div class="exp-c-tags"><span class="exp-c-tag">КЛС</span><span class="exp-c-tag">Связь</span><span class="exp-c-tag">Госструктуры</span></div>
+        <div class="exp-c-more">Подробнее →</div>
+        <div class="exp-c-desc" hidden>Обслуживание кабельно-линейных сооружений (КЛС) аэронавигационной связи. Ответственность за бесперебойность систем связи аэропорта: плановое ТО, устранение неисправностей, работа с государственной инфраструктурой. Накопил серьёзную дисциплину и ответственность.</div>
+      </article>
+      <article class="exp-card" id="exp-buh" tabindex="0" role="button" aria-haspopup="dialog">
+        <div class="exp-c-num">04</div>
+        <div class="exp-c-company">Ниша бухгалтерии</div>
+        <div class="exp-c-role">Помощник / ассистент руководителя</div>
+        <div class="exp-c-dur"><b>5</b> мес.</div>
+        <div class="exp-c-tags"><span class="exp-c-tag">Налоги</span><span class="exp-c-tag">ИП / ООО</span><span class="exp-c-tag">Telegram</span></div>
+        <div class="exp-c-more">Подробнее →</div>
+        <div class="exp-c-desc" hidden>Помогал клиентам разбираться с налоговой отчётностью для ИП и ООО. Вёл Telegram-канал и переписку с клиентами, обрабатывал входящие запросы, назначал консультации и отслеживал выполнение задач.</div>
+      </article>
+      <article class="exp-card" id="exp-ful" tabindex="0" role="button" aria-haspopup="dialog">
+        <div class="exp-c-num">05</div>
+        <div class="exp-c-company">Фулфилмент «Пеликан»</div>
+        <div class="exp-c-role">Менеджер продаж / личный ассистент</div>
+        <div class="exp-c-dur"><b>10</b> мес.</div>
+        <div class="exp-c-tags"><span class="exp-c-tag">B2B продажи</span><span class="exp-c-tag">КП</span><span class="exp-c-tag">Битрикс24</span></div>
+        <div class="exp-c-more">Подробнее →</div>
+        <div class="exp-c-desc" hidden>B2B продажи услуг фулфилмента для малого и среднего бизнеса. Составлял коммерческие предложения, проводил переговоры, вёл клиентскую базу. Параллельно помогал руководителю как личный ассистент: планирование, делегирование, операционные задачи.</div>
+      </article>
+      <article class="exp-card" id="exp-info" tabindex="0" role="button" aria-haspopup="dialog">
+        <div class="exp-c-num">06</div>
+        <div class="exp-c-company">Наставничество / Инфобизнес</div>
+        <div class="exp-c-role">Администратор / РОП / помощник</div>
+        <div class="exp-c-dur"><b>9</b> мес.</div>
+        <div class="exp-c-tags"><span class="exp-c-tag">CRM с нуля</span><span class="exp-c-tag">Регламенты</span><span class="exp-c-tag">AmoCRM</span></div>
+        <div class="exp-c-more">Подробнее →</div>
+        <div class="exp-c-desc" hidden>Выстраивал CRM-систему в AmoCRM с нуля: воронки, теги, автоматизации. Писал регламенты для отдела продаж, проводил обучение менеджеров. Выступал в роли РОП: контролировал KPI, прослушивал звонки, давал обратную связь команде.</div>
+      </article>
+      <article class="exp-card" id="exp-psy" tabindex="0" role="button" aria-haspopup="dialog">
+        <div class="exp-c-num">07</div>
+        <div class="exp-c-company">Ниша психологии</div>
+        <div class="exp-c-role">Бизнес-ассистент</div>
+        <div class="exp-c-dur"><b>5</b> мес.</div>
+        <div class="exp-c-tags"><span class="exp-c-tag">Копирайтинг</span><span class="exp-c-tag">Reels</span><span class="exp-c-tag">CRM</span></div>
+        <div class="exp-c-more">Подробнее →</div>
+        <div class="exp-c-desc" hidden>Вёл копирайтинг и создавал контент для онлайн-практики психолога: посты, сторис, сценарии для Reels. Настраивал CRM, помогал выстраивать воронку продаж консультаций и вёл коммуникацию с потенциальными клиентами.</div>
+      </article>
+      <article class="exp-card" id="exp-food" tabindex="0" role="button" aria-haspopup="dialog">
+        <div class="exp-c-num">08</div>
+        <div class="exp-c-company">General Food</div>
+        <div class="exp-c-role">Официант · Бармен · Курьер</div>
+        <div class="exp-c-dur"><b>2</b> года</div>
+        <div class="exp-c-tags"><span class="exp-c-tag">Коммуникация</span><span class="exp-c-tag">Сервис</span><span class="exp-c-tag">Команда</span></div>
+        <div class="exp-c-more">Подробнее →</div>
+        <div class="exp-c-desc" hidden>Работа в сфере общественного питания в нескольких ролях. Прокачал навыки живой коммуникации с людьми, высокий стандарт сервиса и умение работать в команде в режиме многозадачности. Это заложило базу для работы с людьми в любой роли.</div>
+      </article>
+    </div>
+
+    <div class="exp-box" id="expBox">
+      <div class="exp-box-inner">
+        <div class="exp-box-back"></div>
+        <div class="exp-box-glow" id="expBoxGlow"></div>
+        <div class="exp-flap exp-flap-l" id="expFlapL"></div>
+        <div class="exp-flap exp-flap-r" id="expFlapR"></div>
+        <div class="exp-box-front"></div>
+        <div class="exp-box-label">Опыт · 2017–2024</div>
       </div>
     </div>
 
-    <div class="acc-item" id="exp-gaz">
-      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-gaz" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">1.5</div><div class="acc-dur-label">года</div></div>
-        <div><div class="acc-company">ООО «ГазСтройПроф»</div><div class="acc-position">Помощник руководителя</div></div>
-        <div class="acc-arrow" aria-hidden="true">▾</div>
-      </div>
-      <div class="acc-body" id="body-gaz">
-        <p class="acc-desc">Работа в крупной газовой компании: финансовое планирование и контроль, составление бюджетов по проектам, работа со счетами, выставление счетов подрядчикам, составление финансовых отчётов. Учёт рабочего времени, статусов ИТД, ведение реестров догазов, внутрянок, распредов и просрочек. Работа с документацией: акты ЗСО, СП, планы трасс, схемы сварных стыков. Учёт ППР, отчётные сведения в ГСМ, работа с сертификатами (Росс RU, ГазСЕРТ), структуризация закупок. Параллельно прошёл полный курс MBA General в City Business School.</p>
-        <div class="acc-tags"><span class="acc-tag">Финпланирование</span><span class="acc-tag">Бюджеты</span><span class="acc-tag">ИТД / ППР</span><span class="acc-tag">Сертификаты</span><span class="acc-tag">Закупки</span><span class="acc-tag">MBA</span><span class="acc-tag">Битрикс24</span></div>
-      </div>
-    </div>
-
-    <div class="acc-item" id="exp-airport">
-      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-airport" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">4+</div><div class="acc-dur-label">года</div></div>
-        <div><div class="acc-company">Госкорпорация по ОрВД</div><div class="acc-position">Инженер связи</div></div>
-        <div class="acc-arrow" aria-hidden="true">▾</div>
-      </div>
-      <div class="acc-body" id="body-airport">
-        <p class="acc-desc">Работа по профильной специальности инженера-связиста в государственной организации. Обслуживание, эксплуатация и контроль состояния кабельных линий связи (КЛС). Параллельная деятельность, совмещаемая с основной карьерой бизнес-ассистента — даёт техническую базу и понимание системной работы в крупных структурах.</p>
-        <div class="acc-tags"><span class="acc-tag">КЛС</span><span class="acc-tag">Связь</span><span class="acc-tag">Инженерия</span><span class="acc-tag">Госструктуры</span></div>
-      </div>
-    </div>
-
-    <div class="acc-item" id="exp-buh">
-      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-buh" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div></div>
-        <div><div class="acc-company">Ниша бухгалтерии</div><div class="acc-position">Помощник / ассистент руководителя</div></div>
-        <div class="acc-arrow" aria-hidden="true">▾</div>
-      </div>
-      <div class="acc-body" id="body-buh">
-        <p class="acc-desc">Работа в связке с профессиональным бухгалтером с опытом более 20 лет. Поиск клиентов для бухгалтерского аутсорсинга и консультаций по российскому законодательству. Участие в процессах регистрации ИП и ООО, сдачи отчётности, составления налоговых деклараций. Ведение Telegram-канала компании, параллельное обучение — погружение в бухгалтерский и налоговый учёт.</p>
-        <div class="acc-tags"><span class="acc-tag">Бухаутсорсинг</span><span class="acc-tag">Налоги</span><span class="acc-tag">ИП / ООО</span><span class="acc-tag">Telegram</span><span class="acc-tag">Клиентопоиск</span></div>
-      </div>
-    </div>
-
-    <div class="acc-item" id="exp-ful">
-      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-ful" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">10</div><div class="acc-dur-label">мес.</div></div>
-        <div><div class="acc-company">Фулфилмент «Пеликан»</div><div class="acc-position">Менеджер по продажам / личный ассистент</div></div>
-        <div class="acc-arrow" aria-hidden="true">▾</div>
-      </div>
-      <div class="acc-body" id="body-ful">
-        <p class="acc-desc">Активный поиск клиентов для услуг фулфилмента, холодные и тёплые продажи, полное сопровождение на каждом этапе сделки. Подготовка коммерческих предложений и договоров, расчёт стоимости услуг под каждого клиента. Анализ конкурентов и рынка. Ведение рабочих аккаунтов в соцсетях, видеомонтаж Reels, развитие Telegram-канала компании.</p>
-        <div class="acc-tags"><span class="acc-tag">B2B продажи</span><span class="acc-tag">КП и договоры</span><span class="acc-tag">Сопровождение сделок</span><span class="acc-tag">SMM</span><span class="acc-tag">Reels</span><span class="acc-tag">Telegram</span></div>
-      </div>
-    </div>
-
-    <div class="acc-item" id="exp-info">
-      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-info" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">9</div><div class="acc-dur-label">мес.</div></div>
-        <div><div class="acc-company">Наставничество / Инфобизнес</div><div class="acc-position">Администратор / РОП / помощник руководителя</div></div>
-        <div class="acc-arrow" aria-hidden="true">▾</div>
-      </div>
-      <div class="acc-body" id="body-info">
-        <p class="acc-desc">Широкий спектр задач в онлайн-бизнесе: создание регламентов и CRM-системы с нуля, руководство отделом продаж — найм, обучение, постановка планов, контроль результатов. Ведение валютного контроля и бухгалтерских отчётов. Travel-поддержка руководителя: поиск и бронирование жилья, транспорта, логистика поездок. Взаимодействие с госорганами, поиск подрядчиков. Создание договоров, счетов на оплату, платёжных поручений. Обработка лидов, ведение воронки продаж, закупка рекламы в Telegram-каналах.</p>
-        <div class="acc-tags"><span class="acc-tag">РОП</span><span class="acc-tag">CRM с нуля</span><span class="acc-tag">Регламенты</span><span class="acc-tag">Travel</span><span class="acc-tag">Валютный контроль</span><span class="acc-tag">AmoCRM</span><span class="acc-tag">Битрикс24</span><span class="acc-tag">Реклама в TG</span></div>
-      </div>
-    </div>
-
-    <div class="acc-item" id="exp-psy">
-      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-psy" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">5</div><div class="acc-dur-label">мес.</div></div>
-        <div><div class="acc-company">Ниша психологии</div><div class="acc-position">Бизнес-ассистент</div></div>
-        <div class="acc-arrow" aria-hidden="true">▾</div>
-      </div>
-      <div class="acc-body" id="body-psy">
-        <p class="acc-desc">Работа с практикующим психологом: ведение бухгалтерского учёта и отчётности, составление календаря и планёрок, личные поручения. Копирайтинг для соцсетей и рассылок, анализ алгоритмов Instagram и YouTube для роста аудитории. Ведение CRM, видеомонтаж экспертных Reels, рассылки по базе клиентов.</p>
-        <div class="acc-tags"><span class="acc-tag">Копирайтинг</span><span class="acc-tag">CRM</span><span class="acc-tag">Reels</span><span class="acc-tag">YouTube</span><span class="acc-tag">Instagram</span><span class="acc-tag">Бухучёт</span></div>
-      </div>
-    </div>
-
-    <div class="acc-item" id="exp-food">
-      <div class="acc-header" role="button" aria-expanded="false" aria-controls="body-food" tabindex="0">
-        <div class="acc-duration"><div class="acc-dur-num">2</div><div class="acc-dur-label">года</div></div>
-        <div><div class="acc-company">General Food</div><div class="acc-position">Официант · Бармен · Курьер</div></div>
-        <div class="acc-arrow" aria-hidden="true">▾</div>
-      </div>
-      <div class="acc-body" id="body-food">
-        <p class="acc-desc">Первый опыт работы с людьми. Именно здесь сформировались базовые навыки коммуникации, стрессоустойчивости и работы в команде в условиях высокой нагрузки. Работал в нескольких ролях параллельно: обслуживание гостей, барная стойка, курьерская доставка.</p>
-        <div class="acc-tags"><span class="acc-tag">Коммуникация</span><span class="acc-tag">Стрессоустойчивость</span><span class="acc-tag">Командная работа</span><span class="acc-tag">Сервис</span></div>
-      </div>
-    </div>
-
+    <div class="exp-progress" id="expProgress"></div>
   </div>
 </section>
 
@@ -609,6 +602,22 @@
 </footer>
 </div>
 
+<!-- EXP MODAL -->
+<div id="expModal" class="exp-modal" role="dialog" aria-modal="true" aria-labelledby="expModalCompany" hidden>
+  <div class="exp-modal-backdrop" id="expModalBackdrop"></div>
+  <div class="exp-modal-panel">
+    <button class="exp-modal-close" id="expModalClose" aria-label="Закрыть">✕</button>
+    <div class="exp-modal-num" id="expModalNum"></div>
+    <div class="exp-modal-company" id="expModalCompany"></div>
+    <div class="exp-modal-role" id="expModalRole"></div>
+    <div class="exp-modal-dur" id="expModalDur"></div>
+    <div class="exp-modal-tags" id="expModalTags"></div>
+    <p class="exp-modal-desc" id="expModalDesc"></p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

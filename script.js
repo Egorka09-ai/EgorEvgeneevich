@@ -312,12 +312,8 @@ document.querySelectorAll('.acc-header').forEach(header => {
 document.querySelectorAll('.niche-card').forEach(card => {
   card.addEventListener('click', e => {
     e.preventDefault();
-    const target = document.querySelector(card.getAttribute('href'));
-    if (!target) return;
-    document.querySelectorAll('.acc-item.open').forEach(i => { if (i !== target) accClose(i); });
-    if (!target.classList.contains('open')) accOpen(target);
-    /* #4 скролл через JS */
-    setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    const expSection = document.getElementById('section-exp');
+    if (expSection) setTimeout(() => expSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
   });
 });
 
@@ -635,6 +631,142 @@ document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
       el.style.setProperty('--mg-y', '0px');
     });
   });
+})();
+
+/* ===== GENIE EXPERIENCE ANIMATION ===== */
+(function () {
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const scene = document.getElementById('expScene');
+  if (!scene) return;
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cards = gsap.utils.toArray('.exp-card');
+  const progressWrap = document.getElementById('expProgress');
+
+  cards.forEach(() => { const i = document.createElement('i'); progressWrap.appendChild(i); });
+  const dots = gsap.utils.toArray('#expProgress i');
+
+  if (reduce) {
+    gsap.set(cards, { clearProps: 'all' });
+    dots.forEach(d => d.classList.add('on'));
+    return;
+  }
+
+  function calcOffsets() {
+    const box = document.getElementById('expBox');
+    const br = box.getBoundingClientRect();
+    const bx = br.left + br.width / 2;
+    const by = br.top + br.height * 0.22;
+    cards.forEach(card => {
+      const r = card.getBoundingClientRect();
+      card._dx = bx - (r.left + r.width / 2);
+      card._dy = by - (r.top + r.height / 2);
+    });
+  }
+  calcOffsets();
+
+  const NECK = 'polygon(42% 0%, 58% 0%, 53% 100%, 47% 100%)';
+  const FULL = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+
+  cards.forEach((card, i) => {
+    gsap.set(card, {
+      x: card._dx, y: card._dy,
+      scaleX: 0.05, scaleY: 0.5, opacity: 0,
+      skewX: 0, clipPath: NECK, webkitClipPath: NECK,
+      transformOrigin: '50% 100%',
+      filter: 'blur(3px)', zIndex: i,
+    });
+  });
+  gsap.set(['#expFlapL', '#expFlapR'], { rotateX: 0 });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#section-exp',
+      start: 'top top',
+      end: '+=' + (cards.length * 480 + 900),
+      pin: true,
+      scrub: 1,
+      anticipatePin: 1,
+      onUpdate: self => {
+        const active = Math.round(self.progress * cards.length);
+        dots.forEach((d, i) => d.classList.toggle('on', i < active));
+      },
+    },
+  });
+
+  tl.to('#expFlapL', { rotateX: -135, duration: 1.4, ease: 'power2.inOut' }, 0)
+    .to('#expFlapR', { rotateX: -135, duration: 1.4, ease: 'power2.inOut' }, 0)
+    .to('#expBoxGlow', { opacity: 1, duration: 1.1, ease: 'sine.out' }, 0.2);
+
+  cards.forEach((card, i) => {
+    const start = 1.4 + i * 0.8;
+    const dir = i % 2 === 0 ? 1 : -1;
+
+    tl.to(card, { y: card._dy * 0.4, opacity: 1, scaleX: 0.16, scaleY: 1.7, skewX: 6 * dir, duration: 0.7, ease: 'power2.out' }, start);
+    tl.to(card, { x: card._dx * 0.4, y: -22, scaleX: 0.42, scaleY: 1.45, skewX: -5 * dir, duration: 0.6, ease: 'sine.inOut' }, start + 0.62);
+    tl.to(card, { clipPath: 'polygon(15% 0%, 85% 0%, 78% 100%, 22% 100%)', duration: 0.6, ease: 'sine.inOut' }, start + 0.62);
+    tl.to(card, { x: 0, y: 0, scaleX: 1, scaleY: 1, skewX: 0, clipPath: FULL, webkitClipPath: FULL, duration: 0.95, ease: 'back.out(1.7)' }, start + 1.16);
+    tl.to(card, { filter: 'blur(0px)', duration: 0.8, ease: 'power1.out' }, start + 0.5);
+
+    tl.to('#expBox', { y: -8, duration: 0.4, ease: 'sine.out' }, start)
+      .to('#expBox', { y: 0, duration: 0.7, ease: 'elastic.out(1, 0.55)' }, start + 0.4);
+    tl.fromTo('#expBoxGlow',
+      { opacity: 1, scaleY: 1 },
+      { opacity: 0.5, scaleY: 1.4, duration: 0.5, yoyo: true, repeat: 1, ease: 'sine.out' },
+      start
+    );
+  });
+
+  let rt;
+  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => ScrollTrigger.refresh(), 200); });
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+})();
+
+/* ===== EXP MODAL ===== */
+(function expModal() {
+  const modal   = document.getElementById('expModal');
+  const backdrop = document.getElementById('expModalBackdrop');
+  const closeBtn = document.getElementById('expModalClose');
+  if (!modal) return;
+
+  function openModal(card) {
+    document.getElementById('expModalNum').textContent     = card.querySelector('.exp-c-num').textContent;
+    document.getElementById('expModalCompany').textContent = card.querySelector('.exp-c-company').textContent;
+    document.getElementById('expModalRole').textContent    = card.querySelector('.exp-c-role').textContent;
+    document.getElementById('expModalDur').innerHTML       = card.querySelector('.exp-c-dur').innerHTML + ' опыта';
+    document.getElementById('expModalDesc').textContent    = card.querySelector('.exp-c-desc').textContent.trim();
+
+    const tagsEl = document.getElementById('expModalTags');
+    tagsEl.innerHTML = '';
+    card.querySelectorAll('.exp-c-tag').forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'exp-c-tag';
+      span.textContent = t.textContent;
+      tagsEl.appendChild(span);
+    });
+
+    modal.hidden = false;
+    requestAnimationFrame(() => modal.classList.add('is-open'));
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    document.body.style.overflow = '';
+    modal.addEventListener('transitionend', () => { modal.hidden = true; }, { once: true });
+  }
+
+  document.querySelectorAll('.exp-card').forEach(card => {
+    card.addEventListener('click', () => openModal(card));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card); } });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
 })();
 
 /* ===== ПЛАВНОЕ ПОЯВЛЕНИЕ заголовков секций ===== */
