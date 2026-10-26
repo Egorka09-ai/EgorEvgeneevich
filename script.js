@@ -497,13 +497,13 @@ document.querySelectorAll('.doodle').forEach(d => doodleObs.observe(d));
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   let w = window.innerWidth, h = window.innerHeight;
-  const N = w < 600 ? 3 : 7;
+  const N = w < 600 ? 5 : 9;
   const flies = [];
 
   for (let i = 0; i < N; i++) {
     const el = document.createElement('span');
     el.className = 'firefly';
-    const size = 8 + Math.random() * 9;              // 8–17px: заметно, но не пятном
+    const size = 12 + Math.random() * 14;            // крупные: 12–26px
     el.style.width = el.style.height = size.toFixed(1) + 'px';
     el.style.animationDuration = (2.6 + Math.random() * 3) + 's';
     el.style.animationDelay = (-Math.random() * 4).toFixed(2) + 's';
